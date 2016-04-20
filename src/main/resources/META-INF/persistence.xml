@@ -13,4 +13,16 @@
         </properties>
     </persistence-unit>
 
+    <persistence-unit name="HiberanteOGMMongoDb" transaction-type="RESOURCE_LOCAL" >
+        <provider>org.hibernate.ogm.jpa.HibernateOgmPersistence</provider>
+        <properties>
+            <property name="hibernate.ogm.datastore.provider" value="mongodb"/>
+            <property name="hibernate.ogm.datastore.database" value="hlms"/>
+            <property name="hibernate.ogm.datastore.host" value="localhost"/>
+            <property name="hibernate.ogm.datastore.port" value="27017"/>
+            <property name="hibernate.ogm.datastore.username" value="root"/>
+            <property name="hibernate.ogm.datastore.password" value=""/>
+        </properties>
+    </persistence-unit>
+
 </persistence>

@@ -2,5 +2,6 @@
 <html>
 <body>
 <h2>${date}</h2>
+<h2>${house}<h2>
 </body>
 </html>

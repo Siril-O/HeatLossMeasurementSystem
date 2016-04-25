@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-    <property name="DEV_HOME" value="logs" />
+    <property name="DEV_HOME" value="/logs" />
 
     <appender name="FILE-AUDIT"
               class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -33,7 +33,7 @@
         </layout>
     </appender>
 
-    <logger name="debug-logger" level="debug"
+    <logger name="ua.heatloss" level="debug"
             additivity="false">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="FILE-AUDIT" />

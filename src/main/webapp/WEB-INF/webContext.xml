@@ -19,11 +19,44 @@
    <!-- <security:global-method-security
             secured-annotations="enabled"/> -->
 
-    <bean id="viewResolver"
+  <!--  <bean id="viewResolver"
           class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/jsp/"/>
         <property name="suffix" value=".jsp"/>
+    </bean> -->
+
+
+    <!-- Configure Apache Tiles for the view
+    <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
+        <property name="definitions" value="/WEB-INF/tiles/tiles-templates.xml" />
+        <property name="preparerFactoryClass" value="org.springframework.web.servlet.view.tiles2.SpringBeanPreparerFactory"/>
     </bean>
+
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.tiles2.TilesViewResolver">
+        <property name="requestContextAttribute" value="requestContext"/>
+        <property name="viewClass" value="org.springframework.web.servlet.view.tiles2.TilesView"/>
+    </bean>
+    -->
+    <bean id="viewResolver"
+          class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+        <property name="viewClass">
+            <value>
+                org.springframework.web.servlet.view.tiles3.TilesView
+            </value>
+        </property>
+    </bean>
+    <bean id="tilesConfigurer"
+          class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+        <property name="definitions">
+            <list>
+                <value>/WEB-INF/tiles/tiles-templates.xml</value>
+                <value>/WEB-INF/tiles/definitions.xml</value>
+            </list>
+        </property>
+    </bean>
+
+
+
 
     <mvc:resources mapping="/resources/**" location="/resources/"/>
 

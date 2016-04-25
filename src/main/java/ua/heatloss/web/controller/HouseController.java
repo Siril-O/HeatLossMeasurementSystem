@@ -25,7 +25,7 @@ public class HouseController {
     public String getHouse(@RequestParam(value = "id") String id, final Model model) {
         final House house = houseDao.findById(id);
         model.addAttribute("house", house);
-        return "test";
+        return "info";
     }
 
     @RequestMapping(method = RequestMethod.POST)

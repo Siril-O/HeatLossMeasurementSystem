@@ -5,6 +5,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.heatloss.dao.HouseDao;
 import ua.heatloss.domain.House;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -36,6 +38,11 @@ public class DefaultHouseDao implements HouseDao {
         if (id != null) {
             return em.find(House.class, id);
         }
+        return null;
+    }
+
+    @Override
+    public List<House> getHouses(int startPosition, int maxResults) {
         return null;
     }
 }

@@ -34,7 +34,7 @@
     </appender>
 
     <logger name="ua.heatloss" level="debug"
-            additivity="false">
+            additivity="true">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="FILE-AUDIT" />
     </logger>

@@ -1,17 +1,24 @@
 package ua.heatloss.domain;
 
 
-import org.hibernate.annotations.Type;
-
-import javax.persistence.*;
 import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 public class House {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
- //   @Type(type = "objectid")
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private Long id;
 
     @OneToMany(mappedBy = "house", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)

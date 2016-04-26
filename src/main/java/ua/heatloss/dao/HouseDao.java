@@ -2,6 +2,8 @@ package ua.heatloss.dao;
 
 import ua.heatloss.domain.House;
 
+import java.util.List;
+
 
 public interface HouseDao {
 
@@ -10,5 +12,7 @@ public interface HouseDao {
     void updateHouse(final House house);
 
     House findById(final String id);
+
+    List<House> getHouses(final int startPosition,final int maxResults);
 
 }

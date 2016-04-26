@@ -11,7 +11,8 @@
         <title>
             <tiles:getAsString name="title" />
         </title>
-        <link rel="stylesheet" href="/css/style.css" type="text/css"/>
+        <link href="/css/style.css" type="text/css"  rel="stylesheet"/>
+        <link href="/css/bootstrap.min.css" rel="stylesheet"/>
     </head>
     <body>
 

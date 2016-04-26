@@ -1,17 +1,10 @@
 package ua.heatloss.domain;
 
 
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-
 import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class House {
@@ -50,7 +43,25 @@ public class House {
         return address;
     }
 
+    public List<Appartament> getAppartments() {
+        return appartments;
+    }
+
+    public void setAppartments(List<Appartament> appartments) {
+        this.appartments = appartments;
+    }
+
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    @Override
+    public String toString() {
+        return "House{" +
+                "id=" + id +
+                ", pipes=" + pipes +
+                ", appartments=" + appartments +
+                ", address=" + address +
+                '}';
     }
 }

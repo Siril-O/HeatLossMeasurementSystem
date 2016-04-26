@@ -11,15 +11,15 @@
         <title>
             <tiles:getAsString name="title" />
         </title>
-        <link href="/css/style.css" type="text/css"  rel="stylesheet"/>
-        <link href="/css/bootstrap.min.css" rel="stylesheet"/>
+        <link href="<c:url value="/resources/css/style.css" />" rel="stylesheet">
+        <link href="<c:url value="/resources/css/bootstrap.min.css" />" rel="stylesheet">
     </head>
     <body>
-
-        <tiles:insertAttribute name="header" />
-        <tiles:insertAttribute name="navigation" />
-        <tiles:insertAttribute name="content" />
-        <tiles:insertAttribute name="footer" />
-
+        <div class="container">
+            <tiles:insertAttribute name="header" />
+            <tiles:insertAttribute name="navigation" />
+            <tiles:insertAttribute name="content" />
+            <tiles:insertAttribute name="footer" />
+        </div>
     </body>
 </html>

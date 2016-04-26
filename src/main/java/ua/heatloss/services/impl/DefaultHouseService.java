@@ -1,5 +1,6 @@
 package ua.heatloss.services.impl;
 
+import org.springframework.transaction.annotation.Transactional;
 import ua.heatloss.dao.HouseDao;
 import ua.heatloss.domain.House;
 import ua.heatloss.services.HouseService;
@@ -16,11 +17,13 @@ public class DefaultHouseService implements HouseService {
     private HouseDao houseDao;
 
     @Override
+    @Transactional
     public void createHouse(House house) {
         houseDao.createHouse(house);
     }
 
     @Override
+    @Transactional
     public void updateHouse(House house) {
         houseDao.updateHouse(house);
     }
@@ -31,7 +34,7 @@ public class DefaultHouseService implements HouseService {
     }
 
     @Override
-    public List<House> getHouses(int startPosition, int maxResults) {
+    public List<House> getHouses(Integer startPosition, Integer maxResults) {
         return houseDao.getHouses(startPosition, maxResults);
     }
 }

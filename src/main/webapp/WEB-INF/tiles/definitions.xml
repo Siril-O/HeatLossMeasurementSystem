@@ -4,6 +4,10 @@
         "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
 <tiles-definitions>
 
+    <definition name="index" extends="base-template">
+        <put-attribute name="title" value="main"/>
+        <put-attribute name="content" value="/WEB-INF/templates/layouts/index.jsp"/>
+    </definition>
     <definition name="house.*" extends="base-template">
         <put-attribute name="title" value="{1}"/>
         <put-attribute name="content" value="/WEB-INF/templates/layouts/house/{1}.jsp"/>

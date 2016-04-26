@@ -16,15 +16,9 @@ public class IndexCotroller {
 
     @RequestMapping(value = { "/" })
     public String test(Model model){
-        LOG.debug("test method invoked");
+        LOG.debug("index method invoked");
         model.addAttribute("date", new Date());
         return "index";
     }
 
-    @RequestMapping(value = { "/info" })
-    public String info(Model model){
-        LOG.debug("test method invoked");
-        model.addAttribute("date", new Date());
-        return "info";
-    }
 }

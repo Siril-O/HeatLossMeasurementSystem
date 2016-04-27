@@ -1,11 +1,25 @@
 package ua.heatloss.domain;
 
 
-import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+
+import org.hibernate.Hibernate;
+import org.hibernate.annotations.GenericGenerator;
+
+@NamedQueries(
+        {
+                @NamedQuery(name = "House.findHouses", query = "SELECT h FROM House AS h")}
+)
 @Entity
 public class House {
 
@@ -59,8 +73,8 @@ public class House {
     public String toString() {
         return "House{" +
                 "id=" + id +
-                ", pipes=" + pipes +
-                ", appartments=" + appartments +
+                ", pipes=" + (pipes == null ? "" : pipes) +
+                ", appartments=" + (appartments == null ? "" : appartments) +
                 ", address=" + address +
                 '}';
     }

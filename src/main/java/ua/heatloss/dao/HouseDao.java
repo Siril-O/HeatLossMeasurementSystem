@@ -13,6 +13,6 @@ public interface HouseDao {
 
     House findById(final String id);
 
-    List<House> getHouses(final int startPosition,final int maxResults);
+    List<House> getHouses(final Integer startPosition, final Integer maxResults);
 
 }

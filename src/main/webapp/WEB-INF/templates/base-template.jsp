@@ -11,9 +11,12 @@
         <title>
             <tiles:getAsString name="title" />
         </title>
-        <link href="<c:url value="/resources/css/style.css" />" rel="stylesheet">
-        <link href="<c:url value="/resources/css/bootstrap.min.css" />" rel="stylesheet">
-    </head>
+            <link href="<c:url value="/resources/css/style.css" />" rel="stylesheet">
+            <link href="<c:url value="/resources/css/bootstrap.min.css" />" rel="stylesheet">
+            <script src="<c:url value="/resources/js/jquery.1.10.2.min.js" />" ></script>
+                        <script src="<c:url value="/resources/js/jquery.autocomplete.min.js" />" ></script>
+
+         </head>
     <body>
         <div class="container">
             <tiles:insertAttribute name="header" />

@@ -26,6 +26,8 @@
         <mysql.connector.version>5.1.36</mysql.connector.version>
         <!-- Apache version -->
         <apache.tiles.version>3.0.5</apache.tiles.version>
+        <!-- Jackson version -->
+        <jackson.version>1.9.10</jackson.version>
     </properties>
 
     <dependencies>
@@ -217,6 +219,13 @@
         </dependency>
         <!-- END Logging -->
 
+        <!-- Jackson -->
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <!-- END Jackson -->
 
     </dependencies>
 

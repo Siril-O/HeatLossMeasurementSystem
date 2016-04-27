@@ -1,5 +1,6 @@
 package ua.heatloss.web.controller;
 
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,19 +58,20 @@ public class HouseController {
     @RequestMapping(method = RequestMethod.GET, value = "/list")
     public String getAllHouses(@RequestParam(value = "startPosition", required = false) Integer startPosition,
                                @RequestParam(value = "limit", required = false) Integer limit, Model model) {
-   //     final List<House> houses = houseService.getHouses(startPosition, limit);
-        final List<House> houses = new ArrayList<>();
-        House house = new House();
-        Address address = new Address();
-        address.setCountry("Ukraine");
-        address.setCity("Kyiv");
-        address.setStreet("Bulv Lepse");
-        address.setHouseNumber("23B");
-        house.setAddress(address);
-        houses.add(house);
-        houses.add(house);
+        final List<House> houses = houseService.getHouses(startPosition, limit);
+        houses.get(0).getPipes();
+        //        final List<House> houses = new ArrayList<>();
+//        House house = new House();
+//        Address address = new Address();
+//        address.setCountry("Ukraine");
+//        address.setCity("Kyiv");
+//        address.setStreet("Bulv Lepse");
+//        address.setHouseNumber("23B");
+//        house.setAddress(address);
+//        houses.add(house);
+//        houses.add(house);
 
-        LOG.debug("Show Houses:"+ houses);
+   //     LOG.debug("Show Houses:"+ houses);
 
         model.addAttribute("houses", houses);
         return "house.list";

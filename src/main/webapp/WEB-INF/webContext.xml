@@ -80,4 +80,9 @@
     </bean>
 
 
+    <bean id="contentNegotiationManager"
+          class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+        <property name="defaultContentType" value="application/json" />
+    </bean>
+
 </beans>

@@ -1,10 +1,9 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
 <form:form commandName="house" method="POST" action="./">
      <fieldset class="form-group">
-        <label for="country">Country</label>
-        <form:input path="address.country" type="text" class="form-control" id="country" placeholder="Enter country"/>
+        <label for="w-country">Country</label>
+        <form:input path="address.country" type="text" class="form-control" id="w-country" placeholder="Enter country"/>
      </fieldset>
      <fieldset class="form-group">
           <label for="city">City</label>
@@ -21,3 +20,28 @@
 <input type="submit" class="btn btn-primary"/>
 
 </form:form>
+
+  <script>
+  $(document).ready(function() {
+
+	$('#w-country').autocomplete({
+		serviceUrl: '${pageContext.request.contextPath}/utils/country',
+		paramName: "tagName",
+		delimiter: ",",
+	   transformResult: function(response) {
+
+		return {
+		  //must convert json to javascript object before process
+		  suggestions: $.map($.parseJSON(response), function(item) {
+
+		      return { value: item.tagName, data: item.id };
+		   })
+
+		 };
+
+            }
+
+	 });
+
+  });
+  </script>

@@ -9,13 +9,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@RequestMapping(value = "/utils")
+@RequestMapping(value = "utils")
 @Controller
 public class UtilController {
 
@@ -60,29 +61,34 @@ public class UtilController {
                     "Virgin Islands (U.S.)", "Wallis and Futuna Islands", "Western Sahara", "Yemen",
                     "Yugoslavia", "Zambia", "Zimbabwe"));
 
-    private static final List<Tag> TAGS = new ArrayList<Tag>() {
+    private static final List<Term> TERMS = new ArrayList<Term>() {
         {
             int i = 1;
             for (String country : COUNTRIES) {
-                add(new Tag(i++, country));
+                add(new Term(i++, country));
             }
         }
     };
 
     private static final Logger LOG = LoggerFactory.getLogger(UtilController.class);
 
-    @RequestMapping(value = "/country", method = RequestMethod.GET)
+    @RequestMapping(value = "/country", method = RequestMethod.GET, produces = "application/json")
     public
     @ResponseBody
     @ResponseStatus(value = HttpStatus.OK)
-    List<Tag> getTags(@RequestParam String tagName) {
+    List<Term> getCountryTerms(@RequestParam String term, @RequestHeader(value = "Accept") String accept) {
 
-        final List<Tag> tags = buildResponce(tagName);
-        LOG.debug("Tags: " + tags);
-        return tags;
+        final List<Term> terms = buildResponce(term);
+        LOG.debug("Accept: " + accept + "Tags: " + term);
+        return terms;
     }
 
-    private List<Tag> buildResponce(String tagName) {
-        return TAGS.stream().filter(tag -> tag.getName().contains(tagName)).collect(Collectors.toList());
+    private List<Term> buildResponce(String term) {
+        return TERMS.stream().filter(tag -> tag.getLabel().contains(term)).collect(Collectors.toList());
     }
+
+    private List<String> buildStringResponce(String term) {
+        return TERMS.stream().filter(tag -> tag.getLabel().contains(term)).map(Term::getLabel).collect(Collectors.toList());
+    }
+
 }

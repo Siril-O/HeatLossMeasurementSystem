@@ -4,6 +4,7 @@
      <fieldset class="form-group">
         <label for="w-country">Country</label>
         <form:input path="address.country" type="text" class="form-control" id="w-country" placeholder="Enter country"/>
+        <input type="hidden" name="countryId" id="w-country-hidden"/>
      </fieldset>
      <fieldset class="form-group">
           <label for="city">City</label>
@@ -23,25 +24,16 @@
 
   <script>
   $(document).ready(function() {
-
-	$('#w-country').autocomplete({
-		serviceUrl: '${pageContext.request.contextPath}/utils/country',
-		paramName: "tagName",
-		delimiter: ",",
-	   transformResult: function(response) {
-
-		return {
-		  //must convert json to javascript object before process
-		  suggestions: $.map($.parseJSON(response), function(item) {
-
-		      return { value: item.tagName, data: item.id };
-		   })
-
-		 };
-
-            }
-
-	 });
-
+            var serverURL = '${pageContext.request.contextPath}/utils/country' + document.getElementById('w-country').value;
+         $('#w-country').autocomplete({
+             source: serverURL,
+             minLength: 1,
+             delay: 50,
+                     select: function( event, ui ) {
+                     document.getElementById('w-country').value = ui.item.label ;
+                     document.getElementById('w-country-hidden').value =  ui.item.value;
+                     return false;
+                     }
+         });
   });
   </script>

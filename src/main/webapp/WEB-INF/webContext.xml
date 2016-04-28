@@ -13,6 +13,7 @@
                         http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
                         http://www.springframework.org/schema/security
 						http://www.springframework.org/schema/security/spring-security.xsd">
+
     <context:component-scan base-package="ua.heatloss.web"/>
     <mvc:annotation-driven/>
 
@@ -25,18 +26,7 @@
         <property name="suffix" value=".jsp"/>
     </bean> -->
 
-
-    <!-- Configure Apache Tiles for the view
-    <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
-        <property name="definitions" value="/WEB-INF/tiles/tiles-templates.xml" />
-        <property name="preparerFactoryClass" value="org.springframework.web.servlet.view.tiles2.SpringBeanPreparerFactory"/>
-    </bean>
-
-    <bean id="viewResolver" class="org.springframework.web.servlet.view.tiles2.TilesViewResolver">
-        <property name="requestContextAttribute" value="requestContext"/>
-        <property name="viewClass" value="org.springframework.web.servlet.view.tiles2.TilesView"/>
-    </bean>
-    -->
+    <!-- Configure Apache Tiles for the view-->
     <bean id="viewResolver"
           class="org.springframework.web.servlet.view.UrlBasedViewResolver">
         <property name="viewClass">
@@ -54,9 +44,6 @@
             </list>
         </property>
     </bean>
-
-
-
 
     <mvc:resources mapping="/resources/**" location="/resources/"/>
 
@@ -79,10 +66,12 @@
         <property name="defaultEncoding" value="UTF-8"></property>
     </bean>
 
-
+    <bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView">
+        <property name="extractValueFromSingleKeyModel" value="true" />
+    </bean>
+<!--
     <bean id="contentNegotiationManager"
           class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
         <property name="defaultContentType" value="application/json" />
-    </bean>
-
+    </bean> -->
 </beans>

@@ -22,6 +22,7 @@
             <tiles:insertAttribute name="header" />
             <tiles:insertAttribute name="navigation" />
             <tiles:insertAttribute name="content" />
+            <tiles:insertAttribute name="paging" />
             <tiles:insertAttribute name="footer" />
         </div>
     </body>

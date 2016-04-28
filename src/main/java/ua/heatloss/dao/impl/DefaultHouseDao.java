@@ -1,24 +1,19 @@
 package ua.heatloss.dao.impl;
 
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ua.heatloss.dao.HouseDao;
 import ua.heatloss.dao.utils.DaoUtils;
 import ua.heatloss.domain.House;
 
+import javax.persistence.*;
 import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceContextType;
-import javax.persistence.TypedQuery;
-
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class DefaultHouseDao implements HouseDao {
 
-@PersistenceContext(type = PersistenceContextType.EXTENDED)
-private EntityManager em;
+    @PersistenceContext(type = PersistenceContextType.EXTENDED)
+    private EntityManager em;
 
 
     @Override
@@ -48,7 +43,14 @@ private EntityManager em;
     @Override
     public List<House> getHouses(Integer startPosition, Integer maxResults) {
         TypedQuery<House> query = em.createNamedQuery("House.findHouses", House.class);
-        return query.setFirstResult(DaoUtils.checkStartPosition(startPosition))
-                .setMaxResults(DaoUtils.checkMaxResults(maxResults)).getResultList();
+        query.setFirstResult(DaoUtils.checkStartPosition(startPosition));
+        query.setMaxResults(DaoUtils.checkMaxResults(maxResults));
+        return query.getResultList();
+    }
+
+    @Override
+    public Long getHouseTotalResultCount() {
+        final Query queryTotal = em.createNamedQuery("House.findHousesTotalResultCount");
+        return (long) queryTotal.getSingleResult();
     }
 }

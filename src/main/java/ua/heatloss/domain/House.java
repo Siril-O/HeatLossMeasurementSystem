@@ -18,7 +18,9 @@ import org.hibernate.annotations.GenericGenerator;
 
 @NamedQueries(
         {
-                @NamedQuery(name = "House.findHouses", query = "SELECT h FROM House AS h")}
+                @NamedQuery(name = "House.findHouses", query = "SELECT h FROM House AS h"),
+                @NamedQuery(name = "House.findHousesTotalResultCount", query = "SELECT count(h.id) FROM House AS h"),
+        }
 )
 @Entity
 public class House {

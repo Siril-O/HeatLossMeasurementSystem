@@ -16,4 +16,6 @@ public interface HouseService {
 
     List<House> getHouses(final Integer startPosition, final Integer maxResults);
 
+    Long getHouseTotalResultCount();
+
 }

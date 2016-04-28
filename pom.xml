@@ -256,7 +256,11 @@
                 <version>2.2</version>
                 <configuration>
                     <port>8888</port>
+                    <systemProperties>
+                        <JAVA_OPTS>-Xmx1024m -Xms256m -XX:MaxPermSize=256m -Xnoagent -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8888</JAVA_OPTS>
+                    </systemProperties>
                 </configuration>
+
             </plugin>
 
             <!-- Set compile jdk version -->

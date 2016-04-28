@@ -1,6 +1,5 @@
 package ua.heatloss.web.controller;
 
-import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +9,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import ua.heatloss.dao.utils.DaoUtils;
 import ua.heatloss.domain.Address;
 import ua.heatloss.domain.House;
 import ua.heatloss.services.HouseService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -56,24 +55,31 @@ public class HouseController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/list")
-    public String getAllHouses(@RequestParam(value = "startPosition", required = false) Integer startPosition,
-                               @RequestParam(value = "limit", required = false) Integer limit, Model model) {
-        final List<House> houses = houseService.getHouses(startPosition, limit);
-        houses.get(0).getPipes();
-        //        final List<House> houses = new ArrayList<>();
-//        House house = new House();
-//        Address address = new Address();
-//        address.setCountry("Ukraine");
-//        address.setCity("Kyiv");
-//        address.setStreet("Bulv Lepse");
-//        address.setHouseNumber("23B");
-//        house.setAddress(address);
-//        houses.add(house);
-//        houses.add(house);
+    public String getAllHouses(@RequestParam(value = "offset", required = false, defaultValue = "0") Integer offset,
+                               @RequestParam(value = "limit", required = false, defaultValue = DaoUtils.DEFAULT_LIMIT_STRING) Integer limit,
+                               Model model) {
+        final List<House> houses = houseService.getHouses(offset, limit);
+        Long total = houseService.getHouseTotalResultCount();
 
-   //     LOG.debug("Show Houses:"+ houses);
+        int paging = preparePaging(offset, limit, total, model);
+        LOG.debug("Offset:" + offset + " Limit:" + limit + " Total:" + total + " pagesNumber:" + paging + " Houses:" + houses);
 
         model.addAttribute("houses", houses);
-        return "house.list";
+        return "house.paging.list";
     }
+
+    private int preparePaging(Integer offset, Integer limit, Long total, Model model) {
+        if (limit == null || limit == 0) {
+            limit = DaoUtils.DEFAULT_LIMIT;
+        }
+        long pages = total / limit;
+        int extraPage = (total % limit) != 0 ? 1 : 0;
+        int pagesQuantity = (int) (pages + extraPage);
+
+        model.addAttribute("pagesQuantity", pagesQuantity);
+        model.addAttribute("offset", offset);
+        model.addAttribute("limit", limit);
+        return pagesQuantity;
+    }
+
 }

@@ -4,7 +4,8 @@ package ua.heatloss.dao.utils;
 public class DaoUtils {
 
     public final static int DEFAULT_START_POSITION = 0;
-    public final static int DEFAULT_MAX_RESULTS = 10;
+    public final static int DEFAULT_LIMIT = 5;
+    public final static String DEFAULT_LIMIT_STRING = "5";
 
     public static int checkStartPosition(final Integer startPosition) {
         if (startPosition == null) {
@@ -15,7 +16,7 @@ public class DaoUtils {
 
     public static int checkMaxResults(final Integer maxResults) {
         if (maxResults == null) {
-            return DEFAULT_MAX_RESULTS;
+            return DEFAULT_LIMIT;
         }
         return maxResults;
     }

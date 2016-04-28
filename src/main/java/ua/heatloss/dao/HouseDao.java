@@ -15,4 +15,6 @@ public interface HouseDao {
 
     List<House> getHouses(final Integer startPosition, final Integer maxResults);
 
+    Long getHouseTotalResultCount();
+
 }

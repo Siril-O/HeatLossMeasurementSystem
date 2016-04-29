@@ -20,7 +20,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @NamedQueries({
-        @NamedQuery(name = "Sensor.findSensors", query = "SELECT s FROM Sensor AS s"),
+        @NamedQuery(name = "Sensor.find", query = "SELECT s FROM Sensor AS s"),
         @NamedQuery(name = "Sensor.getTotalCount", query = "SELECT count(s.id) FROM Sensor AS s")
 })
 

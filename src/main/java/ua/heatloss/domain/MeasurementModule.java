@@ -5,15 +5,14 @@ import ua.heatloss.domain.sensors.Sensor;
 
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
+
+@NamedQueries(
+        {
+                @NamedQuery(name = "MeasurementModule.find", query = "SELECT m FROM MeasurementModule AS m"),
+                @NamedQuery(name = "MeasurementModule.findTotalResultCount", query = "SELECT count(m.id) FROM MeasurementModule AS m"),
+        }
+)
 
 @Entity
 public class MeasurementModule {
@@ -30,7 +29,7 @@ public class MeasurementModule {
 
     @ManyToOne
     @JoinColumn(name = "APPARTAMENT_ID")
-    private Appartament appartament;
+    private Apartment appartament;
 
     @OneToMany(mappedBy = "measurementModule", fetch = FetchType.EAGER)
     private List<Sensor> sensors;
@@ -52,11 +51,11 @@ public class MeasurementModule {
         this.pipe = pipe;
     }
 
-    public Appartament getAppartament() {
+    public Apartment getAppartament() {
         return appartament;
     }
 
-    public void setAppartament(Appartament appartament) {
+    public void setAppartament(Apartment appartament) {
         this.appartament = appartament;
     }
 

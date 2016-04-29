@@ -1,18 +1,17 @@
 package ua.heatloss.domain;
 
+import org.hibernate.annotations.Type;
 import ua.heatloss.domain.sensors.Sensor;
 
+import javax.persistence.*;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
-import org.hibernate.annotations.Type;
+@NamedQueries(
+        {
+                @NamedQuery(name = "Measurement.find", query = "SELECT m FROM Measurement AS m"),
+                @NamedQuery(name = "Measurement.findTotalResultCount", query = "SELECT count(m.id) FROM Measurement AS m"),
+        }
+)
 
 @Entity
 public class Measurement {
@@ -32,6 +31,9 @@ public class Measurement {
     @ManyToOne
     @JoinColumn(name = "SENSOR_ID")
     private Sensor sensor;
+
+    @Transient
+    public static final String TYPE = "Measurement";
 
     public Long getId() {
         return id;

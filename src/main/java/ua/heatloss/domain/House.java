@@ -16,8 +16,8 @@ import javax.persistence.OneToMany;
 
 @NamedQueries(
         {
-                @NamedQuery(name = "House.findHouses", query = "SELECT h FROM House AS h"),
-                @NamedQuery(name = "House.findHousesTotalResultCount", query = "SELECT count(h.id) FROM House AS h"),
+                @NamedQuery(name = "House.find", query = "SELECT h FROM House AS h"),
+                @NamedQuery(name = "House.findTotalResultCount", query = "SELECT count(h.id) FROM House AS h"),
         }
 )
 @Entity
@@ -31,7 +31,7 @@ public class House {
     private List<Pipe> pipes;
 
     @OneToMany(mappedBy = "house", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    private List<Appartament> appartments;
+    private List<Apartment> appartments;
 
     @Embedded
     private Address address;
@@ -56,11 +56,11 @@ public class House {
         return address;
     }
 
-    public List<Appartament> getAppartments() {
+    public List<Apartment> getAppartments() {
         return appartments;
     }
 
-    public void setAppartments(List<Appartament> appartments) {
+    public void setAppartments(List<Apartment> appartments) {
         this.appartments = appartments;
     }
 

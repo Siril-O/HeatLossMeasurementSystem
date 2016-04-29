@@ -1,19 +1,18 @@
 package ua.heatloss.domain;
 
 
+import javax.persistence.*;
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+@NamedQueries(
+        {
+                @NamedQuery(name = "Apartment.find", query = "SELECT m FROM Apartment AS m"),
+                @NamedQuery(name = "Apartment.findTotalResultCount", query = "SELECT count(m.id) FROM Apartment AS m"),
+        }
+)
 
 @Entity
-public class Appartament {
+public class Apartment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

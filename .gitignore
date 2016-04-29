@@ -1,3 +1,4 @@
 target/**
-.idea/libraries/**
+.idea/libraries**
+.idea/workspace.xml
 logs/**

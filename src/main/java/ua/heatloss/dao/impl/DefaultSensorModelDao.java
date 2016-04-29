@@ -1,15 +1,14 @@
 package ua.heatloss.dao.impl;
 
+import org.springframework.stereotype.Repository;
 import ua.heatloss.dao.AbstractDao;
 import ua.heatloss.dao.SensorModelDao;
-import ua.heatloss.domain.sensors.Sensor;
 import ua.heatloss.domain.sensors.model.SensorModel;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
-import javax.transaction.Transactional;
-
-
+@Repository
 public class DefaultSensorModelDao extends AbstractDao<SensorModel> implements SensorModelDao {
 
     @Transactional
@@ -33,7 +32,7 @@ public class DefaultSensorModelDao extends AbstractDao<SensorModel> implements S
 
     @Override
     public List<SensorModel> getList(Integer startPosition, Integer maxResults) {
-        return getList(startPosition, maxResults, "SensorModel.findSensors", SensorModel.class);
+        return getList(startPosition, maxResults, "SensorModel.find", SensorModel.class);
     }
 
     @Override

@@ -1,13 +1,12 @@
 package ua.heatloss.dao.impl;
 
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ua.heatloss.dao.AbstractDao;
 import ua.heatloss.dao.HouseDao;
 import ua.heatloss.domain.House;
 
 import java.util.List;
-
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class DefaultHouseDao extends AbstractDao<House> implements HouseDao {
@@ -33,12 +32,12 @@ public class DefaultHouseDao extends AbstractDao<House> implements HouseDao {
 
     @Override
     public List<House> getList(Integer startPosition, Integer maxResults) {
-        return getList(startPosition, maxResults, "House.findHouses", House.class);
+        return getList(startPosition, maxResults, "House.find", House.class);
     }
 
     @Override
     public Long getTotalResultCount() {
-        return getTotalResultCount("House.findHousesTotalResultCount");
+        return getTotalResultCount("House.findTotalResultCount");
     }
 
 }

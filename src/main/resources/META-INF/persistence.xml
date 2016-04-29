@@ -22,7 +22,7 @@
             <property name="hibernate.ogm.datastore.database" value="hlms"/>
             <property name="hibernate.ogm.datastore.host" value="localhost"/>
             <property name="hibernate.ogm.datastore.port" value="27017"/>
-            <property name="hibernate.ogm.datastore.create_database" value="true"/>
+            <property name="hibernate.ogm.datastore.create_database" value="create"/>
      <!--       <property name="hibernate.ogm.datastore.username" value="myUserAdmin"/>
             <property name="hibernate.ogm.datastore.password" value="abc123"/> -->
         </properties>

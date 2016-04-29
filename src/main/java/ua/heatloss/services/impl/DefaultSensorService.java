@@ -1,13 +1,12 @@
 package ua.heatloss.services.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ua.heatloss.dao.SensorDao;
 import ua.heatloss.domain.sensors.Sensor;
 import ua.heatloss.services.SensorService;
 
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Service
 public class DefaultSensorService implements SensorService {
@@ -26,7 +25,7 @@ public class DefaultSensorService implements SensorService {
     }
 
     @Override
-    public Sensor findById(String id) {
+    public Sensor findById(Long id) {
         return sensorDao.findById(id);
     }
 

@@ -28,7 +28,7 @@ public class DefaultPipeDao extends AbstractDao<Pipe> implements PipeDao {
     }
 
     @Override
-    public Pipe findById(String id) {
+    public Pipe findById(Long id) {
         return findById(id, Pipe.class);
     }
 

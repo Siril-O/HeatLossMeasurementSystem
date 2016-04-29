@@ -26,7 +26,7 @@ public class DefaultMeasurementService implements MeasurementService {
     }
 
     @Override
-    public Measurement findById(String id) {
+    public Measurement findById(Long id) {
         return measurementDao.findById(id);
     }
 

@@ -27,7 +27,7 @@ public class DefaultSensorDao extends AbstractDao<Sensor> implements SensorDao {
     }
 
     @Override
-    public Sensor findById(String id) {
+    public Sensor findById(Long id) {
         return findById(id, Sensor.class);
     }
 

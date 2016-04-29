@@ -5,7 +5,7 @@ import java.util.List;
 
 @NamedQueries(
         {
-                @NamedQuery(name = "Pipe.find", query = "SELECT m FROM Pipe AS p"),
+                @NamedQuery(name = "Pipe.find", query = "SELECT p FROM Pipe AS p"),
                 @NamedQuery(name = "Pipe.findTotalResultCount", query = "SELECT count(p.id) FROM Pipe AS p"),
         }
 )

@@ -25,7 +25,7 @@ public class DefaultMeasurementModuleDao extends AbstractDao<MeasurementModule> 
     }
 
     @Override
-    public MeasurementModule findById(String id) {
+    public MeasurementModule findById(Long id) {
         return findById(id, MeasurementModule.class);
     }
 

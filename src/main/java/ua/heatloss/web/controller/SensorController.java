@@ -1,5 +1,11 @@
 package ua.heatloss.web.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import ua.heatloss.dao.AbstractDao;
 import ua.heatloss.domain.sensors.Sensor;
 import ua.heatloss.services.SensorService;
@@ -8,15 +14,8 @@ import ua.heatloss.web.utils.WebConstants;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-
-@RequestMapping(value = "/sensor")
 @Controller
+@RequestMapping(value = "/sensor")
 public class SensorController {
 
     private static final String SENSOR = "sensor";

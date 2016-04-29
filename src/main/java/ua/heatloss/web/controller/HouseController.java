@@ -1,14 +1,5 @@
 package ua.heatloss.web.controller;
 
-import ua.heatloss.dao.AbstractDao;
-import ua.heatloss.domain.Address;
-import ua.heatloss.domain.House;
-import ua.heatloss.services.HouseService;
-import ua.heatloss.web.utils.PagingUtils;
-import ua.heatloss.web.utils.WebConstants;
-
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +9,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import ua.heatloss.dao.AbstractDao;
+import ua.heatloss.domain.Address;
+import ua.heatloss.domain.House;
+import ua.heatloss.services.HouseService;
+import ua.heatloss.web.utils.PagingUtils;
+import ua.heatloss.web.utils.WebConstants;
+
+import java.util.List;
 
 @Controller
-@RequestMapping("house")
+@RequestMapping("/house")
 public class HouseController {
 
     private static final Logger LOG = LoggerFactory.getLogger(HouseController.class);
@@ -30,7 +29,7 @@ public class HouseController {
     private HouseService houseService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/{houseId}")
-    public String getHouse(@PathVariable final String houseId, final Model model) {
+    public String getHouse(@PathVariable final Long houseId, final Model model) {
         final House house = houseService.findById(houseId);
         model.addAttribute(HOUSE, house);
         return "model";
@@ -40,7 +39,7 @@ public class HouseController {
     public String createHouse(House house, Model model) {
         LOG.debug("Start Creating House:" + house);
         houseService.create(house);
-        return WebConstants.REDIRECT;
+        return WebConstants.REDIRECT + HOUSE + WebConstants.PAGED_LIST;
     }
 
     @RequestMapping(value = WebConstants.SLASH + WebConstants.CREATE)

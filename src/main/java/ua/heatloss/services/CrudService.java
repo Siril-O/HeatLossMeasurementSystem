@@ -9,7 +9,7 @@ public interface CrudService<T> {
 
     void update(final T entity);
 
-    T findById(final String id);
+    T findById(final Long id);
 
     List<T> getList(final Integer startPosition, final Integer maxResults);
 

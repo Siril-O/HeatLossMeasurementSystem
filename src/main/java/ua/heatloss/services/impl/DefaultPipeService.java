@@ -25,7 +25,7 @@ public class DefaultPipeService implements PipeService {
     }
 
     @Override
-    public Pipe findById(String id) {
+    public Pipe findById(Long id) {
         return pipeDao.findById(id);
     }
 

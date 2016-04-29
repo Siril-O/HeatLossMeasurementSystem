@@ -27,7 +27,7 @@ public class DefaultHouseService implements HouseService {
 
 
     @Override
-    public House findById(String id) {
+    public House findById(Long id) {
         return houseDao.findById(id);
     }
 

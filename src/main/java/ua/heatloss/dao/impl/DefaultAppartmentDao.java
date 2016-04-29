@@ -26,7 +26,7 @@ public class DefaultAppartmentDao extends AbstractDao<Apartment> implements Apar
     }
 
     @Override
-    public Apartment findById(final String id) {
+    public Apartment findById(final Long id) {
         return findById(id, Apartment.class);
     }
 

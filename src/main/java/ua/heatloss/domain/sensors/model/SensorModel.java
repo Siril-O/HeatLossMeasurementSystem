@@ -2,23 +2,11 @@ package ua.heatloss.domain.sensors.model;
 
 import ua.heatloss.domain.sensors.Sensor;
 
+import javax.persistence.*;
 import java.util.List;
 
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
 @NamedQueries({
-        @NamedQuery(name = "SensorModel.findSensors", query = "SELECT sm FROM SensorModel AS sm"),
+        @NamedQuery(name = "SensorModel.find", query = "SELECT sm FROM SensorModel AS sm "),
         @NamedQuery(name = "SensorModel.getTotalCount", query = "SELECT count(sm.id) FROM SensorModel AS sm")
 })
 
@@ -31,6 +19,10 @@ public abstract class SensorModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String name;
+
+    private String maker;
 
     @OneToMany(mappedBy = "sensorModel", fetch = FetchType.LAZY)
     private List<Sensor> sensors;
@@ -49,5 +41,21 @@ public abstract class SensorModel {
 
     public void setSensors(List<Sensor> sensors) {
         this.sensors = sensors;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getMaker() {
+        return maker;
+    }
+
+    public void setMaker(String maker) {
+        this.maker = maker;
     }
 }

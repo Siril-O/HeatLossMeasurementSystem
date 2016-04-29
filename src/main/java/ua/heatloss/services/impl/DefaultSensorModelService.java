@@ -27,7 +27,7 @@ public class DefaultSensorModelService implements SensorModelService {
     }
 
     @Override
-    public SensorModel findById(String id) {
+    public SensorModel findById(Long id) {
         return sensorModelDao.findById(id);
     }
 

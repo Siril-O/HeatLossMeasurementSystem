@@ -26,7 +26,7 @@ public class DefaultHouseDao extends AbstractDao<House> implements HouseDao {
     }
 
     @Override
-    public House findById(final String id) {
+    public House findById(final Long id) {
         return findById(id, House.class);
     }
 

@@ -25,7 +25,7 @@ public class DefaultMeasurementModuleService implements MeasurementModuleService
     }
 
     @Override
-    public MeasurementModule findById(String id) {
+    public MeasurementModule findById(Long id) {
         return measurementModuleDao.findById(id);
     }
 

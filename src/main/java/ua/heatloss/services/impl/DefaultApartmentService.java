@@ -25,7 +25,7 @@ public class DefaultApartmentService implements ApartmentService {
     }
 
     @Override
-    public Apartment findById(String id) {
+    public Apartment findById(Long id) {
         return apartmentDao.findById(id);
     }
 

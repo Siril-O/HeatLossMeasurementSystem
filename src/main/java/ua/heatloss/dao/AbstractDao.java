@@ -1,18 +1,16 @@
 package ua.heatloss.dao;
 
+import javax.persistence.*;
 import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceContextType;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 
 public abstract class AbstractDao<T> {
 
     public final static int DEFAULT_START_POSITION = 0;
     public final static int DEFAULT_LIMIT = 5;
     public final static String DEFAULT_LIMIT_STRING = "5";
+
+    @PersistenceContext(type = PersistenceContextType.EXTENDED)
+    protected EntityManager em;
 
     public static int checkStartPosition(final Integer startPosition) {
         if (startPosition == null) {
@@ -28,9 +26,6 @@ public abstract class AbstractDao<T> {
         return maxResults;
     }
 
-    @PersistenceContext(type = PersistenceContextType.EXTENDED)
-    protected EntityManager em;
-
     protected T persist(T entity, boolean create) {
         if (entity == null) {
             return null;
@@ -44,7 +39,7 @@ public abstract class AbstractDao<T> {
     }
 
 
-    protected T findById(final String id, Class<T> type) {
+    protected T findById(final Long id, Class<T> type) {
         if (id != null) {
             return em.find(type, id);
         }
@@ -59,7 +54,7 @@ public abstract class AbstractDao<T> {
     }
 
     protected Long getTotalResultCount(String queryString) {
-        final Query queryTotal = em.createNamedQuery("House.findHousesTotalResultCount");
+        final Query queryTotal = em.createNamedQuery(queryString);
         return (long) queryTotal.getSingleResult();
     }
 

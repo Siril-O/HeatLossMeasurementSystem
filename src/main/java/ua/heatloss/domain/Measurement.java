@@ -1,6 +1,6 @@
 package ua.heatloss.domain;
 
-import ua.heatloss.domain.sensors.AbstractSensor;
+import ua.heatloss.domain.sensors.Sensor;
 
 import java.util.Date;
 
@@ -31,7 +31,7 @@ public class Measurement {
 
     @ManyToOne
     @JoinColumn(name = "SENSOR_ID")
-    private AbstractSensor sensor;
+    private Sensor sensor;
 
     public Long getId() {
         return id;
@@ -57,11 +57,11 @@ public class Measurement {
         this.value = value;
     }
 
-    public AbstractSensor getSensor() {
+    public Sensor getSensor() {
         return sensor;
     }
 
-    public void setSensor(AbstractSensor sensor) {
+    public void setSensor(Sensor sensor) {
         this.sensor = sensor;
     }
 }

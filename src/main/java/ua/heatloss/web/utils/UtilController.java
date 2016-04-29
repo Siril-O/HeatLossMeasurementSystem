@@ -1,4 +1,4 @@
-package ua.heatloss.web.controller.utils;
+package ua.heatloss.web.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -76,19 +75,15 @@ public class UtilController {
     public
     @ResponseBody
     @ResponseStatus(value = HttpStatus.OK)
-    List<Term> getCountryTerms(@RequestParam String term, @RequestHeader(value = "Accept") String accept) {
+    List<Term> getCountryTerms(@RequestParam String term) {
 
-        final List<Term> terms = buildResponce(term);
-        LOG.debug("Accept: " + accept + "Tags: " + term);
+        final List<Term> terms = buildResponse(term);
+        LOG.debug("Tags: " + terms);
         return terms;
     }
 
-    private List<Term> buildResponce(String term) {
+    private List<Term> buildResponse(String term) {
         return TERMS.stream().filter(tag -> tag.getLabel().contains(term)).collect(Collectors.toList());
-    }
-
-    private List<String> buildStringResponce(String term) {
-        return TERMS.stream().filter(tag -> tag.getLabel().contains(term)).map(Term::getLabel).collect(Collectors.toList());
     }
 
 }

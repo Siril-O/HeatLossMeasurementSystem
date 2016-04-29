@@ -1,7 +1,7 @@
 package ua.heatloss.domain;
 
 
-import ua.heatloss.domain.sensors.AbstractSensor;
+import ua.heatloss.domain.sensors.Sensor;
 
 import java.util.List;
 
@@ -32,8 +32,8 @@ public class MeasurementModule {
     @JoinColumn(name = "APPARTAMENT_ID")
     private Appartament appartament;
 
-    @OneToMany(mappedBy = "measurementModule", fetch = FetchType.LAZY)
-    private List<AbstractSensor> sensors;
+    @OneToMany(mappedBy = "measurementModule", fetch = FetchType.EAGER)
+    private List<Sensor> sensors;
 
     public Long getId() {
         return id;
@@ -60,11 +60,11 @@ public class MeasurementModule {
         this.appartament = appartament;
     }
 
-    public List<AbstractSensor> getSensors() {
+    public List<Sensor> getSensors() {
         return sensors;
     }
 
-    public void setSensors(List<AbstractSensor> sensors) {
+    public void setSensors(List<Sensor> sensors) {
         this.sensors = sensors;
     }
 }

@@ -1,13 +1,13 @@
 package ua.heatloss.services.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ua.heatloss.dao.HouseDao;
 import ua.heatloss.domain.House;
 import ua.heatloss.services.HouseService;
 
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class DefaultHouseService implements HouseService {
@@ -16,29 +16,29 @@ public class DefaultHouseService implements HouseService {
     private HouseDao houseDao;
 
     @Override
-    @Transactional
-    public void createHouse(House house) {
-        houseDao.createHouse(house);
+    public void create(House house) {
+        houseDao.create(house);
     }
 
     @Override
-    @Transactional
-    public void updateHouse(House house) {
-        houseDao.updateHouse(house);
+    public void update(House house) {
+        houseDao.update(house);
     }
+
 
     @Override
     public House findById(String id) {
         return houseDao.findById(id);
     }
 
+
     @Override
-    public List<House> getHouses(Integer startPosition, Integer maxResults) {
-        return houseDao.getHouses(startPosition, maxResults);
+    public List<House> getList(Integer startPosition, Integer maxResults) {
+        return houseDao.getList(startPosition, maxResults);
     }
 
     @Override
-    public Long getHouseTotalResultCount() {
-        return houseDao.getHouseTotalResultCount();
+    public Long getTotalResultCount() {
+        return houseDao.getTotalResultCount();
     }
 }

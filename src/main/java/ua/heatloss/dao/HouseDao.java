@@ -2,19 +2,8 @@ package ua.heatloss.dao;
 
 import ua.heatloss.domain.House;
 
-import java.util.List;
 
+public interface HouseDao extends CrudDao<House> {
 
-public interface HouseDao {
-
-    void createHouse(final House house);
-
-    void updateHouse(final House house);
-
-    House findById(final String id);
-
-    List<House> getHouses(final Integer startPosition, final Integer maxResults);
-
-    Long getHouseTotalResultCount();
 
 }

@@ -24,11 +24,4 @@
         </tbody>
 
   </table>
-  <!-- <ul class="pagination">
-      <c:forEach begin="1" end="${pagesQuantity}" var="i">
-      <c:set var="pageOffset" value="${(i - 1) * limit}" />
-          <li <c:if test="${offset == (pageOffset)}"> class="active" </c:if> >
-          <a  href="/?offset=${pageOffset}">${i} </a></li>
-  </c:forEach>
-  </ul> -->
 </div>

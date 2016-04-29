@@ -1,6 +1,6 @@
 package ua.heatloss.domain.sensors;
 
 
-public enum TemperatureSensorType {
+public enum SensorType {
     INPUT, OUTPUT, ADDITIONAL;
 }

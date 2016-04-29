@@ -1,4 +1,4 @@
-package ua.heatloss.web.controller.utils;
+package ua.heatloss.web.utils;
 
 
 public class Term {

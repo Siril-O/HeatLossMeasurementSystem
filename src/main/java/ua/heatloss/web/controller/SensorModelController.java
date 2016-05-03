@@ -5,57 +5,64 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import ua.heatloss.dao.AbstractDao;
 import ua.heatloss.domain.sensors.model.FlowSensorModel;
-import ua.heatloss.domain.sensors.model.SensorModel;
 import ua.heatloss.domain.sensors.model.TemperatureSensorModel;
 import ua.heatloss.services.SensorModelService;
 import ua.heatloss.web.utils.PagingUtils;
-import ua.heatloss.web.utils.WebConstants;
+import ua.heatloss.web.utils.PagingWraper;
 
 import java.util.List;
 
 @Controller
 @RequestMapping(value = "/sensorModel")
-public class SensorModelController {
+public class SensorModelController extends AbstractController {
 
     private static final String SENSOR_MODEL = "sensorModel";
+    public static final String TEMPERATURE = "Temperature";
+    public static final String FLOW = "Flow";
 
     @Autowired
     private SensorModelService sensorModelService;
 
-    @RequestMapping(method = RequestMethod.POST, value = "/temp")
+    @RequestMapping(method = RequestMethod.POST, value = SLASH + "temperature")
     public String createTemperatureSensorModel(TemperatureSensorModel sensorModel, Model model) {
         sensorModelService.create(sensorModel);
-        return WebConstants.REDIRECT + WebConstants.SLASH + WebConstants.LIST;
+        return REDIRECT + SLASH + SENSOR_MODEL + SLASH + LIST + TEMPERATURE;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/flow")
+    @RequestMapping(method = RequestMethod.POST, value = SLASH + "flow")
     public String createFlowSensorModel(FlowSensorModel sensorModel, Model model) {
         sensorModelService.create(sensorModel);
-        return WebConstants.REDIRECT + WebConstants.SLASH + WebConstants.LIST;
+        return REDIRECT + SLASH + SENSOR_MODEL + SLASH + LIST + FLOW;
     }
 
 
-    @RequestMapping(value = WebConstants.SLASH + WebConstants.CREATE)
+    @RequestMapping(value = SLASH + CREATE)
     public String showAddSensorModelForm(Model model) {
         TemperatureSensorModel tempSensorModel = new TemperatureSensorModel();
         FlowSensorModel flowSensorModel = new FlowSensorModel();
         model.addAttribute("flowSensorModel", flowSensorModel);
         model.addAttribute("tempSensorModel", tempSensorModel);
-        return SENSOR_MODEL + "." + WebConstants.CREATE;
+        return SENSOR_MODEL + "." + CREATE;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = WebConstants.SLASH + WebConstants.LIST)
-    public String getSensorsModels(@RequestParam(value = "offset", required = false, defaultValue = "0") Integer offset,
-                                   @RequestParam(value = "limit", required = false, defaultValue = AbstractDao.DEFAULT_LIMIT_STRING) Integer limit,
-                                   Model model) {
-        final List<SensorModel> sensorModels = sensorModelService.getList(offset, limit);
-        Long total = sensorModelService.getTotalResultCount();
-        PagingUtils.preparePaging(offset, limit, total, model);
-        //LOG.debug("Offset:" + offset + " Limit:" + limit + " Total:" + total + " pagesNumber:" + paging + " Houses:" + houses);
-        model.addAttribute("sensorModels", sensorModels);
-        return SENSOR_MODEL + WebConstants.PAGED_LIST;
+    @RequestMapping(method = RequestMethod.GET, value = SLASH + LIST + FLOW)
+    public String getFlowSensorModels(PagingWraper paging, Model model) {
+        final List<FlowSensorModel> flowSensorModels = sensorModelService.getFlowModelsList(paging.getOffset(), paging.getLimit());
+        Long total = sensorModelService.getFlowModelsTotalCount();
+        PagingUtils.preparePaging(paging, total, model);
+        model.addAttribute("sensorModels", flowSensorModels);
+        return SENSOR_MODEL + PAGED_LIST + FLOW;
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = SLASH + LIST + TEMPERATURE)
+    public String getTemperatureSensorModels(PagingWraper paging, Model model) {
+        final List<TemperatureSensorModel> temperatureSensorModels = sensorModelService.getTemperatureModelsList(paging.getOffset(), paging.getLimit());
+        Long total = sensorModelService.getTemperatureModelsTotalCount();
+        PagingUtils.preparePaging(paging, total, model);
+        model.addAttribute("sensorModels", temperatureSensorModels);
+        return SENSOR_MODEL + PAGED_LIST + TEMPERATURE;
+    }
+
+
 }

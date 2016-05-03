@@ -1,13 +1,12 @@
 package ua.heatloss.dao.impl;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ua.heatloss.dao.AbstractDao;
 import ua.heatloss.dao.SensorDao;
 import ua.heatloss.domain.sensors.Sensor;
 
 import java.util.List;
-
-import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class DefaultSensorDao extends AbstractDao<Sensor> implements SensorDao {
@@ -39,5 +38,10 @@ public class DefaultSensorDao extends AbstractDao<Sensor> implements SensorDao {
     @Override
     public Long getTotalResultCount() {
         return getTotalResultCount("Sensor.getTotalCount");
+    }
+
+    @Override
+    public void refresh(Sensor entity) {
+        em.refresh(entity);
     }
 }

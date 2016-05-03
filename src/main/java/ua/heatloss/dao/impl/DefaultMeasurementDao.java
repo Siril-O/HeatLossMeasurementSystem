@@ -39,5 +39,10 @@ public class DefaultMeasurementDao extends AbstractDao<Measurement> implements M
     public Long getTotalResultCount() {
         return getTotalResultCount("Measurement.getTotalCount");
     }
+
+    @Override
+    public void refresh(Measurement entity) {
+        em.refresh(entity);
+    }
 }
 

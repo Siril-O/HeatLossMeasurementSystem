@@ -38,4 +38,9 @@ public class DefaultPipeService implements PipeService {
     public Long getTotalResultCount() {
         return pipeDao.getTotalResultCount();
     }
+
+    @Override
+    public void refresh(Pipe entity) {
+        pipeDao.refresh(entity);
+    }
 }

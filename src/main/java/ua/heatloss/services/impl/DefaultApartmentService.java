@@ -38,4 +38,9 @@ public class DefaultApartmentService implements ApartmentService {
     public Long getTotalResultCount() {
         return apartmentDao.getTotalResultCount();
     }
+
+    @Override
+    public void refresh(Apartment entity) {
+        apartmentDao.refresh(entity);
+    }
 }

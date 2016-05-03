@@ -1,0 +1,5 @@
+MODEL_TYPE,id,maker,name,absoluteAccuracy,maxTemperature,minTemperature,maxFlowRate,minFlowRate
+TEMP,14,"Taxas Instruments","LM95235-Q1 ",0.001,160,-50,NULL,NULL
+TEMP,15,"Taxas Instruments","LM95231 Dual Remote and Local Temperature Sensor with TruTherm Technology and SMBus Interface",0.002,180,-30,NULL,NULL
+TEMP,16,"Taxas Instruments","TMP461 - High-Accuracy Remote and Local Temperature Sensor with Pin-Programmable Bus Address",0.005,140,-25,NULL,NULL
+FLOW,17,Keyence,FD-Q10C,1,NULL,NULL,500,0.01

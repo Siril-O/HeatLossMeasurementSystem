@@ -5,18 +5,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import ua.heatloss.dao.AbstractDao;
 import ua.heatloss.domain.sensors.Sensor;
 import ua.heatloss.services.SensorService;
 import ua.heatloss.web.utils.PagingUtils;
-import ua.heatloss.web.utils.WebConstants;
+import ua.heatloss.web.utils.PagingWraper;
 
 import java.util.List;
 
 @Controller
 @RequestMapping(value = "/sensor")
-public class SensorController {
+public class SensorController extends AbstractController {
 
     private static final String SENSOR = "sensor";
 
@@ -24,24 +22,19 @@ public class SensorController {
     private SensorService sensorService;
 
 
-    @RequestMapping(value = WebConstants.SLASH + WebConstants.CREATE)
+    @RequestMapping(value = SLASH + CREATE)
     public String showAddSensorForm(Model model) {
-        //house.setAddress(address);
-        // model.addAttribute("house", house);
-        return SENSOR + "." + WebConstants.CREATE;
+        return SENSOR + "." + CREATE;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = WebConstants.SLASH + WebConstants.LIST)
-    public String getAllSensors(@RequestParam(value = "offset", required = false, defaultValue = "0") Integer offset,
-                                @RequestParam(value = "limit", required = false, defaultValue = AbstractDao.DEFAULT_LIMIT_STRING) Integer limit,
-                                Model model) {
-        final List<Sensor> sensors = sensorService.getList(offset, limit);
+    @RequestMapping(method = RequestMethod.GET, value = SLASH + LIST)
+    public String getAllSensors(PagingWraper paging, Model model) {
+        final List<Sensor> sensors = sensorService.getList(paging.getOffset(), paging.getLimit());
         Long total = sensorService.getTotalResultCount();
 
-        PagingUtils.preparePaging(offset, limit, total, model);
-        //LOG.debug("Offset:" + offset + " Limit:" + limit + " Total:" + total + " pagesNumber:" + paging + " Houses:" + houses);
+        PagingUtils.preparePaging(paging, total, model);
 
         model.addAttribute("sensors", sensors);
-        return SENSOR + WebConstants.PAGED_LIST;
+        return SENSOR + PAGED_LIST;
     }
 }

@@ -38,4 +38,9 @@ public class DefaultSensorService implements SensorService {
     public Long getTotalResultCount() {
         return sensorDao.getTotalResultCount();
     }
+
+    @Override
+    public void refresh(Sensor entity) {
+        sensorDao.refresh(entity);
+    }
 }

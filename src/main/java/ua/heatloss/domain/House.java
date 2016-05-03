@@ -1,18 +1,8 @@
 package ua.heatloss.domain;
 
 
+import javax.persistence.*;
 import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 
 @NamedQueries(
         {
@@ -27,11 +17,11 @@ public class House {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "house", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "house", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY)
     private List<Pipe> pipes;
 
-    @OneToMany(mappedBy = "house", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    private List<Apartment> appartments;
+    @Enumerated(EnumType.STRING)
+    private PipeSystem pipeSystem;
 
     @Embedded
     private Address address;
@@ -56,16 +46,16 @@ public class House {
         return address;
     }
 
-    public List<Apartment> getAppartments() {
-        return appartments;
-    }
-
-    public void setAppartments(List<Apartment> appartments) {
-        this.appartments = appartments;
-    }
-
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public PipeSystem getPipeSystem() {
+        return pipeSystem;
+    }
+
+    public void setPipeSystem(PipeSystem pipeSystem) {
+        this.pipeSystem = pipeSystem;
     }
 
     @Override
@@ -73,7 +63,6 @@ public class House {
         return "House{" +
                 "id=" + id +
                 ", pipes=" + (pipes == null ? "" : pipes) +
-                ", appartments=" + (appartments == null ? "" : appartments) +
                 ", address=" + address +
                 '}';
     }

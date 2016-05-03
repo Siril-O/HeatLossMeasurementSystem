@@ -39,15 +39,15 @@ public abstract class AbstractDao<T> {
     }
 
 
-    protected T findById(final Long id, Class<T> type) {
+    protected T findById(final Long id, Class<? extends T> type) {
         if (id != null) {
             return em.find(type, id);
         }
         return null;
     }
 
-    protected List<T> getList(Integer startPosition, Integer maxResults, String queryString, Class<T> type) {
-        TypedQuery<T> query = em.createNamedQuery(queryString, type);
+    protected<H extends T> List<H> getList(Integer startPosition, Integer maxResults, String queryString, Class<H> type) {
+        TypedQuery<H> query = em.createNamedQuery(queryString, type);
         query.setFirstResult(checkStartPosition(startPosition));
         query.setMaxResults(checkMaxResults(maxResults));
         return query.getResultList();

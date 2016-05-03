@@ -39,4 +39,9 @@ public class DefaultMeasurementService implements MeasurementService {
     public Long getTotalResultCount() {
         return measurementDao.getTotalResultCount();
     }
+
+    @Override
+    public void refresh(Measurement entity) {
+        measurementDao.refresh(entity);
+    }
 }

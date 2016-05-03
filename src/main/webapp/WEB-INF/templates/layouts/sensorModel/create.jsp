@@ -4,14 +4,14 @@
 <form>
 <h4>Choose sensor model type:</h4>
 <div class="radio">
-  <label><input type="radio" name="sensorType" id="temp-sensor-selected" selected="true" onclick="tempSensorSelected()"/>Temperature Sensor</label>
+  <label><input type="radio" name="sensorType" id="temp-sensor-selected" checked="checked" onclick="tempSensorSelected()"/>Temperature Sensor</label>
 </div>
 <div class="radio">
   <label><input type="radio" name="sensorType"  id="flow-sensor-selected" onclick="flowSensorSelected()"/>Flow Sensor</label>
 </div>
 </form>
 
-<div id="flowSensorModel-form">
+<div id="flowSensorModel-form" style="display:none;">
 <form:form commandName="flowSensorModel" method="POST" action="./flow">
     <h2>Create Flow Sensor Model:</h2>
      <fieldset class="form-group">
@@ -37,8 +37,9 @@
 <input type="submit" class="btn btn-primary"/>
 </form:form>
 </div>
-<div id="tempSensorModel-form" style="display:none;">
-<form:form commandName="tempSensorModel" method="POST" action="./temp">
+
+<div id="tempSensorModel-form" >
+<form:form commandName="tempSensorModel" method="POST" action="./temperature">
     <h2>Create Temperature Sensor Model:</h2>
      <fieldset class="form-group">
         <label for="name">Name:</label>
@@ -64,8 +65,8 @@
 </form:form>
 </div>
 <script>
-var tempForm = document.getElementById("flowSensorModel-form");
-var flowForm = document.getElementById("tempSensorModel-form");
+var flowForm = document.getElementById("flowSensorModel-form");
+var tempForm = document.getElementById("tempSensorModel-form");
 function tempSensorSelected(){
  tempForm.style.display="block";
  flowForm.style.display="none";

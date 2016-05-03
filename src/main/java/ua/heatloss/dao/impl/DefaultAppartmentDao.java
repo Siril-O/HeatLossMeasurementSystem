@@ -39,4 +39,9 @@ public class DefaultAppartmentDao extends AbstractDao<Apartment> implements Apar
     public Long getTotalResultCount() {
         return getTotalResultCount("Apartment.findTotalResultCount");
     }
+
+    @Override
+    public void refresh(Apartment entity) {
+        em.refresh(entity);
+    }
 }

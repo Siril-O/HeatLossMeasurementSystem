@@ -18,16 +18,13 @@ public class Apartment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "HOUSE_ID")
-    private House house;
-
-    @OneToMany(mappedBy = "appartament", fetch = FetchType.LAZY)
-    private List<MeasurementModule> measurementModules;
+    @OneToMany(mappedBy = "apartment", fetch = FetchType.LAZY)
+    private List<MeasurementSection> measurementSections;
 
     private Integer number;
     private String owner;
     private Integer rooms;
+    private Integer floor;
 
 
     public Long getId() {
@@ -38,20 +35,12 @@ public class Apartment {
         this.id = id;
     }
 
-    public House getHouse() {
-        return house;
+    public List<MeasurementSection> getMeasurementSections() {
+        return measurementSections;
     }
 
-    public void setHouse(House house) {
-        this.house = house;
-    }
-
-    public List<MeasurementModule> getMeasurementModules() {
-        return measurementModules;
-    }
-
-    public void setMeasurementModules(List<MeasurementModule> measurementModules) {
-        this.measurementModules = measurementModules;
+    public void setMeasurementSections(List<MeasurementSection> measurementSections) {
+        this.measurementSections = measurementSections;
     }
 
     public String getOwner() {
@@ -76,5 +65,25 @@ public class Apartment {
 
     public void setNumber(Integer number) {
         this.number = number;
+    }
+
+    public Integer getFloor() {
+        return floor;
+    }
+
+    public void setFloor(Integer floor) {
+        this.floor = floor;
+    }
+
+    @Override
+    public String toString() {
+        return "Apartment{" +
+                "id=" + id +
+                ", number=" + number +
+                ", owner='" + owner + '\'' +
+                ", rooms=" + rooms +
+                ", floor=" + floor +
+                ", measurementSections=" + measurementSections +
+                '}';
     }
 }

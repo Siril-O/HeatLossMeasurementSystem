@@ -20,8 +20,10 @@
     <body>
         <div class="container">
             <tiles:insertAttribute name="header" />
-            <tiles:insertAttribute name="navigation" />
+            <tiles:insertAttribute name="top-menu" />
+            <div id="content-wrapper">
             <tiles:insertAttribute name="content" />
+        </div>
             <tiles:insertAttribute name="paging" />
             <tiles:insertAttribute name="footer" />
         </div>

@@ -40,4 +40,9 @@ public class DefaultHouseDao extends AbstractDao<House> implements HouseDao {
         return getTotalResultCount("House.findTotalResultCount");
     }
 
+    @Override
+    public void refresh(House entity) {
+        em.refresh(entity);
+    }
+
 }

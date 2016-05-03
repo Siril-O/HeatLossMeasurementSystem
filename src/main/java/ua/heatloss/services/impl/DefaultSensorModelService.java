@@ -1,13 +1,14 @@
 package ua.heatloss.services.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ua.heatloss.dao.SensorModelDao;
+import ua.heatloss.domain.sensors.model.FlowSensorModel;
 import ua.heatloss.domain.sensors.model.SensorModel;
+import ua.heatloss.domain.sensors.model.TemperatureSensorModel;
 import ua.heatloss.services.SensorModelService;
 
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Service
 public class DefaultSensorModelService implements SensorModelService {
@@ -39,5 +40,30 @@ public class DefaultSensorModelService implements SensorModelService {
     @Override
     public Long getTotalResultCount() {
         return sensorModelDao.getTotalResultCount();
+    }
+
+    @Override
+    public void refresh(SensorModel entity) {
+        sensorModelDao.refresh(entity);
+    }
+
+    @Override
+    public List<TemperatureSensorModel> getTemperatureModelsList(Integer startPosition, Integer maxResults) {
+        return sensorModelDao.getTemperatureModelsList(startPosition, maxResults);
+    }
+
+    @Override
+    public List<FlowSensorModel> getFlowModelsList(Integer startPosition, Integer maxResults) {
+        return sensorModelDao.getFlowModelsList(startPosition, maxResults);
+    }
+
+    @Override
+    public Long getTemperatureModelsTotalCount() {
+        return sensorModelDao.getTemperatureModelsTotalCount();
+    }
+
+    @Override
+    public Long getFlowModelsTotalCount() {
+        return sensorModelDao.getFlowModelsTotalCount();
     }
 }

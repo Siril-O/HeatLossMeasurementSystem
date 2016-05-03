@@ -2,5 +2,5 @@ package ua.heatloss.domain.sensors;
 
 
 public enum SensorType {
-    INPUT, OUTPUT, ADDITIONAL;
+    ADDITIONAL_INPUT, INPUT, FLOW, OUTPUT, ADDITIONAL_OUTPUT;
 }

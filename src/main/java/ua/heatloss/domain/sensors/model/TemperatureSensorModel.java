@@ -2,6 +2,14 @@ package ua.heatloss.domain.sensors.model;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+
+@NamedQueries({
+        @NamedQuery(name = "TemperatureSensorModel.find", query = "SELECT sm FROM TemperatureSensorModel AS sm "),
+        @NamedQuery(name = "TemperatureSensorModel.getTotalCount", query = "SELECT count(sm.id) FROM TemperatureSensorModel AS sm")
+})
+
 
 @Entity
 @DiscriminatorValue(value = "TEMP")

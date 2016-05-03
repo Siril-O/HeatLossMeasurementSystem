@@ -14,4 +14,6 @@ public interface CrudService<T> {
     List<T> getList(final Integer startPosition, final Integer maxResults);
 
     Long getTotalResultCount();
+
+    void refresh(T entity);
 }

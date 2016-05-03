@@ -41,4 +41,9 @@ public class DefaultPipeDao extends AbstractDao<Pipe> implements PipeDao {
     public Long getTotalResultCount() {
         return getTotalResultCount("Measurement.getTotalCount");
     }
+
+    @Override
+    public void refresh(Pipe entity) {
+        em.refresh(entity);
+    }
 }

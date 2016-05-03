@@ -1,7 +1,5 @@
 package ua.heatloss.web.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,24 +7,27 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import ua.heatloss.dao.AbstractDao;
 import ua.heatloss.domain.Address;
 import ua.heatloss.domain.House;
+import ua.heatloss.domain.PipeSystem;
+import ua.heatloss.facades.HouseFacade;
 import ua.heatloss.services.HouseService;
 import ua.heatloss.web.utils.PagingUtils;
-import ua.heatloss.web.utils.WebConstants;
+import ua.heatloss.web.utils.PagingWraper;
 
 import java.util.List;
 
 @Controller
 @RequestMapping("/house")
-public class HouseController {
+public class HouseController extends AbstractController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(HouseController.class);
     public static final String HOUSE = "house";
 
     @Autowired
     private HouseService houseService;
+
+    @Autowired
+    private HouseFacade houseFacade;
 
     @RequestMapping(method = RequestMethod.GET, value = "/{houseId}")
     public String getHouse(@PathVariable final Long houseId, final Model model) {
@@ -36,35 +37,36 @@ public class HouseController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public String createHouse(House house, Model model) {
-        LOG.debug("Start Creating House:" + house);
-        houseService.create(house);
-        return WebConstants.REDIRECT + HOUSE + WebConstants.PAGED_LIST;
+    public String createHouse(House house, Model model, @RequestParam("amountOfPipes") Integer pipesAmount) {
+        houseFacade.createHouse(house, pipesAmount);
+        return REDIRECT + SLASH + HOUSE + SLASH + LIST;
     }
 
-    @RequestMapping(value = WebConstants.SLASH + WebConstants.CREATE)
+    @RequestMapping(value = SLASH + CREATE)
     public String showAddHouseForm(Model model) {
-        LOG.debug("Show House Form");
         House house = new House();
         Address address = new Address();
         house.setAddress(address);
         model.addAttribute("house", house);
-        return HOUSE + "." + WebConstants.CREATE;
+        model.addAttribute("pipeTypes", PipeSystem.values());
+        return HOUSE + "." + CREATE;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = WebConstants.SLASH + WebConstants.LIST)
-    public String getAllHouses(@RequestParam(value = "offset", required = false, defaultValue = "0") Integer offset,
-                               @RequestParam(value = "limit", required = false, defaultValue = AbstractDao.DEFAULT_LIMIT_STRING) Integer limit,
+    @RequestMapping(method = RequestMethod.GET, value = SLASH + LIST)
+    public String getAllHouses(PagingWraper paging,
                                Model model) {
-        final List<House> houses = houseService.getList(offset, limit);
+        final List<House> houses = houseService.getList(paging.getOffset(), paging.getLimit());
         Long total = houseService.getTotalResultCount();
-
-        int paging = PagingUtils.preparePaging(offset, limit, total, model);
-        LOG.debug("Offset:" + offset + " Limit:" + limit + " Total:" + total + " pagesNumber:" + paging + " Houses:" + houses);
-
+        PagingUtils.preparePaging(paging, total, model);
         model.addAttribute("houses", houses);
-        return HOUSE + WebConstants.PAGED_LIST;
+        return HOUSE + PAGED_LIST;
     }
 
+
+    @RequestMapping(method = {RequestMethod.POST, RequestMethod.GET}, value = SLASH + MANAGE)
+    public String manageHouse(@RequestParam("houseId") House house, Model model) {
+        model.addAttribute("house", house);
+        return HOUSE + "." + MANAGE;
+    }
 
 }

@@ -1,23 +1,11 @@
 package ua.heatloss.domain.sensors;
 
 import ua.heatloss.domain.Measurement;
-import ua.heatloss.domain.MeasurementModule;
+import ua.heatloss.domain.MeasurementSection;
 import ua.heatloss.domain.sensors.model.SensorModel;
 
+import javax.persistence.*;
 import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
 @NamedQueries({
         @NamedQuery(name = "Sensor.find", query = "SELECT s FROM Sensor AS s"),
@@ -38,13 +26,14 @@ public class Sensor {
     private SensorModel sensorModel;
 
     @ManyToOne
-    @JoinColumn(name = "MEASUREMENT_MODULE_ID")
-    private MeasurementModule measurementModule;
+    @JoinColumn(name = "MEASUREMENT_SECTION_ID")
+    private MeasurementSection measurementSection;
 
 
     @OneToMany(mappedBy = "sensor", fetch = FetchType.LAZY)
     private List<Measurement> measurement;
 
+    private Integer ordinalNumber;
 
     private SensorType sensorType;
 
@@ -56,12 +45,12 @@ public class Sensor {
         this.id = id;
     }
 
-    public MeasurementModule getMeasurementModule() {
-        return measurementModule;
+    public MeasurementSection getMeasurementSection() {
+        return measurementSection;
     }
 
-    public void setMeasurementModule(MeasurementModule measurementModule) {
-        this.measurementModule = measurementModule;
+    public void setMeasurementSection(MeasurementSection measurementSection) {
+        this.measurementSection = measurementSection;
     }
 
     public SensorModel getSensorModel() {
@@ -86,6 +75,26 @@ public class Sensor {
 
     public void setSensorType(SensorType sensorType) {
         this.sensorType = sensorType;
+    }
+
+    public Integer getOrdinalNumber() {
+        return ordinalNumber;
+    }
+
+    public void setOrdinalNumber(Integer ordinalNumber) {
+        this.ordinalNumber = ordinalNumber;
+    }
+
+    @Override
+    public String toString() {
+        return "Sensor{" +
+                "id=" + id +
+                ", sensorModel=" + sensorModel +
+                ", measurementSection=" + measurementSection +
+                ", measurement=" + measurement +
+                ", ordinalNumber=" + ordinalNumber +
+                ", sensorType=" + sensorType +
+                '}';
     }
 }
 

@@ -33,11 +33,41 @@
          <form:options items="${pipeTypes}" />
      </form:select>
      </form:form>
+
+         <c:choose>
+                         <c:when test="${empty house.apartments}">
+                            <h3>There are no Apartments in this house</h3>
+                         </c:when>
+                         <c:otherwise>
+                         <h4>Apartments</h4>
+                           <table class="table table-striped">
+                                <tr>
+                                    <th>Number</th>
+                                    <th>Owner</th>
+                                    <th>rooms</th>
+                                    <th>floor</th>
+                                </tr>
+                                     <c:forEach items="${house.apartments}" var="apartment">
+                                <tr>
+                                          <td>${apartment.number}</td>
+                                          <td>${apartment.owner}</td>
+                                          <td>${apartment.rooms}</td>
+                                          <td>${apartment.floor}</td>
+                                    </tr>
+                              </c:forEach>
+                              </table>
+                         </c:otherwise>
+              </c:choose>
+         <form method="POST" action="../apartment/create">
+              <input type="hidden" name="houseId" value="${house.id}">
+              <input type="submit" value="Add Apartment" class="btn btn-primary">
+         </form>
      <c:choose>
                 <c:when test="${empty house.pipes}">
                    <h3>There are no Pipes is this house</h3>
                 </c:when>
                 <c:otherwise>
+           <h4>Pipes</h4>
                   <table class="table table-striped">
                        <tr>
                            <th>Number</th>

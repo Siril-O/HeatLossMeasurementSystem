@@ -12,6 +12,7 @@
             <tiles:getAsString name="title" />
         </title>
           <script src="<c:url value="/resources/js/jquery-1.10.2.js" />" ></script>
+          <script type="text/javascript" src="https://www.google.com/jsapi"></script>
             <script src="<c:url value="/resources/js/jquery-ui.js" />" ></script>
             <link href="<c:url value="/resources/css/style.css" />" rel="stylesheet">
             <link href="<c:url value="/resources/css/bootstrap.min.css" />" rel="stylesheet">

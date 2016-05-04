@@ -43,4 +43,9 @@ public class DefaultApartmentService implements ApartmentService {
     public void refresh(Apartment entity) {
         apartmentDao.refresh(entity);
     }
+
+    @Override
+    public List<Apartment> findApartmentsByNumber(Integer number) {
+        return apartmentDao.findApartmentsByNumber(number);
+    }
 }

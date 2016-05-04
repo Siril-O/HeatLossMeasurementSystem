@@ -23,6 +23,9 @@ public class House {
     @Enumerated(EnumType.STRING)
     private PipeSystem pipeSystem;
 
+    @OneToMany(mappedBy = "house", fetch = FetchType.EAGER)
+    private List<Apartment> apartments;
+
     @Embedded
     private Address address;
 
@@ -56,6 +59,14 @@ public class House {
 
     public void setPipeSystem(PipeSystem pipeSystem) {
         this.pipeSystem = pipeSystem;
+    }
+
+    public List<Apartment> getApartments() {
+        return apartments;
+    }
+
+    public void setApartments(List<Apartment> apartments) {
+        this.apartments = apartments;
     }
 
     @Override

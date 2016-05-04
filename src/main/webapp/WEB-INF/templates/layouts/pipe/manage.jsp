@@ -40,6 +40,12 @@
        </div>
 
        <div id="apartment-allocation" style="display:none;">
+            <h4>Add existing Apartment</h4>
+            <fieldset class="form-group">
+                    <label for="auto-complete-apartment">Apartment Number</label>
+                    <input type="text" name="existingApartment" class="form-control" id="auto-complete-apartment" placeholder="Enter number"/>
+                    <input type="hidden" name="existingApartmentId" id="auto-complete-apartment-hidden"/>
+                 </fieldset>
        <h4>Create Apartment</h4>
             <fieldset class="form-group">
                  <label for="city">Number</label>
@@ -95,6 +101,21 @@
 </form:form>
 
 <script>
+$(document).ready(function() {
+            var serverURL = '${pageContext.request.contextPath}/utils/appartment' + document.getElementById('auto-complete-apartment').value;
+         $('#auto-complete-apartment').autocomplete({
+             source: serverURL,
+             minLength: 1,
+             delay: 50,
+                     select: function( event, ui ) {
+                     document.getElementById('auto-complete-apartment').value = ui.item.label ;
+                     document.getElementById('auto-complete-apartment-hidden').value =  ui.item.value;
+                     return false;
+                     }
+         });
+  });
+</script>
+<script>
 var apartmentAllocation = document.getElementById("apartment-allocation");
 var sensorsForm = document.getElementById("sensors-form");
 var standartModuleType = document.getElementById("standart-module-type");
@@ -113,5 +134,5 @@ function sensorsAbsenceSelected(){
  sensorsForm.style.display="none";
  standartModuleType.checked  = false;
 };
-
 </script>
+

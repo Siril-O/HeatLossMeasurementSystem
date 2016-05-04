@@ -63,8 +63,27 @@ public class Pipe {
         return "Pipe{" +
                 "id=" + id +
                 ", ordinalNumber=" + ordinalNumber +
-                ", house=" + (house != null ? house.getId(): "") +
+                ", house=" + (house != null ? house.getId() : "") +
                 ", measurementSections=" + measurementSections +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Pipe)) return false;
+
+        Pipe pipe = (Pipe) o;
+
+        if (id != null ? !id.equals(pipe.id) : pipe.id != null) return false;
+        return ordinalNumber != null ? ordinalNumber.equals(pipe.ordinalNumber) : pipe.ordinalNumber == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (ordinalNumber != null ? ordinalNumber.hashCode() : 0);
+        return result;
     }
 }

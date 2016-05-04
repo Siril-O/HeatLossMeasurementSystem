@@ -32,8 +32,14 @@ public class Measurement {
     @JoinColumn(name = "SENSOR_ID")
     private Sensor sensor;
 
-    @Transient
-    public static final String TYPE = "Measurement";
+    public Measurement() {
+    }
+
+    public Measurement(Date timestamp, Double value, Sensor sensor) {
+        this.timestamp = timestamp;
+        this.value = value;
+        this.sensor = sensor;
+    }
 
     public Long getId() {
         return id;

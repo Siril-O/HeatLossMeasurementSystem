@@ -1,4 +1,4 @@
-package ua.heatloss.web.controller;
+package ua.heatloss.web.controller.dto;
 
 import ua.heatloss.domain.Pipe;
 import ua.heatloss.domain.sensors.model.FlowSensorModel;

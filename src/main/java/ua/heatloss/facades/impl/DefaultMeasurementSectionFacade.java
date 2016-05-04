@@ -2,10 +2,7 @@ package ua.heatloss.facades.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ua.heatloss.domain.Apartment;
-import ua.heatloss.domain.MeasurementModuleType;
-import ua.heatloss.domain.MeasurementSection;
-import ua.heatloss.domain.SectionType;
+import ua.heatloss.domain.*;
 import ua.heatloss.domain.sensors.Sensor;
 import ua.heatloss.domain.sensors.SensorType;
 import ua.heatloss.domain.sensors.model.FlowSensorModel;
@@ -13,6 +10,7 @@ import ua.heatloss.domain.sensors.model.TemperatureSensorModel;
 import ua.heatloss.facades.MeasurementSectionFacade;
 import ua.heatloss.services.ApartmentService;
 import ua.heatloss.services.MeasurementSectionService;
+import ua.heatloss.services.PipeService;
 import ua.heatloss.services.SensorService;
 
 import java.util.ArrayList;
@@ -33,20 +31,34 @@ public class DefaultMeasurementSectionFacade implements MeasurementSectionFacade
     @Autowired
     private SensorService sensorService;
 
+    @Autowired
+    private PipeService pipeService;
+
     @Override
     public void createMeasurementSection(MeasurementSection section, TemperatureSensorModel temperatureSensorModel,
-                                         FlowSensorModel flowSensorModel) {
+                                         FlowSensorModel flowSensorModel, Apartment newApartment) {
+        Pipe pipe = pipeService.findById(section.getPipe().getId());
+        pipeService.refresh(pipe);
+        section.setPipe(pipe);
 
         manageSectionOrdinalNumber(section);
         manageSensors(section, temperatureSensorModel, flowSensorModel);
-
         section.setSectionType(defineSectionType(section));
 
-        Apartment apartment = section.getApartment();
-        if (apartment != null) {
-            apartmentService.create(apartment);
-        }
+        saveApartment(section, newApartment);
         measurementSectionService.create(section);
+    }
+
+    private void saveApartment(MeasurementSection section, Apartment newApartment) {
+        if (newApartment != null) {
+            section.setApartment(newApartment);
+        } else {
+            Apartment apartment = section.getApartment();
+            if (apartment != null) {
+                apartment.setHouse(section.getPipe().getHouse());
+                apartmentService.create(apartment);
+            }
+        }
     }
 
     private void manageSensors(MeasurementSection section, TemperatureSensorModel temperatureSensorModel, FlowSensorModel flowSensorModel) {
@@ -89,11 +101,13 @@ public class DefaultMeasurementSectionFacade implements MeasurementSectionFacade
     private SectionType defineSectionType(MeasurementSection section) {
         Apartment apartment = section.getApartment();
         List<Sensor> sensors = section.getSensors();
-        if (apartment == null && (sensors == null || sensors.isEmpty())) {
+        boolean apartmentPresent = apartment != null && apartment.getNumber() != null;
+        boolean sensorsPresent = sensors != null && !sensors.isEmpty();
+        if (!apartmentPresent && !sensorsPresent) {
             return SectionType.NOT_APARTMENT_WITHOUT_SENSOR;
-        } else if (apartment == null && !(sensors == null || sensors.isEmpty())) {
+        } else if (!apartmentPresent && sensorsPresent) {
             return SectionType.NOT_APARTMENT_WITH_SENSOR;
-        } else if (apartment != null && !(sensors == null || sensors.isEmpty())) {
+        } else if (apartmentPresent && sensorsPresent) {
             return SectionType.APARTMENT_WITH_SENSOR;
         } else {
             return SectionType.APARTMENT_WITHOT_SENSOR;

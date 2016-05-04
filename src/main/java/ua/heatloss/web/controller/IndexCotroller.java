@@ -12,11 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class IndexCotroller {
 
-    private final static Logger LOG = LoggerFactory.getLogger(IndexCotroller.class);
-
     @RequestMapping(value = { "/" })
-    public String test(Model model){
-        LOG.debug("index method invoked");
+    public String index(Model model){
         model.addAttribute("date", new Date());
         return "index";
     }

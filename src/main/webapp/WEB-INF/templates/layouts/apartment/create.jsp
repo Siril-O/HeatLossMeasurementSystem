@@ -1,42 +1,26 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <h1>Register new House</h1>
-<form:form commandName="house" method="POST" action="./">
+<form:form commandName="apartment" method="POST" action="./">
 <fieldset>
-<legend>Address</legend>
-     <fieldset class="form-group">
-        <label for="w-country">Country</label>
-        <form:input path="address.country" type="text" class="form-control" id="w-country" placeholder="Enter country"/>
-        <input type="hidden" name="countryId" id="w-country-hidden"/>
-     </fieldset>
-     <fieldset class="form-group">
-          <label for="city">City</label>
-          <form:input path="address.city" type="text" class="form-control" id="city" placeholder="Enter city"/>
-     </fieldset>
-     <fieldset class="form-group">
-            <label for="street">Street</label>
-            <form:input path="address.street" type="text" class="form-control" id="street" placeholder="Enter street"/>
-     </fieldset>
-     <fieldset class="form-group">
-                     <label for="houseNumber">House Number</label>
-                     <form:input path="address.houseNumber" type="text" class="form-control" id="houseNumber" placeholder="Enter houseNumber"/>
+<legend>Create Apartment</legend>
+            <fieldset class="form-group">
+                 <label for="number">Number</label>
+                 <form:input path="number" type="text" class="form-control" id="number" placeholder="Enter number"/>
             </fieldset>
-     </fieldset>
-     <fieldset class="form-group">
-                 <label for="Pipe-system-type">Street</label>
-                 <form:input path="address.street" type="text" class="form-control" id="Pipe-system-type" placeholder="Enter street"/>
-     </fieldset>
-     <fieldset>
-     <legend>Pipe System type</legend>
-     <form:select path="pipeSystem" class="form-control">
-         <form:option value="" label="Select Pipe System Type" />
-         <form:options items="${pipeTypes}" />
-     </form:select>
-      <fieldset class="form-group">
-              <label for="Amount of pipes">Amount of pipes</label>
-              <input type="text" class="form-control" id="Pipe-system-type" placeholder="Enter Amount of pipes" name="amountOfPipes"/>
-          </fieldset>
-      </fieldset>
-<input type="submit" class="btn btn-primary" value="Create House"/>
-
+            <fieldset class="form-group">
+                 <label for="owner">Owner</label>
+                 <form:input path="owner" type="text" class="form-control" id="owner" placeholder="Enter owner"/>
+            </fieldset>
+            <fieldset class="form-group">
+                 <label for="rooms">Rooms Quantity</label>
+                 <form:input path="rooms" type="text" class="form-control" id="rooms" placeholder="Enter rooms"/>
+            </fieldset>
+            <fieldset class="form-group">
+                 <label for="floor">Floor</label>
+                 <form:input path="floor" type="text" class="form-control" id="floor" placeholder="Enter floor"/>
+            </fieldset>
+       </div>
+       <form:hidden path="house.id"/>
+<input type="submit" class="btn btn-primary" value="Add Apartment"/>
 </form:form>

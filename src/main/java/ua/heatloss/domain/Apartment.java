@@ -8,6 +8,9 @@ import java.util.List;
         {
                 @NamedQuery(name = "Apartment.find", query = "SELECT m FROM Apartment AS m"),
                 @NamedQuery(name = "Apartment.findTotalResultCount", query = "SELECT count(m.id) FROM Apartment AS m"),
+                @NamedQuery(name = "Apartment.findByNumberLike", query = "SELECT a FROM Apartment AS a WHERE a.number LIKE CONCAT('%', :value, '%')"),
+
+
         }
 )
 
@@ -20,6 +23,10 @@ public class Apartment {
 
     @OneToMany(mappedBy = "apartment", fetch = FetchType.LAZY)
     private List<MeasurementSection> measurementSections;
+
+    @ManyToOne
+    @JoinColumn(name = "HOUSE_ID")
+    private House house;
 
     private Integer number;
     private String owner;
@@ -73,6 +80,14 @@ public class Apartment {
 
     public void setFloor(Integer floor) {
         this.floor = floor;
+    }
+
+    public House getHouse() {
+        return house;
+    }
+
+    public void setHouse(House house) {
+        this.house = house;
     }
 
     @Override

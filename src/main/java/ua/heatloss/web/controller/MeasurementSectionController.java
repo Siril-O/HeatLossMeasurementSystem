@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import ua.heatloss.domain.Apartment;
 import ua.heatloss.domain.MeasurementSection;
 import ua.heatloss.domain.Pipe;
 import ua.heatloss.domain.sensors.model.FlowSensorModel;
@@ -28,9 +29,17 @@ public class MeasurementSectionController extends AbstractController {
     public String createMeasurementSection(MeasurementSection measurementSection,
                                            Model model, RedirectAttributes redirectAttributes,
                                            @RequestParam("temperatureSensorModelId") TemperatureSensorModel temperatureSensorModel,
-                                           @RequestParam("flowSensorModelId") FlowSensorModel flowSensorModel) {
-        measurementSectionFacade.createMeasurementSection(measurementSection, temperatureSensorModel, flowSensorModel);
+                                           @RequestParam("flowSensorModelId") FlowSensorModel flowSensorModel,
+                                           @RequestParam(value = "existingApartmentId", required = false) Apartment apartment) {
+        measurementSectionFacade.createMeasurementSection(measurementSection, temperatureSensorModel, flowSensorModel, apartment);
         return redirectToManagePipe(measurementSection.getPipe(), redirectAttributes);
+    }
+
+    @RequestMapping(method = {RequestMethod.POST, RequestMethod.GET}, value = SLASH + MANAGE)
+    public String manageMeasurementSection(@RequestParam("measurementSectionId") MeasurementSection measurementSection, Model model) {
+       measurementSectionService.refresh(measurementSection);
+        model.addAttribute("measurementSection", measurementSection);
+        return "measurementSection" + "." + MANAGE;
     }
 
     private String redirectToManagePipe(Pipe pipe, RedirectAttributes redirectAttributes) {

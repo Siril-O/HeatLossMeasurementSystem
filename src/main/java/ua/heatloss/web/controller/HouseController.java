@@ -21,7 +21,6 @@ import java.util.List;
 @RequestMapping("/house")
 public class HouseController extends AbstractController {
 
-    public static final String HOUSE = "house";
 
     @Autowired
     private HouseService houseService;
@@ -65,6 +64,7 @@ public class HouseController extends AbstractController {
 
     @RequestMapping(method = {RequestMethod.POST, RequestMethod.GET}, value = SLASH + MANAGE)
     public String manageHouse(@RequestParam("houseId") House house, Model model) {
+        houseService.refresh(house);
         model.addAttribute("house", house);
         return HOUSE + "." + MANAGE;
     }

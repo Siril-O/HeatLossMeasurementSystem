@@ -6,6 +6,7 @@ import ua.heatloss.dao.AbstractDao;
 import ua.heatloss.dao.ApartmentDao;
 import ua.heatloss.domain.Apartment;
 
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Repository
@@ -43,5 +44,14 @@ public class DefaultAppartmentDao extends AbstractDao<Apartment> implements Apar
     @Override
     public void refresh(Apartment entity) {
         em.refresh(entity);
+    }
+
+    @Override
+    public List<Apartment> findApartmentsByNumber(Integer number) {
+        TypedQuery<Apartment> query = em.createNamedQuery("Apartment.findByNumberLike", Apartment.class);
+        query.setFirstResult(checkStartPosition(null));
+        query.setMaxResults(checkMaxResults(null));
+        query.setParameter("value", number);
+        return query.getResultList();
     }
 }

@@ -15,6 +15,7 @@ import ua.heatloss.domain.MeasurementSection;
 import ua.heatloss.domain.Pipe;
 import ua.heatloss.services.HouseService;
 import ua.heatloss.services.PipeService;
+import ua.heatloss.web.controller.dto.MeasurementSectionContext;
 
 import java.util.Optional;
 
@@ -68,11 +69,6 @@ public class PipeController extends AbstractController {
         house.getPipes().add(pipe);
         houseService.update(house);
         return redirectToManageHouse(house, redirectAttributes);
-    }
-
-    private String redirectToManageHouse(House house, RedirectAttributes redirectAttributes) {
-        redirectAttributes.addAttribute("houseId", house.getId());
-        return REDIRECT + SLASH + "house" + SLASH + MANAGE;
     }
 
 }

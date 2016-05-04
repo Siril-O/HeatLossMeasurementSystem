@@ -1,19 +1,17 @@
 package ua.heatloss.web.utils;
 
+import org.hibernate.type.IntegerType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import ua.heatloss.domain.Apartment;
+import ua.heatloss.services.ApartmentService;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 @RequestMapping(value = "utils")
 @Controller
@@ -69,16 +67,34 @@ public class UtilController {
         }
     };
 
-    private static final Logger LOG = LoggerFactory.getLogger(UtilController.class);
+    @Autowired
+    private ApartmentService apartmentService;
 
     @RequestMapping(value = "/country", method = RequestMethod.GET, produces = "application/json")
     public
     @ResponseBody
     @ResponseStatus(value = HttpStatus.OK)
     List<Term> getCountryTerms(@RequestParam String term) {
-
         final List<Term> terms = buildResponse(term);
-        LOG.debug("Tags: " + terms);
+        return terms;
+    }
+
+    @RequestMapping(value = "/appartment", method = RequestMethod.GET, produces = "application/json")
+    public
+    @ResponseBody
+    @ResponseStatus(value = HttpStatus.OK)
+    List<Term> getApartmentNumbersTerms(@RequestParam Integer term) {
+
+        final List<Term> terms = convertToTerms(apartmentService.findApartmentsByNumber(term));
+        return terms;
+    }
+
+    private List<Term> convertToTerms(List<Apartment> apartments) {
+        List<Term> terms = new ArrayList<>();
+        for (Apartment apartment : apartments) {
+            Term term = new Term(apartment.getId().intValue(), apartment.getNumber().toString());
+            terms.add(term);
+        }
         return terms;
     }
 

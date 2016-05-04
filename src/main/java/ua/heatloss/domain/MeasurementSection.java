@@ -88,15 +88,18 @@ public class MeasurementSection {
     }
 
     private SectionType defineSectionType() {
-        if (apartment == null && (sensors == null || sensors.isEmpty())) {
+        boolean apartmentPresent = apartment != null && apartment.getNumber() != null;
+        boolean sensorsPresent = sensors != null && !sensors.isEmpty();
+        if (!apartmentPresent && !sensorsPresent) {
             return SectionType.NOT_APARTMENT_WITHOUT_SENSOR;
-        } else if (apartment == null && !(sensors == null || sensors.isEmpty())) {
+        } else if (!apartmentPresent && sensorsPresent) {
             return SectionType.NOT_APARTMENT_WITH_SENSOR;
-        } else if (apartment != null && !(sensors == null || sensors.isEmpty())) {
+        } else if (apartmentPresent && sensorsPresent) {
             return SectionType.APARTMENT_WITH_SENSOR;
         } else {
             return SectionType.APARTMENT_WITHOT_SENSOR;
         }
+
     }
 
     public MeasurementModuleType getModuleType() {

@@ -3,13 +3,14 @@ package ua.heatloss.web.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import ua.heatloss.domain.Apartment;
 import ua.heatloss.domain.House;
+import ua.heatloss.domain.MeasurementSection;
 import ua.heatloss.domain.Pipe;
+import ua.heatloss.domain.sensors.Sensor;
 import ua.heatloss.domain.sensors.model.SensorModel;
-import ua.heatloss.services.CrudService;
-import ua.heatloss.services.HouseService;
-import ua.heatloss.services.PipeService;
-import ua.heatloss.services.SensorModelService;
+import ua.heatloss.services.*;
 
 import java.beans.PropertyEditorSupport;
 
@@ -22,7 +23,7 @@ public class AbstractController {
     public static final String PAGED_LIST = ".paging.list";
     public static final String MANAGE = "manage";
     public static final String DOT = ".";
-
+    public static final String HOUSE = "house";
     @Autowired
     private PipeService pipeService;
 
@@ -31,6 +32,15 @@ public class AbstractController {
 
     @Autowired
     private SensorModelService sensorModelService;
+
+    @Autowired
+    private ApartmentService apartmentService;
+
+    @Autowired
+    private MeasurementSectionService measurementSectionService;
+
+    @Autowired
+    private SensorService sensorService;
 
     private static <T> T getEntityById(CrudService<T> service, Long id) {
         T entity = service.findById(id);
@@ -56,6 +66,21 @@ public class AbstractController {
     @InitBinder
     public void bindSensorModel(WebDataBinder binder) {
         binder.registerCustomEditor(SensorModel.class, new PropertyEditorSupportById<>(sensorModelService));
+    }
+
+    @InitBinder
+    public void bindApartment(WebDataBinder binder) {
+        binder.registerCustomEditor(Apartment.class, new PropertyEditorSupportById<>(apartmentService));
+    }
+
+    @InitBinder
+    public void bindMeasurementSection(WebDataBinder binder) {
+        binder.registerCustomEditor(MeasurementSection.class, new PropertyEditorSupportById<>(measurementSectionService));
+    }
+
+    @InitBinder
+    public void bindSensor(WebDataBinder binder) {
+        binder.registerCustomEditor(Sensor.class, new PropertyEditorSupportById<>(sensorService));
     }
 
     public static class PropertyEditorSupportById<T> extends PropertyEditorSupport {
@@ -85,4 +110,10 @@ public class AbstractController {
             this.crudService = crudService;
         }
     }
+
+    protected String redirectToManageHouse(House house, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addAttribute("houseId", house.getId());
+        return REDIRECT + SLASH + HOUSE + SLASH + MANAGE;
+    }
+
 }

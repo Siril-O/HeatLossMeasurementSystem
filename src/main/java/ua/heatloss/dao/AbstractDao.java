@@ -46,16 +46,19 @@ public abstract class AbstractDao<T> {
         return null;
     }
 
-    protected<H extends T> List<H> getList(Integer startPosition, Integer maxResults, String queryString, Class<H> type) {
+    protected <H extends T> List<H> getList(Integer startPosition, Integer maxResults, String queryString, Class<H> type) {
         TypedQuery<H> query = em.createNamedQuery(queryString, type);
         query.setFirstResult(checkStartPosition(startPosition));
         query.setMaxResults(checkMaxResults(maxResults));
         return query.getResultList();
     }
 
+
+
     protected Long getTotalResultCount(String queryString) {
         final Query queryTotal = em.createNamedQuery(queryString);
         return (long) queryTotal.getSingleResult();
     }
+
 
 }

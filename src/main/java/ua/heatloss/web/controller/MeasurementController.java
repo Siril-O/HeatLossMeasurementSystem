@@ -3,6 +3,7 @@ package ua.heatloss.web.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ua.heatloss.domain.Measurement;
 import ua.heatloss.domain.sensors.Sensor;
@@ -27,7 +28,7 @@ public class MeasurementController extends AbstractController {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
-    public void addMeasurement(@RequestParam("value") Double value, @RequestParam("sensorId") Sensor sensor) {
+    public void addMeasurement(@RequestParam("value") Double value, @RequestParam("sensorId") Sensor sensor, BindingResult result) {
         Measurement measurement = new Measurement(new Date(), value, sensor);
         measurementService.create(measurement);
     }
@@ -39,4 +40,4 @@ public class MeasurementController extends AbstractController {
         measurementFacade.saveMeasurementData(measurementData);
     }
 
-}
+ }

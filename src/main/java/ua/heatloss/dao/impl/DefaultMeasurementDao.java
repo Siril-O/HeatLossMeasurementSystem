@@ -4,12 +4,19 @@ import org.springframework.stereotype.Repository;
 import ua.heatloss.dao.AbstractDao;
 import ua.heatloss.dao.MeasurementDao;
 import ua.heatloss.domain.Measurement;
+import ua.heatloss.domain.MeasurementSection;
 
+import javax.persistence.TemporalType;
+import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Repository
 public class DefaultMeasurementDao extends AbstractDao<Measurement> implements MeasurementDao {
+
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Transactional
     @Override
@@ -43,6 +50,29 @@ public class DefaultMeasurementDao extends AbstractDao<Measurement> implements M
     @Override
     public void refresh(Measurement entity) {
         em.refresh(entity);
+    }
+
+    @Transactional
+    @Override
+    public void createButch(List<Measurement> measurements) {
+        int counter = 0;
+        for (Measurement measurement : measurements) {
+            em.persist(measurement);
+            counter++;
+            if (counter % 50 == 0) {
+                em.flush();
+                em.clear();
+            }
+        }
+    }
+
+    @Override
+    public List<Measurement> findInTimePeriodForMeasurementSection(MeasurementSection section, Date startDate, Date endDate) {
+        TypedQuery<Measurement> query = em.createNamedQuery("Measurement.findInTimePeriodForMeasurementSection", Measurement.class);
+        query.setParameter("sectionId",section.getId());
+        query.setParameter("startDate",startDate,TemporalType.TIMESTAMP);
+        query.setParameter("endDate",endDate, TemporalType.TIMESTAMP);
+        return query.getResultList();
     }
 }
 

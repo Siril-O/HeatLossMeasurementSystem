@@ -1,3 +1,5 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 		<div id="linechart_material"></div>
 
@@ -7,11 +9,11 @@
 
               function drawChart() {
             	  var data = new google.visualization.DataTable();
-            	  data.addColumn('string', 'Date');
-            	  data.addColumn('number', 'Power');
+            	  data.addColumn('string', 'Date(time)');
+            	  data.addColumn('number', 'Power(Wat)');
             	  data.addRows([
             	  <c:forEach items="${dataMap}" var="entry">
-            	  [ '${entry.key.date}', ${entry.value} ],
+            	  [ '<fmt:formatDate pattern="HH:mm" value="${entry.key}" />', ${entry.value} ],
             	  </c:forEach>
             	  ]);
 

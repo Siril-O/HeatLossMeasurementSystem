@@ -45,23 +45,6 @@
                     <label for="auto-complete-apartment">Apartment Number</label>
                     <input type="text" name="existingApartment" class="form-control" id="auto-complete-apartment" placeholder="Enter number"/>
                     <input type="hidden" name="existingApartmentId" id="auto-complete-apartment-hidden"/>
-                 </fieldset>
-       <h4>Create Apartment</h4>
-            <fieldset class="form-group">
-                 <label for="city">Number</label>
-                 <form:input path="apartment.number" type="text" class="form-control" id="number" placeholder="Enter number"/>
-            </fieldset>
-            <fieldset class="form-group">
-                 <label for="owner">Owner</label>
-                 <form:input path="apartment.owner" type="text" class="form-control" id="owner" placeholder="Enter owner"/>
-            </fieldset>
-            <fieldset class="form-group">
-                 <label for="rooms">Rooms Quantity</label>
-                 <form:input path="apartment.rooms" type="text" class="form-control" id="rooms" placeholder="Enter rooms"/>
-            </fieldset>
-            <fieldset class="form-group">
-                 <label for="floor">Floor</label>
-                 <form:input path="apartment.floor" type="text" class="form-control" id="floor" placeholder="Enter floor"/>
             </fieldset>
        </div>
 

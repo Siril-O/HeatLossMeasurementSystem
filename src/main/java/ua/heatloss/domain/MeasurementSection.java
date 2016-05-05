@@ -129,4 +129,25 @@ public class MeasurementSection {
         this.sectionType = sectionType;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MeasurementSection)) return false;
+
+        MeasurementSection section = (MeasurementSection) o;
+
+        if (id != null ? !id.equals(section.id) : section.id != null) return false;
+        if (ordinalNumber != null ? !ordinalNumber.equals(section.ordinalNumber) : section.ordinalNumber != null)
+            return false;
+        return pipe != null ? pipe.equals(section.pipe) : section.pipe == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (ordinalNumber != null ? ordinalNumber.hashCode() : 0);
+        result = 31 * result + (pipe != null ? pipe.hashCode() : 0);
+        return result;
+    }
 }

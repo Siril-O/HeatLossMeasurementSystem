@@ -1,5 +1,6 @@
 package ua.heatloss.domain;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import ua.heatloss.domain.sensors.Sensor;
 
@@ -10,6 +11,9 @@ import java.util.Date;
         {
                 @NamedQuery(name = "Measurement.find", query = "SELECT m FROM Measurement AS m"),
                 @NamedQuery(name = "Measurement.findTotalResultCount", query = "SELECT count(m.id) FROM Measurement AS m"),
+                @NamedQuery(name = "Measurement.findInTimePeriodForMeasurementSection",
+                        query = "SELECT m FROM Measurement AS m WHERE m.sensor.measurementSection.id =:sectionId AND m.timestamp between :startDate AND :endDate")
+
         }
 )
 

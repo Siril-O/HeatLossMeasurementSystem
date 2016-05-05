@@ -1,4 +1,4 @@
-package ua.heatloss.web.utils;
+package ua.heatloss.web.controller.infrastructure;
 
 import org.hibernate.type.IntegerType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ua.heatloss.domain.Apartment;
 import ua.heatloss.services.ApartmentService;
+import ua.heatloss.web.utils.Term;
 
 import java.util.ArrayList;
 import java.util.Arrays;

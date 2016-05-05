@@ -31,10 +31,11 @@ public class Sensor {
 
 
     @OneToMany(mappedBy = "sensor", fetch = FetchType.LAZY)
-    private List<Measurement> measurement;
+    private List<Measurement> measurements;
 
     private Integer ordinalNumber;
 
+    @Enumerated(value = EnumType.STRING)
     private SensorType sensorType;
 
     public Long getId() {
@@ -61,12 +62,12 @@ public class Sensor {
         this.sensorModel = sensorModel;
     }
 
-    public List<Measurement> getMeasurement() {
-        return measurement;
+    public List<Measurement> getMeasurements() {
+        return measurements;
     }
 
-    public void setMeasurement(List<Measurement> measurement) {
-        this.measurement = measurement;
+    public void setMeasurements(List<Measurement> measurements) {
+        this.measurements = measurements;
     }
 
     public SensorType getSensorType() {
@@ -91,7 +92,7 @@ public class Sensor {
                 "id=" + id +
                 ", sensorModel=" + sensorModel +
                 ", measurementSection=" + measurementSection +
-                ", measurement=" + measurement +
+                ", measurements=" + measurements +
                 ", ordinalNumber=" + ordinalNumber +
                 ", sensorType=" + sensorType +
                 '}';

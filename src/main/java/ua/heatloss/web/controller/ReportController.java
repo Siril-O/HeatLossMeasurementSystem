@@ -7,11 +7,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import ua.heatloss.domain.House;
 import ua.heatloss.domain.MeasurementSection;
 import ua.heatloss.facades.ReportsFacade;
+import ua.heatloss.services.HouseService;
+import ua.heatloss.web.utils.PagingUtils;
+import ua.heatloss.web.utils.PagingWraper;
 
-import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -20,6 +24,8 @@ public class ReportController extends AbstractController {
 
     @Autowired
     private ReportsFacade reportsFacade;
+    @Autowired
+    private HouseService houseService;
 
 
     @RequestMapping(method = {RequestMethod.POST, RequestMethod.GET})
@@ -27,17 +33,23 @@ public class ReportController extends AbstractController {
                                                                 @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date startDate,
                                                                 @RequestParam(value = "finishDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date endDate,
                                                                 Model model) {
-         Map<Date,Double> dataMap = reportsFacade.calculateDataForPowerReport(section, startDate, endDate);
-        model.addAttribute("dataMap",dataMap);
+        Map<Date, Double> dataMap = reportsFacade.calculateDataForPowerReport(section, startDate, endDate);
+        model.addAttribute("dataMap", dataMap);
         return "report.powerOfHeatConsumption";
     }
 
-    @RequestMapping(method = {RequestMethod.POST, RequestMethod.GET})
-    public String builReportForPowerOfHeatConsumptionForHouse(@RequestParam(value = "houseId", required = false) MeasurementSection section,
-                                                                @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date startDate,
-                                                                @RequestParam(value = "finishDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date endDate,
-                                                                Model model) {
-
-        return "powerConsumptionByHouses.jsp"
+    @RequestMapping(method = {RequestMethod.POST, RequestMethod.GET}, value = "/energy")
+    public String builReportForPowerOfHeatConsumptionForHouse(@RequestParam(value = "houseId", defaultValue = "1") House house,
+                                                              @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date startDate,
+                                                              @RequestParam(value = "finishDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date endDate,
+                                                              Model model, PagingWraper paging) {
+        Map<MeasurementSection, Double> dataMap = reportsFacade.
+                calculateEnergyConsumedInPeriodForHouseBySections(house, startDate, endDate);
+        model.addAttribute("dataMap", dataMap);
+        final List<House> houses = houseService.getList(paging.getOffset(), paging.getLimit());
+        Long total = houseService.getTotalResultCount();
+        PagingUtils.preparePaging(paging, total, model);
+        model.addAttribute("houses", houses);
+        return "report.paging.energyConsumptionOfHouseByPipes";
     }
 }

@@ -26,10 +26,17 @@ public class DefaultReportsFacade implements ReportsFacade {
     }
 
     @Override
-    public Map<Date, Double> calculateDataForSummaryHosePowerReport(House house, Date startDate, Date endDate) {
+    public Map<MeasurementSection, Double> calculateEnergyConsumedInPeriodForHouseBySections(House house, Date startDate, Date endDate) {
         DatePeriod period = new DatePeriod(startDate, endDate);
         period.checkDates();
-        return consumptionCalculationService.calculateDataForSummaryHosePowerReport(house, startDate, endDate);
+        Map<MeasurementSection, Double> result = consumptionCalculationService.calculateEnergyConsumedInPeriodForHouseBySections(house, period.startDate, period.endDate);
+
+        for (Map.Entry<MeasurementSection, Double> entry : result.entrySet()) {
+            if (entry.getValue().isNaN()) {
+                result.put(entry.getKey(), 0D);
+            }
+        }
+        return result;
     }
 
 

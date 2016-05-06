@@ -106,11 +106,11 @@ public class DefaultMeasurementSectionFacade implements MeasurementSectionFacade
         if (!apartmentPresent && !sensorsPresent) {
             return SectionType.NOT_APARTMENT_WITHOUT_SENSOR;
         } else if (!apartmentPresent && sensorsPresent) {
-            return SectionType.NOT_APARTMENT_WITH_SENSOR;
+            return SectionType.MAIN_PIPE_SENSOR;
         } else if (apartmentPresent && sensorsPresent) {
             return SectionType.APARTMENT_WITH_SENSOR;
         } else {
-            return SectionType.APARTMENT_WITHOT_SENSOR;
+            return SectionType.APARTMENT_WITHOUT_SENSOR;
         }
     }
 

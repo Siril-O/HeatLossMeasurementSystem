@@ -13,7 +13,11 @@ public interface HeatConsumptionCalculationService {
 
     Map<Date, Double> calculateSummaryHeatConsumptionPowerForMeasurementSection(MeasurementSection section, Date startDat, Date endDate);
 
-    Double calculateRadiatorHeatPowerLoss(MeasurementContext measurementContext);
+    double calculateRadiatorHeatPowerLoss(MeasurementContext measurementContext);
 
-    Map<Date, Double> calculateDataForSummaryHosePowerReport(House house, Date startDate, Date endDate);
+    double calculateEnergyConsumedInPeriodForHouse(House house, Date startDate, Date endDate);
+
+    Map<MeasurementSection, Double> calculateEnergyConsumedInPeriodForHouseBySections(House house, Date startDate, Date endDate);
+
+    double calculateEnergyConsumedInPeriodForMeasurementSection(MeasurementSection section, Date startDate, Date endDate);
 }

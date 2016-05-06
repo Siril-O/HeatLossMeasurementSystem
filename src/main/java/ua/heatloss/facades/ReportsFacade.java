@@ -10,6 +10,5 @@ import java.util.Map;
 public interface ReportsFacade {
     Map<Date, Double> calculateDataForPowerReport(MeasurementSection section, Date startDate, Date endDate);
 
-    Map<Date, Double> calculateDataForSummaryHosePowerReport(House house, Date startDate, Date endDate);
-
+    Map<MeasurementSection, Double> calculateEnergyConsumedInPeriodForHouseBySections(House house, Date startDate, Date endDate);
 }

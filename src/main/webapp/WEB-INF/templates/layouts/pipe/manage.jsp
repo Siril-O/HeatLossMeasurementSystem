@@ -36,7 +36,7 @@
        <div class="radio">
          <label><input type="radio" name="allocation" id="apartment-allocation-selected"  onclick="apartmentAllocationSelected()"/>Apartment Section</label>
          </br>
-         <label><input type="radio" name="allocation"  id="residential-allocation-selected" checked="checked" onclick="residentialAllocationSelected()"/>Residential Section</label>
+         <label><input type="radio" name="allocation"  id="residential-allocation-selected" checked="checked" onclick="residentialAllocationSelected()"/>Pipe main Section</label>
        </div>
 
        <div id="apartment-allocation" style="display:none;">

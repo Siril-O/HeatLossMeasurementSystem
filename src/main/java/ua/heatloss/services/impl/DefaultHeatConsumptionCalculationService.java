@@ -18,6 +18,7 @@ import java.util.*;
 public class DefaultHeatConsumptionCalculationService implements HeatConsumptionCalculationService {
 
     public static final Double SPECIFIC_HEAT_CAPACITY = 4.187;
+    public static final int MILLIS_IN_SECOND = 1000;
 
     @Autowired
     private MeasurementService measurementService;
@@ -31,28 +32,54 @@ public class DefaultHeatConsumptionCalculationService implements HeatConsumption
 
 
     @Override
-    public Double calculateRadiatorHeatPowerLoss(MeasurementContext measurementContext) {
-        Double flowMeasure = measurementContext.getFlow().getValue();
-        Double inputMeasure = measurementContext.getInput().getValue();
-        Double outputMeasure = measurementContext.getOutput().getValue();
+    public double calculateRadiatorHeatPowerLoss(MeasurementContext measurementContext) {
+        double flowMeasure = measurementContext.getFlow().getValue();
+        double inputMeasure = measurementContext.getInput().getValue();
+        double outputMeasure = measurementContext.getOutput().getValue();
 
         double loss = flowMeasure * SPECIFIC_HEAT_CAPACITY * (inputMeasure - outputMeasure);
         return loss;
     }
 
     @Override
-    public Map<Date, Double> calculateDataForSummaryHosePowerReport(House house, Date startDate, Date endDate) {
-        List<Map<Date, Double>> result = new ArrayList<>();
+    public double calculateEnergyConsumedInPeriodForHouse(House house, Date startDate, Date endDate) {
+        double result = 0;
         for (Pipe pipe : house.getPipes()) {
             for (MeasurementSection section : pipe.getMeasurementSections()) {
-                result.add(calculateDataPowerConsumptionForSection(section, startDate, endDate));
+                result += (calculateEnergyConsumedInPeriodForMeasurementSection(section, startDate, endDate));
             }
         }
-        return null;
+        return result;
     }
 
-    private Double calculateEnergyConsumedInPeriodForMeasuremetSection(MeasurementSection section, Date startDate, Date endDate) {
-        return 0D;
+    @Override
+    public Map<MeasurementSection, Double> calculateEnergyConsumedInPeriodForHouseBySections(House house, Date startDate, Date endDate) {
+
+        Map<MeasurementSection, Double> result = new LinkedHashMap<>();
+        for (Pipe pipe : house.getPipes()) {
+            for (MeasurementSection section : pipe.getMeasurementSections()) {
+                result.put(section,calculateEnergyConsumedInPeriodForMeasurementSection(section, startDate, endDate));
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public double calculateEnergyConsumedInPeriodForMeasurementSection(MeasurementSection section, Date startDate, Date endDate) {
+        Map<Date, Double> power = calculateDataPowerConsumptionForSection(section, startDate, endDate);
+        long timePeriod = (endDate.getTime() - startDate.getTime()) / MILLIS_IN_SECOND;
+        double average = calculateAveragePowerForSecton(power);
+        double energy = average * timePeriod /1000;
+        return energy;
+    }
+
+    private double calculateAveragePowerForSecton(Map<Date, Double> power) {
+        double summ = 0;
+        for (double p : power.values()) {
+            summ += p;
+        }
+        double average = summ / power.size();
+        return average;
     }
 
     private Map<Date, Double> calculateDataPowerConsumptionForSection(MeasurementSection section, Date startDate, Date endDate) {

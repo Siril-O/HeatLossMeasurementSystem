@@ -5,7 +5,6 @@
 <h1>All Houses</h1>
 <a href="./create" class="btn btn-primary">Register new House</a>
   <table class="table table-striped">
-      <thead>
   <tr>
       <th>Country</th>
       <th>City</th>
@@ -14,9 +13,6 @@
       <th>Pipe System</th>
       <th>Actions</th>
   </tr>
-      </thead>
-      <tbody>
-
     <c:forEach items="${houses}" var="house">
     <tr>
           <td>${house.address.country}</td>
@@ -32,7 +28,5 @@
           </td>
     </tr>
     </c:forEach>
-        </tbody>
-
   </table>
 </div>

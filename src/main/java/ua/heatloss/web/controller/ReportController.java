@@ -12,7 +12,7 @@ import ua.heatloss.domain.MeasurementSection;
 import ua.heatloss.facades.ReportsFacade;
 import ua.heatloss.services.HouseService;
 import ua.heatloss.web.utils.PagingUtils;
-import ua.heatloss.web.utils.PagingWraper;
+import ua.heatloss.web.utils.PagingWrapper;
 
 import java.util.Date;
 import java.util.List;
@@ -42,7 +42,7 @@ public class ReportController extends AbstractController {
     public String builReportForPowerOfHeatConsumptionForHouse(@RequestParam(value = "houseId", defaultValue = "1") House house,
                                                               @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date startDate,
                                                               @RequestParam(value = "finishDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date endDate,
-                                                              Model model, PagingWraper paging) {
+                                                              Model model, PagingWrapper paging) {
         Map<MeasurementSection, Double> dataMap = reportsFacade.
                 calculateEnergyConsumedInPeriodForHouseBySections(house, startDate, endDate);
         model.addAttribute("dataMap", dataMap);

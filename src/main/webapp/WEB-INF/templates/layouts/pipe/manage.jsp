@@ -17,7 +17,6 @@
                      <tr>
                         <td>Measurement Section # ${measurementSection.ordinalNumber}</td>
                          <td>${measurementSection.sectionType}</td>
-                         <td>${measurementSection.moduleType}</td>
                          <td>
                            <form method="POST" action="../measurementSection/manage">
                                    <input type="hidden" name="measurementSectionId" value="${measurementSection.id}">
@@ -56,13 +55,7 @@
        </div>
 
       <div id="sensors-form" style="display:none">
-             <h4>Choose Measurement Module</h4>
-               <div class="radio">
-                <form:radiobutton id="standart-module-type" path="moduleType" value="STANDART"/>Standart(2 Temperature sensors 1 Flow sensor)
-                </br>
-                <form:radiobutton path="moduleType" value="EXTENDED"/>Extended(4 Temperature sensors 1 Flow sensor)
-                </div>
-            <fieldset class="form-group">
+             <fieldset class="form-group">
                      <label for="temperatureSensorModel">Choose temperature Sensors Model</label>
                      <select class="form-control"  id="temperatureSensorModel" name="temperatureSensorModelId" >
                       <c:forEach items="${sectionContext.temperatureSensorModels}" var="temperatureSensorModel">
@@ -101,7 +94,6 @@ $(document).ready(function() {
 <script>
 var apartmentAllocation = document.getElementById("apartment-allocation");
 var sensorsForm = document.getElementById("sensors-form");
-var standartModuleType = document.getElementById("standart-module-type");
 function apartmentAllocationSelected(){
  apartmentAllocation.style.display="block";
 };
@@ -111,11 +103,9 @@ function residentialAllocationSelected(){
 
 function sensorsPresenceSelected(){
  sensorsForm.style.display="block";
-  standartModuleType.checked  = true;
 };
 function sensorsAbsenceSelected(){
  sensorsForm.style.display="none";
- standartModuleType.checked  = false;
 };
 </script>
 

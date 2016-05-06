@@ -1,9 +1,6 @@
 package ua.heatloss.facades;
 
-import ua.heatloss.domain.Apartment;
-import ua.heatloss.domain.House;
-import ua.heatloss.domain.MeasurementModuleType;
-import ua.heatloss.domain.Pipe;
+import ua.heatloss.domain.*;
 
 import java.util.Date;
 import java.util.List;
@@ -14,9 +11,9 @@ public interface DataGeneratingFacade {
     //frequency in seconds
     void generateMeasurementData(Date startDate, Date finishDate, long density, Object target);
 
-    void generateMeasurementDataForHouse(House house, double startTemperature, Date timestamp);
+    List<Measurement> generateMeasurementDataForHouse(House house, double startTemperature, Date timestamp);
 
-    void generateMeasurementDataForPipe(Pipe pipe, double startTemperature, Date timestamp);
+    List<Measurement> generateMeasurementDataForPipe(Pipe pipe, double startTemperature, Date timestamp);
 
     List<House> generateHouses(int quantity);
 

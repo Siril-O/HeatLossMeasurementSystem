@@ -5,11 +5,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import ua.heatloss.domain.MeasurementSection;
 import ua.heatloss.domain.sensors.model.FlowSensorModel;
 import ua.heatloss.domain.sensors.model.TemperatureSensorModel;
 import ua.heatloss.services.SensorModelService;
 import ua.heatloss.web.utils.PagingUtils;
-import ua.heatloss.web.utils.PagingWraper;
+import ua.heatloss.web.utils.PagingWrapper;
 
 import java.util.List;
 
@@ -47,7 +49,7 @@ public class SensorModelController extends AbstractController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = SLASH + LIST + FLOW)
-    public String getFlowSensorModels(PagingWraper paging, Model model) {
+    public String getFlowSensorModels(PagingWrapper paging, Model model) {
         final List<FlowSensorModel> flowSensorModels = sensorModelService.getFlowModelsList(paging.getOffset(), paging.getLimit());
         Long total = sensorModelService.getFlowModelsTotalCount();
         PagingUtils.preparePaging(paging, total, model);
@@ -56,7 +58,7 @@ public class SensorModelController extends AbstractController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = SLASH + LIST + TEMPERATURE)
-    public String getTemperatureSensorModels(PagingWraper paging, Model model) {
+    public String getTemperatureSensorModels(PagingWrapper paging, Model model) {
         final List<TemperatureSensorModel> temperatureSensorModels = sensorModelService.getTemperatureModelsList(paging.getOffset(), paging.getLimit());
         Long total = sensorModelService.getTemperatureModelsTotalCount();
         PagingUtils.preparePaging(paging, total, model);
@@ -64,5 +66,10 @@ public class SensorModelController extends AbstractController {
         return SENSOR_MODEL + PAGED_LIST + TEMPERATURE;
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = SLASH + LIST)
+    public String getAllHouses(@RequestParam("measurementSectionId") MeasurementSection section, Model model) {
+        model.addAttribute("measurementModule", section.getMeasurementModule());
+        return HOUSE + PAGED_LIST;
+    }
 
 }

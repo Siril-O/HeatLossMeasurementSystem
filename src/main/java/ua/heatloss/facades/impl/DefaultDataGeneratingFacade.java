@@ -3,7 +3,7 @@ package ua.heatloss.facades.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.heatloss.domain.*;
-import ua.heatloss.domain.sensors.Sensor;
+import ua.heatloss.domain.sensors.SensorType;
 import ua.heatloss.domain.sensors.model.FlowSensorModel;
 import ua.heatloss.domain.sensors.model.TemperatureSensorModel;
 import ua.heatloss.facades.DataGeneratingFacade;
@@ -40,8 +40,6 @@ public class DefaultDataGeneratingFacade implements DataGeneratingFacade {
 
     private static final Random RANDOM = new Random();
 
-    private List<Measurement> generatedMeasurements = new ArrayList<>();
-
     @Autowired
     private HouseService houseService;
     @Autowired
@@ -59,14 +57,15 @@ public class DefaultDataGeneratingFacade implements DataGeneratingFacade {
     @Override
     public void generateMeasurementData(Date startDate, Date finishDate, long density, Object target) {
         density *= 1000;
+        List<Measurement> measurements = new ArrayList<>();
         for (long i = startDate.getTime(); i < finishDate.getTime(); i += density) {
             if (target instanceof Pipe) {
-                generateMeasurementDataForPipe((Pipe) target, generateStartTemperature(), new Date(i));
+                measurements.addAll(generateMeasurementDataForPipe((Pipe) target, generateStartTemperature(), new Date(i)));
             } else if (target instanceof House) {
-                generateMeasurementDataForHouse((House) target, generateStartTemperature(), new Date(i));
+                measurements.addAll(generateMeasurementDataForHouse((House) target, generateStartTemperature(), new Date(i)));
             }
         }
-        measurementService.createButch(generatedMeasurements);
+        measurementService.createButch(measurements);
     }
 
 
@@ -75,41 +74,47 @@ public class DefaultDataGeneratingFacade implements DataGeneratingFacade {
     }
 
     @Override
-    public void generateMeasurementDataForHouse(House house, double startTemperature, Date timestamp) {
+    public List<Measurement> generateMeasurementDataForHouse(House house, double startTemperature, Date timestamp) {
+        List<Measurement> measurements = new ArrayList<>();
         for (Pipe pipe : house.getPipes()) {
-            generateMeasurementDataForPipe(pipe, startTemperature, timestamp);
+            measurements.addAll(generateMeasurementDataForPipe(pipe, startTemperature, timestamp));
         }
+        return measurements;
     }
 
     @Override
-    public void generateMeasurementDataForPipe(Pipe pipe, double startTemperature, Date timestamp) {
+    public List<Measurement> generateMeasurementDataForPipe(Pipe pipe, double startTemperature, Date timestamp) {
+        List<Measurement> measurements = new ArrayList<>();
         for (MeasurementSection section : pipe.getMeasurementSections()) {
-            startTemperature = generateMeasurementDataForSection(section, timestamp, startTemperature);
+            Measurement measurement = generateMeasurementDataForSection(section, timestamp, startTemperature);
+            measurements.add(measurement);
+            startTemperature = measurement.getOutputAdditionalValue();
         }
+        return measurements;
     }
 
-    private double generateMeasurementDataForSection(MeasurementSection section, Date timestamp, double startTemperature) {
-        for (Sensor sensor : section.getSensors()) {
-            Measurement measurement = generateMeasurement(timestamp, sensor, startTemperature);
-            startTemperature = measurement.getValue();
-            generatedMeasurements.add(measurement);
-        }
-        return startTemperature;
-    }
 
-    private Measurement generateMeasurement(Date timestamp, Sensor sensor, double startTemperature) {
+    private Measurement generateMeasurementDataForSection(MeasurementSection section, Date timestamp, double startTemperature) {
         Measurement measurement = new Measurement();
-        measurement.setSensor(sensor);
-        double generatedValue = generateRandomValueForSensor(sensor, startTemperature);
-        measurement.setValue(generatedValue);
+        double generatedValue = generateRandomValueForSensor(SensorType.ADDITIONAL_INPUT, startTemperature);
+        measurement.setInputAdditionalValue(generatedValue);
+        generatedValue = generateRandomValueForSensor(SensorType.INPUT, generatedValue);
+        measurement.setInputValue(generatedValue);
+        measurement.setFlowValue(generateRandomValueForFlowSensor());
+        generatedValue = generateRandomValueForSensor(SensorType.OUTPUT, generatedValue);
+        measurement.setOutputValue(generatedValue);
+        generatedValue = generateRandomValueForSensor(SensorType.ADDITIONAL_OUTPUT, generatedValue);
+        measurement.setOutputAdditionalValue(generatedValue);
+
+        measurement.setMeasurementSection(section);
         measurement.setTimestamp(timestamp);
         return measurement;
     }
 
-    private double generateRandomValueForSensor(Sensor sensor, double startTemperature) {
+    private double generateRandomValueForSensor(SensorType type, double startTemperature) {
         double minRange = 0;
         double maxRange = 0;
-        switch (sensor.getSensorType()) {
+        switch (type) {
             case ADDITIONAL_INPUT:
                 minRange = startTemperature - DEFAULT_LOSS_ON_OVERLAP - DELTA_LOSS_ON_OVERLAP;
                 maxRange = startTemperature - DEFAULT_LOSS_ON_OVERLAP + DELTA_LOSS_ON_OVERLAP;
@@ -117,10 +122,6 @@ public class DefaultDataGeneratingFacade implements DataGeneratingFacade {
             case INPUT:
                 minRange = startTemperature - DEFAULT_LOSS_ON_PIPE - DELTA_LOSS_ON_PIPE;
                 maxRange = startTemperature - DEFAULT_LOSS_ON_PIPE + DELTA_LOSS_ON_PIPE;
-                break;
-            case FLOW:
-                minRange = MIN_FLOW_RANGE;
-                maxRange = MAX_FLOW_RANGE;
                 break;
             case OUTPUT:
                 minRange = startTemperature - DEFAULT_LOSS_ON_RADIATOR - DELTA_LOSS_ON_RADIATOR;
@@ -133,6 +134,11 @@ public class DefaultDataGeneratingFacade implements DataGeneratingFacade {
         }
         return generateRandomValue(minRange, maxRange);
     }
+
+    private double generateRandomValueForFlowSensor() {
+        return generateRandomValue(MIN_FLOW_RANGE, MAX_FLOW_RANGE);
+    }
+
 
     private double generateRandomValue(double rangeMin, double rangeMax) {
         double randomValue = rangeMin + (rangeMax - rangeMin) * RANDOM.nextDouble();
@@ -198,18 +204,15 @@ public class DefaultDataGeneratingFacade implements DataGeneratingFacade {
                                                                  FlowSensorModel flowSensorModel, List<Apartment> apartments) {
         List<MeasurementSection> measurementSections = new ArrayList<>();
         for (Apartment apartment : apartments) {
-            MeasurementSection section = generateMeasurementSection(pipe, measurementModuleType,
-                    temperatureSensorModel, flowSensorModel, apartment);
+            MeasurementSection section = generateMeasurementSection(pipe, temperatureSensorModel, flowSensorModel, apartment);
             measurementSections.add(section);
         }
         return measurementSections;
     }
 
-    private MeasurementSection generateMeasurementSection(Pipe pipe, MeasurementModuleType measurementModuleType,
-                                                          TemperatureSensorModel temperatureSensorModel,
+    private MeasurementSection generateMeasurementSection(Pipe pipe, TemperatureSensorModel temperatureSensorModel,
                                                           FlowSensorModel flowSensorModel, Apartment apartment) {
         MeasurementSection section = new MeasurementSection();
-        section.setModuleType(measurementModuleType);
         section.setApartment(apartment);
         section.setPipe(pipe);
         measurementSectionFacade.createMeasurementSection(section, temperatureSensorModel, flowSensorModel, null);

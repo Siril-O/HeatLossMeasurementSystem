@@ -8,7 +8,6 @@ import ua.heatloss.domain.Apartment;
 import ua.heatloss.domain.House;
 import ua.heatloss.domain.MeasurementSection;
 import ua.heatloss.domain.Pipe;
-import ua.heatloss.domain.sensors.Sensor;
 import ua.heatloss.domain.sensors.model.SensorModel;
 import ua.heatloss.services.*;
 
@@ -39,8 +38,6 @@ public class AbstractController {
     @Autowired
     private MeasurementSectionService measurementSectionService;
 
-    @Autowired
-    private SensorService sensorService;
 
     private static <T> T getEntityById(CrudService<T> service, Long id) {
         T entity = service.findById(id);
@@ -76,11 +73,6 @@ public class AbstractController {
     @InitBinder
     public void bindMeasurementSection(WebDataBinder binder) {
         binder.registerCustomEditor(MeasurementSection.class, new PropertyEditorSupportById<>(measurementSectionService));
-    }
-
-    @InitBinder
-    public void bindSensor(WebDataBinder binder) {
-        binder.registerCustomEditor(Sensor.class, new PropertyEditorSupportById<>(sensorService));
     }
 
     public static class PropertyEditorSupportById<T> extends PropertyEditorSupport {

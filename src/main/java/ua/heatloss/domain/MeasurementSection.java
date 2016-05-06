@@ -1,7 +1,5 @@
 package ua.heatloss.domain;
 
-import ua.heatloss.domain.sensors.Sensor;
-
 import javax.persistence.*;
 import java.util.List;
 
@@ -27,18 +25,18 @@ public class MeasurementSection {
     @JoinColumn(name = "PIPE_ID")
     private Pipe pipe;
 
-    @OneToMany(mappedBy = "measurementSection", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
-    private List<Sensor> sensors;
+    @Embedded
+    private MeasurementModule measurementModule;
 
     @ManyToOne
     @JoinColumn(name = "APARTMENT_ID")
     private Apartment apartment;
 
-    @Transient
-    private SectionType sectionType;
+    @OneToMany(mappedBy = "measurementSection", fetch = FetchType.LAZY)
+    private List<Measurement> measurements;
 
     @Transient
-    private MeasurementModuleType moduleType;
+    private SectionType sectionType;
 
     public Long getId() {
         return id;
@@ -64,12 +62,20 @@ public class MeasurementSection {
         this.pipe = pipe;
     }
 
-    public List<Sensor> getSensors() {
-        return sensors;
+    public MeasurementModule getMeasurementModule() {
+        return measurementModule;
     }
 
-    public void setSensors(List<Sensor> sensors) {
-        this.sensors = sensors;
+    public void setMeasurementModule(MeasurementModule measurementModule) {
+        this.measurementModule = measurementModule;
+    }
+
+    public List<Measurement> getMeasurements() {
+        return measurements;
+    }
+
+    public void setMeasurements(List<Measurement> measurements) {
+        this.measurements = measurements;
     }
 
     public Apartment getApartment() {
@@ -89,40 +95,15 @@ public class MeasurementSection {
 
     private SectionType defineSectionType() {
         boolean apartmentPresent = apartment != null && apartment.getNumber() != null;
-        boolean sensorsPresent = sensors != null && !sensors.isEmpty();
-        if (!apartmentPresent && !sensorsPresent) {
-            return SectionType.NOT_APARTMENT_WITHOUT_SENSOR;
-        } else if (!apartmentPresent && sensorsPresent) {
+        boolean measurementModulePresent = measurementModule != null && measurementModule.getFlow() != null;
+        if (!apartmentPresent && measurementModulePresent) {
             return SectionType.MAIN_PIPE_SENSOR;
-        } else if (apartmentPresent && sensorsPresent) {
+        } else if (apartmentPresent && measurementModulePresent) {
             return SectionType.APARTMENT_WITH_SENSOR;
         } else {
             return SectionType.APARTMENT_WITHOUT_SENSOR;
         }
 
-    }
-
-    public MeasurementModuleType getModuleType() {
-        if (moduleType == null) {
-            moduleType = defineModuleType();
-        }
-        return moduleType;
-    }
-
-    private MeasurementModuleType defineModuleType() {
-        if (sensors != null && !sensors.isEmpty()) {
-            if (MeasurementModuleType.STANDART.getSensorsQuantity() == sensors.size()) {
-                return MeasurementModuleType.STANDART;
-            } else {
-                return MeasurementModuleType.EXTENDED;
-            }
-        } else {
-            return null;
-        }
-    }
-
-    public void setModuleType(MeasurementModuleType moduleType) {
-        this.moduleType = moduleType;
     }
 
     public void setSectionType(SectionType sectionType) {

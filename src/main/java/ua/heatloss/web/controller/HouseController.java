@@ -13,7 +13,7 @@ import ua.heatloss.domain.PipeSystem;
 import ua.heatloss.facades.HouseFacade;
 import ua.heatloss.services.HouseService;
 import ua.heatloss.web.utils.PagingUtils;
-import ua.heatloss.web.utils.PagingWraper;
+import ua.heatloss.web.utils.PagingWrapper;
 
 import java.util.List;
 
@@ -52,8 +52,7 @@ public class HouseController extends AbstractController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = SLASH + LIST)
-    public String getAllHouses(PagingWraper paging,
-                               Model model) {
+    public String getAllHouses(PagingWrapper paging, Model model) {
         final List<House> houses = houseService.getList(paging.getOffset(), paging.getLimit());
         Long total = houseService.getTotalResultCount();
         PagingUtils.preparePaging(paging, total, model);

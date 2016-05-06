@@ -1,9 +1,6 @@
 package ua.heatloss.domain.sensors.model;
 
-import ua.heatloss.domain.sensors.Sensor;
-
 import javax.persistence.*;
-import java.util.List;
 
 @NamedQueries({
         @NamedQuery(name = "SensorModel.find", query = "SELECT sm FROM SensorModel AS sm "),
@@ -24,23 +21,12 @@ public abstract class SensorModel {
 
     private String maker;
 
-    @OneToMany(mappedBy = "sensorModel", fetch = FetchType.LAZY)
-    private List<Sensor> sensors;
-
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public List<Sensor> getSensors() {
-        return sensors;
-    }
-
-    public void setSensors(List<Sensor> sensors) {
-        this.sensors = sensors;
     }
 
     public String getName() {

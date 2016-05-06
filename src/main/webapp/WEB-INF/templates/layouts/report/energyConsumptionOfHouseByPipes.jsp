@@ -37,7 +37,7 @@
               function drawChart() {
             	  var data = new google.visualization.DataTable();
             	  data.addColumn('string', 'Date(time)');
-            	  data.addColumn('number', 'Power(Wat)');
+            	  data.addColumn('number', 'Consumed Energy(KJoule)');
             	  data.addRows([
             	  <c:forEach items="${dataMap}" var="entry">
             	  [ '${entry.key.pipe.id}:#${entry.key.ordinalNumber}', ${entry.value} ],

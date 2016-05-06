@@ -7,10 +7,8 @@ import ua.heatloss.domain.House;
 import ua.heatloss.domain.Measurement;
 import ua.heatloss.domain.MeasurementSection;
 import ua.heatloss.domain.Pipe;
-import ua.heatloss.domain.sensors.Sensor;
 import ua.heatloss.services.HeatConsumptionCalculationService;
 import ua.heatloss.services.MeasurementService;
-import ua.heatloss.services.helper.MeasurementContext;
 
 import java.util.*;
 
@@ -26,16 +24,15 @@ public class DefaultHeatConsumptionCalculationService implements HeatConsumption
     @Override
     public Map<Date, Double> calculateSummaryHeatConsumptionPowerForMeasurementSection(MeasurementSection section,
                                                                                        Date startDate, Date endDate) {
-
         return calculateDataPowerConsumptionForSection(section, startDate, endDate);
     }
 
 
     @Override
-    public double calculateRadiatorHeatPowerLoss(MeasurementContext measurementContext) {
-        double flowMeasure = measurementContext.getFlow().getValue();
-        double inputMeasure = measurementContext.getInput().getValue();
-        double outputMeasure = measurementContext.getOutput().getValue();
+    public double calculateRadiatorHeatPowerLoss(Measurement measurement) {
+        double flowMeasure = measurement.getFlowValue();
+        double inputMeasure = measurement.getInputValue();
+        double outputMeasure = measurement.getOutputValue();
 
         double loss = flowMeasure * SPECIFIC_HEAT_CAPACITY * (inputMeasure - outputMeasure);
         return loss;
@@ -58,7 +55,7 @@ public class DefaultHeatConsumptionCalculationService implements HeatConsumption
         Map<MeasurementSection, Double> result = new LinkedHashMap<>();
         for (Pipe pipe : house.getPipes()) {
             for (MeasurementSection section : pipe.getMeasurementSections()) {
-                result.put(section,calculateEnergyConsumedInPeriodForMeasurementSection(section, startDate, endDate));
+                result.put(section, calculateEnergyConsumedInPeriodForMeasurementSection(section, startDate, endDate));
             }
         }
         return result;
@@ -68,12 +65,12 @@ public class DefaultHeatConsumptionCalculationService implements HeatConsumption
     public double calculateEnergyConsumedInPeriodForMeasurementSection(MeasurementSection section, Date startDate, Date endDate) {
         Map<Date, Double> power = calculateDataPowerConsumptionForSection(section, startDate, endDate);
         long timePeriod = (endDate.getTime() - startDate.getTime()) / MILLIS_IN_SECOND;
-        double average = calculateAveragePowerForSecton(power);
-        double energy = average * timePeriod /1000;
+        double average = calculateAveragePowerForSection(power);
+        double energy = average * timePeriod / 1000;
         return energy;
     }
 
-    private double calculateAveragePowerForSecton(Map<Date, Double> power) {
+    private double calculateAveragePowerForSection(Map<Date, Double> power) {
         double summ = 0;
         for (double p : power.values()) {
             summ += p;
@@ -85,45 +82,19 @@ public class DefaultHeatConsumptionCalculationService implements HeatConsumption
     private Map<Date, Double> calculateDataPowerConsumptionForSection(MeasurementSection section, Date startDate, Date endDate) {
         List<Measurement> measurements = measurementService.findInTimePeriodForMeasurementSection(section, startDate, endDate);
 
-        Map<Date, MeasurementContext> measurementContexts = createContextsForMeasurementSection(measurements);
+        Map<Date, Measurement> measurementContexts = groupMeasurementsByDate(measurements);
         Map<Date, Double> result = new LinkedHashMap<>();
-        for (Map.Entry<Date, MeasurementContext> entry : measurementContexts.entrySet()) {
+        for (Map.Entry<Date, Measurement> entry : measurementContexts.entrySet()) {
             result.put(entry.getKey(), calculateRadiatorHeatPowerLoss(entry.getValue()));
         }
         return result;
     }
 
 
-    private Map<Date, MeasurementContext> createContextsForMeasurementSection(MeasurementSection section) {
-        List<Measurement> measurements = new ArrayList<>();
-        for (Sensor sensor : section.getSensors()) {
-            measurements.addAll(sensor.getMeasurements());
-        }
-        return createContextsForMeasurementSection(measurements);
-    }
-
-    private Map<Date, MeasurementContext> createContextsForMeasurementSection(List<Measurement> measurements) {
-        Map<Date, List<Measurement>> measurementsByDate = groupMeasurementsByDate(measurements);
-        Map<Date, MeasurementContext> contextsByDate = new HashMap<>();
-        for (Map.Entry<Date, List<Measurement>> entry : measurementsByDate.entrySet()) {
-            MeasurementContext context = new MeasurementContext(entry.getValue());
-            contextsByDate.put(entry.getKey(), context);
-        }
-        return contextsByDate;
-    }
-
-    private Map<Date, List<Measurement>> groupMeasurementsByDate(List<Measurement> measurements) {
-        Map<Date, List<Measurement>> measurementsByDate = new HashMap<>();
+    private Map<Date, Measurement> groupMeasurementsByDate(List<Measurement> measurements) {
+        Map<Date, Measurement> measurementsByDate = new HashMap<>();
         for (Measurement measurement : measurements) {
-            Date timestamp = measurement.getTimestamp();
-            List<Measurement> mForDate = measurementsByDate.get(timestamp);
-            if (mForDate == null) {
-                mForDate = new ArrayList<>();
-                mForDate.add(measurement);
-                measurementsByDate.put(timestamp, mForDate);
-            } else {
-                mForDate.add(measurement);
-            }
+            measurementsByDate.put(measurement.getTimestamp(), measurement);
         }
         return measurementsByDate;
     }

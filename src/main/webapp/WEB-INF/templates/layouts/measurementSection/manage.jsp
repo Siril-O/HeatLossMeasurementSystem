@@ -22,22 +22,31 @@
         <td>SectionType</td>
         <td>${measurementSection.sectionType}</td>
     </tr>
-    <tr>
-        <td>ModuleType</td>
-        <td>${measurementSection.moduleType}</td>
-    </tr>
 </table>
 <table class="table table-striped">
+    <c:set var="module" value="${measurementSection.measurementModule}"/>
     <tr>
     <th>SensorModel</th>
-    <th>OrdinalNumber</th>
     <th>SensorType</th>
     </tr>
-    <c:forEach items="${measurementSection.sensors}" var="sensor">
     <tr>
-        <td>${sensor.sensorModel.name}</td>
-        <td>${sensor.ordinalNumber}</td>
-        <td>${sensor.sensorType}</td>
+        <td>${module.inputAdditional.name} ${module.inputAdditional.maker}</td>
+        <td>Input Additional</td>
     </tr>
-    </c:forEach>
+    <tr>
+        <td>${module.input.name} ${module.input.maker}</td>
+        <td>Input</td>
+    </tr>
+    <tr>
+        <td>${module.flow.name} ${module.flow.maker}</td>
+        <td>Flow</td>
+    </tr>
+    <tr>
+        <td>${module.output.name} ${module.output.maker}</td>
+        <td>Output</td>
+    </tr>
+    <tr>
+        <td>${module.outputAdditional.name} ${module.outputAdditional.maker}</td>
+        <td>Output Additional</td>
+    </tr>
 </table>

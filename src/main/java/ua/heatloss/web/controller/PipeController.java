@@ -7,12 +7,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import ua.heatloss.dao.MeasurementSectionDao;
+import ua.heatloss.dao.MeasurementModuleDao;
 import ua.heatloss.dao.SensorModelDao;
 import ua.heatloss.domain.Apartment;
 import ua.heatloss.domain.House;
-import ua.heatloss.domain.MeasurementSection;
+import ua.heatloss.domain.MeasurementModuleType;
+import ua.heatloss.domain.modules.AbstractMeasurementModule;
 import ua.heatloss.domain.Pipe;
+import ua.heatloss.domain.modules.ApartmentMeasurementModule;
+import ua.heatloss.domain.modules.MeasurementModule;
 import ua.heatloss.services.HouseService;
 import ua.heatloss.services.PipeService;
 import ua.heatloss.web.controller.dto.MeasurementSectionContext;
@@ -32,25 +35,28 @@ public class PipeController extends AbstractController {
     private HouseService houseService;
 
     @Autowired
-    private MeasurementSectionDao measurementSectionDao;
+    private MeasurementModuleDao measurementModuleDao;
 
     @Autowired
     private SensorModelDao sensorModelDao;
 
+    //TODO
     @RequestMapping(method = {RequestMethod.POST, RequestMethod.GET}, value = SLASH + MANAGE)
     public String managePipe(@RequestParam("pipeId") Pipe pipe, Model model) {
         MeasurementSectionContext measurementSectionContext = new MeasurementSectionContext();
         pipeService.refresh(pipe);
 
-        MeasurementSection section = new MeasurementSection();
-        section.setPipe(pipe);
-        Apartment apartment = new Apartment();
-        section.setApartment(apartment);
-
+        MeasurementModule module = new MeasurementModule();
+        ApartmentMeasurementModule apmodule = new ApartmentMeasurementModule();
+        module.setPipe(pipe);
+        apmodule.setPipe(pipe);
         measurementSectionContext.setPipe(pipe);
+
         measurementSectionContext.setFlowSensorModels(sensorModelDao.getFlowModelsList(0, 20));
         measurementSectionContext.setTemperatureSensorModels(sensorModelDao.getTemperatureModelsList(0, 20));
-        model.addAttribute("measurementSection", section);
+        model.addAttribute("moduleTypes", MeasurementModuleType.values());
+        model.addAttribute("measurementModule", module);
+        model.addAttribute("apartmentMeasurementModule", module);
         model.addAttribute("sectionContext", measurementSectionContext);
         return PIPE + DOT + MANAGE;
     }

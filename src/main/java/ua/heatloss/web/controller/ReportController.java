@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import ua.heatloss.domain.House;
-import ua.heatloss.domain.MeasurementSection;
+import ua.heatloss.domain.modules.AbstractMeasurementModule;
 import ua.heatloss.facades.ReportsFacade;
 import ua.heatloss.services.HouseService;
 import ua.heatloss.web.utils.PagingUtils;
@@ -29,7 +29,7 @@ public class ReportController extends AbstractController {
 
 
     @RequestMapping(method = {RequestMethod.POST, RequestMethod.GET})
-    public String builReportForPowerOfHeatConsumptionForSection(@RequestParam(value = "sectionId", defaultValue = "1") MeasurementSection section,
+    public String builReportForPowerOfHeatConsumptionForSection(@RequestParam(value = "sectionId", defaultValue = "1") AbstractMeasurementModule section,
                                                                 @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date startDate,
                                                                 @RequestParam(value = "finishDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date endDate,
                                                                 Model model) {
@@ -43,7 +43,7 @@ public class ReportController extends AbstractController {
                                                               @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date startDate,
                                                               @RequestParam(value = "finishDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date endDate,
                                                               Model model, PagingWrapper paging) {
-        Map<MeasurementSection, Double> dataMap = reportsFacade.
+        Map<AbstractMeasurementModule, Double> dataMap = reportsFacade.
                 calculateEnergyConsumedInPeriodForHouseBySections(house, startDate, endDate);
         model.addAttribute("dataMap", dataMap);
         final List<House> houses = houseService.getList(paging.getOffset(), paging.getLimit());

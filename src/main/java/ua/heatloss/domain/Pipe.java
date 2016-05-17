@@ -1,5 +1,7 @@
 package ua.heatloss.domain;
 
+import ua.heatloss.domain.modules.AbstractMeasurementModule;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -24,7 +26,7 @@ public class Pipe {
     private House house;
 
     @OneToMany(mappedBy = "pipe", fetch = FetchType.LAZY)
-    private List<MeasurementSection> measurementSections;
+    private List<AbstractMeasurementModule> measurementModules;
 
     public Long getId() {
         return id;
@@ -50,12 +52,12 @@ public class Pipe {
         this.ordinalNumber = ordinalNumber;
     }
 
-    public List<MeasurementSection> getMeasurementSections() {
-        return measurementSections;
+    public List<AbstractMeasurementModule> getMeasurementModules() {
+        return measurementModules;
     }
 
-    public void setMeasurementSections(List<MeasurementSection> measurementSections) {
-        this.measurementSections = measurementSections;
+    public void setMeasurementModules(List<AbstractMeasurementModule> measurementModules) {
+        this.measurementModules = measurementModules;
     }
 
     @Override
@@ -64,7 +66,7 @@ public class Pipe {
                 "id=" + id +
                 ", ordinalNumber=" + ordinalNumber +
                 ", house=" + (house != null ? house.getId() : "") +
-                ", measurementSections=" + measurementSections +
+                ", measurementModules=" + measurementModules +
                 '}';
     }
 

@@ -4,7 +4,7 @@ import org.springframework.stereotype.Repository;
 import ua.heatloss.dao.AbstractDao;
 import ua.heatloss.dao.MeasurementDao;
 import ua.heatloss.domain.Measurement;
-import ua.heatloss.domain.MeasurementSection;
+import ua.heatloss.domain.modules.AbstractMeasurementModule;
 
 import javax.persistence.TemporalType;
 import javax.persistence.TypedQuery;
@@ -67,7 +67,7 @@ public class DefaultMeasurementDao extends AbstractDao<Measurement> implements M
     }
 
     @Override
-    public List<Measurement> findInTimePeriodForMeasurementSection(MeasurementSection section, Date startDate, Date endDate) {
+    public List<Measurement> findInTimePeriodForMeasurementSection(AbstractMeasurementModule section, Date startDate, Date endDate) {
         TypedQuery<Measurement> query = em.createNamedQuery("Measurement.findInTimePeriodForMeasurementSection", Measurement.class);
         query.setParameter("sectionId",section.getId());
         query.setParameter("startDate",startDate,TemporalType.TIMESTAMP);

@@ -1,25 +1,27 @@
 package ua.heatloss.facades.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import ua.heatloss.domain.Apartment;
-import ua.heatloss.domain.MeasurementModule;
-import ua.heatloss.domain.MeasurementSection;
 import ua.heatloss.domain.Pipe;
+import ua.heatloss.domain.modules.AbstractMeasurementModule;
+import ua.heatloss.domain.modules.ApartmentMeasurementModule;
+import ua.heatloss.domain.modules.MeasurementsGroup;
 import ua.heatloss.domain.sensors.model.FlowSensorModel;
 import ua.heatloss.domain.sensors.model.TemperatureSensorModel;
 import ua.heatloss.facades.MeasurementSectionFacade;
 import ua.heatloss.services.ApartmentService;
-import ua.heatloss.services.MeasurementSectionService;
+import ua.heatloss.services.MeasurementModuleService;
 import ua.heatloss.services.PipeService;
 
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Component
 public class DefaultMeasurementSectionFacade implements MeasurementSectionFacade {
 
     @Autowired
-    private MeasurementSectionService measurementSectionService;
+    private MeasurementModuleService measurementModuleService;
 
     @Autowired
     private ApartmentService apartmentService;
@@ -28,48 +30,60 @@ public class DefaultMeasurementSectionFacade implements MeasurementSectionFacade
     private PipeService pipeService;
 
     @Override
-    public void createMeasurementSection(MeasurementSection section, TemperatureSensorModel temperatureSensorModel,
-                                         FlowSensorModel flowSensorModel, Apartment newApartment) {
-        Pipe pipe = pipeService.findById(section.getPipe().getId());
+    public void createMeasurementModule(AbstractMeasurementModule module, TemperatureSensorModel temperatureSensorModel,
+                                        FlowSensorModel flowSensorModel) {
+        Pipe pipe = pipeService.findById(module.getPipe().getId());
         pipeService.refresh(pipe);
-        section.setPipe(pipe);
+        module.setPipe(pipe);
 
-        manageSectionOrdinalNumber(section);
+        manageSectionOrdinalNumber(module);
         if (temperatureSensorModel != null && flowSensorModel != null) {
-            section.setMeasurementModule(createMeasurementModule(temperatureSensorModel, flowSensorModel));
+            module.setMeasurementsGroup(createMeasurementModule(temperatureSensorModel, flowSensorModel));
         }
-        saveApartment(section, newApartment);
-        measurementSectionService.create(section);
+        measurementModuleService.create(module);
     }
 
-    private void saveApartment(MeasurementSection section, Apartment newApartment) {
+    @Override
+    public void createApartmentMeasurementModule(ApartmentMeasurementModule module, TemperatureSensorModel temperatureSensorModel, FlowSensorModel flowSensorModel, Apartment newApartment) {
+        Pipe pipe = pipeService.findById(module.getPipe().getId());
+        pipeService.refresh(pipe);
+        module.setPipe(pipe);
+
+        manageSectionOrdinalNumber(module);
+        if (temperatureSensorModel != null && flowSensorModel != null) {
+            module.setMeasurementsGroup(createMeasurementModule(temperatureSensorModel, flowSensorModel));
+        }
+        saveApartment(module, newApartment);
+        measurementModuleService.create(module);
+    }
+
+
+    private void saveApartment(ApartmentMeasurementModule module, Apartment newApartment) {
         if (newApartment != null) {
-            section.setApartment(newApartment);
+            module.setApartment(newApartment);
         } else {
-            Apartment apartment = section.getApartment();
+            Apartment apartment = module.getApartment();
             if (apartment != null) {
-                apartment.setHouse(section.getPipe().getHouse());
+                apartment.setHouse(module.getPipe().getHouse());
                 apartmentService.create(apartment);
             }
         }
     }
 
-    private MeasurementModule createMeasurementModule(TemperatureSensorModel temperatureSensorModel, FlowSensorModel flowSensorModel) {
-        MeasurementModule module = new MeasurementModule();
-        module.setInputAdditional(temperatureSensorModel);
+    private MeasurementsGroup createMeasurementModule(TemperatureSensorModel temperatureSensorModel, FlowSensorModel flowSensorModel) {
+        MeasurementsGroup module = new MeasurementsGroup();
         module.setInput(temperatureSensorModel);
         module.setFlow(flowSensorModel);
         module.setOutput(temperatureSensorModel);
-        module.setOutputAdditional(temperatureSensorModel);
         return module;
     }
 
-    private void manageSectionOrdinalNumber(MeasurementSection section) {
-        List<MeasurementSection> measurementSections = section.getPipe().getMeasurementSections();
-        if (measurementSections == null || measurementSections.isEmpty()) {
-            section.setOrdinalNumber(1);
+    private void manageSectionOrdinalNumber(AbstractMeasurementModule module) {
+        List<AbstractMeasurementModule> measurementModules = module.getPipe().getMeasurementModules();
+        if (measurementModules == null || measurementModules.isEmpty()) {
+            module.setOrdinalNumber(1);
         } else {
-            section.setOrdinalNumber(measurementSections.size() + 1);
+            module.setOrdinalNumber(measurementModules.size() + 1);
         }
     }
 

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.heatloss.dao.MeasurementDao;
 import ua.heatloss.domain.Measurement;
-import ua.heatloss.domain.MeasurementSection;
+import ua.heatloss.domain.modules.AbstractMeasurementModule;
 import ua.heatloss.services.MeasurementService;
 
 import java.util.Date;
@@ -53,7 +53,7 @@ public class DefaultMeasurementService implements MeasurementService {
     }
 
     @Override
-    public List<Measurement> findInTimePeriodForMeasurementSection(MeasurementSection section, Date startDate, Date endDate) {
+    public List<Measurement> findInTimePeriodForMeasurementSection(AbstractMeasurementModule section, Date startDate, Date endDate) {
         return measurementDao.findInTimePeriodForMeasurementSection(section, startDate, endDate);
     }
 }

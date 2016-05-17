@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.heatloss.domain.House;
 import ua.heatloss.domain.Measurement;
-import ua.heatloss.domain.MeasurementSection;
+import ua.heatloss.domain.modules.AbstractMeasurementModule;
 import ua.heatloss.domain.Pipe;
 import ua.heatloss.services.HeatConsumptionCalculationService;
 import ua.heatloss.services.MeasurementService;
@@ -22,7 +22,7 @@ public class DefaultHeatConsumptionCalculationService implements HeatConsumption
     private MeasurementService measurementService;
 
     @Override
-    public Map<Date, Double> calculateSummaryHeatConsumptionPowerForMeasurementSection(MeasurementSection section,
+    public Map<Date, Double> calculateSummaryHeatConsumptionPowerForMeasurementSection(AbstractMeasurementModule section,
                                                                                        Date startDate, Date endDate) {
         return calculateDataPowerConsumptionForSection(section, startDate, endDate);
     }
@@ -42,7 +42,7 @@ public class DefaultHeatConsumptionCalculationService implements HeatConsumption
     public double calculateEnergyConsumedInPeriodForHouse(House house, Date startDate, Date endDate) {
         double result = 0;
         for (Pipe pipe : house.getPipes()) {
-            for (MeasurementSection section : pipe.getMeasurementSections()) {
+            for (AbstractMeasurementModule section : pipe.getMeasurementModules()) {
                 result += (calculateEnergyConsumedInPeriodForMeasurementSection(section, startDate, endDate));
             }
         }
@@ -50,11 +50,11 @@ public class DefaultHeatConsumptionCalculationService implements HeatConsumption
     }
 
     @Override
-    public Map<MeasurementSection, Double> calculateEnergyConsumedInPeriodForHouseBySections(House house, Date startDate, Date endDate) {
+    public Map<AbstractMeasurementModule, Double> calculateEnergyConsumedInPeriodForHouseBySections(House house, Date startDate, Date endDate) {
 
-        Map<MeasurementSection, Double> result = new LinkedHashMap<>();
+        Map<AbstractMeasurementModule, Double> result = new LinkedHashMap<>();
         for (Pipe pipe : house.getPipes()) {
-            for (MeasurementSection section : pipe.getMeasurementSections()) {
+            for (AbstractMeasurementModule section : pipe.getMeasurementModules()) {
                 result.put(section, calculateEnergyConsumedInPeriodForMeasurementSection(section, startDate, endDate));
             }
         }
@@ -62,7 +62,7 @@ public class DefaultHeatConsumptionCalculationService implements HeatConsumption
     }
 
     @Override
-    public double calculateEnergyConsumedInPeriodForMeasurementSection(MeasurementSection section, Date startDate, Date endDate) {
+    public double calculateEnergyConsumedInPeriodForMeasurementSection(AbstractMeasurementModule section, Date startDate, Date endDate) {
         Map<Date, Double> power = calculateDataPowerConsumptionForSection(section, startDate, endDate);
         long timePeriod = (endDate.getTime() - startDate.getTime()) / MILLIS_IN_SECOND;
         double average = calculateAveragePowerForSection(power);
@@ -79,7 +79,7 @@ public class DefaultHeatConsumptionCalculationService implements HeatConsumption
         return average;
     }
 
-    private Map<Date, Double> calculateDataPowerConsumptionForSection(MeasurementSection section, Date startDate, Date endDate) {
+    private Map<Date, Double> calculateDataPowerConsumptionForSection(AbstractMeasurementModule section, Date startDate, Date endDate) {
         List<Measurement> measurements = measurementService.findInTimePeriodForMeasurementSection(section, startDate, endDate);
 
         Map<Date, Measurement> measurementContexts = groupMeasurementsByDate(measurements);

@@ -2,35 +2,35 @@ package ua.heatloss.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.heatloss.dao.MeasurementSectionDao;
-import ua.heatloss.domain.MeasurementSection;
-import ua.heatloss.services.MeasurementSectionService;
+import ua.heatloss.dao.MeasurementModuleDao;
+import ua.heatloss.domain.modules.AbstractMeasurementModule;
+import ua.heatloss.services.MeasurementModuleService;
 
 import java.util.List;
 
 @Service
-public class DefaultMeasurementSectionService implements MeasurementSectionService {
+public class DefaultMeasurementModuleService implements MeasurementModuleService {
 
     @Autowired
-    private MeasurementSectionDao measurementModuleDao;
+    private MeasurementModuleDao measurementModuleDao;
 
     @Override
-    public void create(MeasurementSection entity) {
+    public void create(AbstractMeasurementModule entity) {
         measurementModuleDao.create(entity);
     }
 
     @Override
-    public void update(MeasurementSection entity) {
+    public void update(AbstractMeasurementModule entity) {
         measurementModuleDao.update(entity);
     }
 
     @Override
-    public MeasurementSection findById(Long id) {
+    public AbstractMeasurementModule findById(Long id) {
         return measurementModuleDao.findById(id);
     }
 
     @Override
-    public List<MeasurementSection> getList(Integer startPosition, Integer maxResults) {
+    public List<AbstractMeasurementModule> getList(Integer startPosition, Integer maxResults) {
         return measurementModuleDao.getList(startPosition, maxResults);
     }
 
@@ -40,7 +40,7 @@ public class DefaultMeasurementSectionService implements MeasurementSectionServi
     }
 
     @Override
-    public void refresh(MeasurementSection entity) {
+    public void refresh(AbstractMeasurementModule entity) {
         measurementModuleDao.refresh(entity);
     }
 }

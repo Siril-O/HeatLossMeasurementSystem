@@ -23,9 +23,9 @@ public class DataGeneratorController extends AbstractController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public String generateDataModel(@RequestParam("houseId") House house) {
-
-        dataGeneratingFacade.generateMeasurementModules(house, MeasurementModuleType.EXTENDED);
+    public String generateDataModel(@RequestParam("houseId") House house, @RequestParam("type") MeasurementModuleType type) {
+    //TODO
+        dataGeneratingFacade.generateMeasurementModules(house, type);
         return "Successfully generated";
     }
 

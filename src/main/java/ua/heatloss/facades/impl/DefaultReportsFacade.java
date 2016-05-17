@@ -3,7 +3,7 @@ package ua.heatloss.facades.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import ua.heatloss.domain.House;
-import ua.heatloss.domain.MeasurementSection;
+import ua.heatloss.domain.modules.AbstractMeasurementModule;
 import ua.heatloss.facades.ReportsFacade;
 import ua.heatloss.services.HeatConsumptionCalculationService;
 
@@ -19,19 +19,19 @@ public class DefaultReportsFacade implements ReportsFacade {
     private HeatConsumptionCalculationService consumptionCalculationService;
 
     @Override
-    public Map<Date, Double> calculateDataForPowerReport(MeasurementSection section, Date startDate, Date endDate) {
+    public Map<Date, Double> calculateDataForPowerReport(AbstractMeasurementModule section, Date startDate, Date endDate) {
         DatePeriod period = new DatePeriod(startDate, endDate);
         period.checkDates();
         return consumptionCalculationService.calculateSummaryHeatConsumptionPowerForMeasurementSection(section, period.startDate, period.endDate);
     }
 
     @Override
-    public Map<MeasurementSection, Double> calculateEnergyConsumedInPeriodForHouseBySections(House house, Date startDate, Date endDate) {
+    public Map<AbstractMeasurementModule, Double> calculateEnergyConsumedInPeriodForHouseBySections(House house, Date startDate, Date endDate) {
         DatePeriod period = new DatePeriod(startDate, endDate);
         period.checkDates();
-        Map<MeasurementSection, Double> result = consumptionCalculationService.calculateEnergyConsumedInPeriodForHouseBySections(house, period.startDate, period.endDate);
+        Map<AbstractMeasurementModule, Double> result = consumptionCalculationService.calculateEnergyConsumedInPeriodForHouseBySections(house, period.startDate, period.endDate);
 
-        for (Map.Entry<MeasurementSection, Double> entry : result.entrySet()) {
+        for (Map.Entry<AbstractMeasurementModule, Double> entry : result.entrySet()) {
             if (entry.getValue().isNaN()) {
                 result.put(entry.getKey(), 0D);
             }

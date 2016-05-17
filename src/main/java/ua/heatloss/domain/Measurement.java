@@ -1,5 +1,7 @@
 package ua.heatloss.domain;
 
+import ua.heatloss.domain.modules.AbstractMeasurementModule;
+
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -10,7 +12,7 @@ import java.util.Date;
                 @NamedQuery(name = "Measurement.find", query = "SELECT m FROM Measurement AS m"),
                 @NamedQuery(name = "Measurement.findTotalResultCount", query = "SELECT count(m.id) FROM Measurement AS m"),
                 @NamedQuery(name = "Measurement.findInTimePeriodForMeasurementSection",
-                        query = "SELECT m FROM Measurement AS m WHERE m.measurementSection.id =:sectionId AND m.timestamp between :startDate AND :endDate")
+                        query = "SELECT m FROM Measurement AS m WHERE m.measurementModule.id =:sectionId AND m.timestamp between :startDate AND :endDate")
 
         }
 )
@@ -27,26 +29,22 @@ public class Measurement {
     @Column(name = "TIME")
     private Date timestamp;
 
-    private Double inputAdditionalValue;
     private Double inputValue;
     private Double flowValue;
     private Double outputValue;
-    private Double outputAdditionalValue;
 
     @ManyToOne
-    @JoinColumn(name = "MEASUREMENT_SECTION_ID")
-    private MeasurementSection measurementSection;
+    @JoinColumn(name = "MEASUREMENT_MODULE_ID")
+    private AbstractMeasurementModule measurementModule;
 
     public Measurement() {
     }
 
-    public Measurement(Date timestamp, Double inputAdditionalValue, Double inputValue, Double flowValue, Double outputValue, Double outputAdditionalValue) {
+    public Measurement(Date timestamp, Double inputValue, Double flowValue, Double outputValue) {
         this.timestamp = timestamp;
-        this.inputAdditionalValue = inputAdditionalValue;
         this.inputValue = inputValue;
         this.flowValue = flowValue;
         this.outputValue = outputValue;
-        this.outputAdditionalValue = outputAdditionalValue;
     }
 
     public Long getId() {
@@ -63,14 +61,6 @@ public class Measurement {
 
     public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
-    }
-
-    public Double getInputAdditionalValue() {
-        return inputAdditionalValue;
-    }
-
-    public void setInputAdditionalValue(Double inputAdditionalValue) {
-        this.inputAdditionalValue = inputAdditionalValue;
     }
 
     public Double getInputValue() {
@@ -97,19 +87,11 @@ public class Measurement {
         this.outputValue = outputValue;
     }
 
-    public Double getOutputAdditionalValue() {
-        return outputAdditionalValue;
+    public AbstractMeasurementModule getMeasurementModule() {
+        return measurementModule;
     }
 
-    public void setOutputAdditionalValue(Double outputAdditionalValue) {
-        this.outputAdditionalValue = outputAdditionalValue;
-    }
-
-    public MeasurementSection getMeasurementSection() {
-        return measurementSection;
-    }
-
-    public void setMeasurementSection(MeasurementSection measurementSection) {
-        this.measurementSection = measurementSection;
+    public void setMeasurementModule(AbstractMeasurementModule measurementModule) {
+        this.measurementModule = measurementModule;
     }
 }

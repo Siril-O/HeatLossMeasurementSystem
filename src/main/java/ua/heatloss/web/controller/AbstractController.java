@@ -1,17 +1,23 @@
 package ua.heatloss.web.controller;
 
+import ua.heatloss.domain.Apartment;
+import ua.heatloss.domain.House;
+import ua.heatloss.domain.Pipe;
+import ua.heatloss.domain.modules.MeasurementModule;
+import ua.heatloss.domain.sensors.model.SensorModel;
+import ua.heatloss.services.ApartmentService;
+import ua.heatloss.services.CrudService;
+import ua.heatloss.services.HouseService;
+import ua.heatloss.services.MeasurementModuleService;
+import ua.heatloss.services.PipeService;
+import ua.heatloss.services.SensorModelService;
+
+import java.beans.PropertyEditorSupport;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import ua.heatloss.domain.Apartment;
-import ua.heatloss.domain.House;
-import ua.heatloss.domain.MeasurementSection;
-import ua.heatloss.domain.Pipe;
-import ua.heatloss.domain.sensors.model.SensorModel;
-import ua.heatloss.services.*;
-
-import java.beans.PropertyEditorSupport;
 
 public class AbstractController {
 
@@ -36,7 +42,7 @@ public class AbstractController {
     private ApartmentService apartmentService;
 
     @Autowired
-    private MeasurementSectionService measurementSectionService;
+    private MeasurementModuleService measurementModuleService;
 
 
     private static <T> T getEntityById(CrudService<T> service, Long id) {
@@ -71,8 +77,8 @@ public class AbstractController {
     }
 
     @InitBinder
-    public void bindMeasurementSection(WebDataBinder binder) {
-        binder.registerCustomEditor(MeasurementSection.class, new PropertyEditorSupportById<>(measurementSectionService));
+    public void bindMeasurementModule(WebDataBinder binder) {
+        binder.registerCustomEditor(MeasurementModule.class, new PropertyEditorSupportById<>(measurementModuleService));
     }
 
     public static class PropertyEditorSupportById<T> extends PropertyEditorSupport {

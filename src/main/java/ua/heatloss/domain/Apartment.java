@@ -1,6 +1,8 @@
 package ua.heatloss.domain;
 
 
+import ua.heatloss.domain.modules.ApartmentMeasurementModule;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -22,7 +24,7 @@ public class Apartment {
     private Long id;
 
     @OneToMany(mappedBy = "apartment", fetch = FetchType.LAZY)
-    private List<MeasurementSection> measurementSections;
+    private List<ApartmentMeasurementModule> measurementModules;
 
     @ManyToOne
     @JoinColumn(name = "HOUSE_ID")
@@ -42,12 +44,12 @@ public class Apartment {
         this.id = id;
     }
 
-    public List<MeasurementSection> getMeasurementSections() {
-        return measurementSections;
+    public List<ApartmentMeasurementModule> getMeasurementModules() {
+        return measurementModules;
     }
 
-    public void setMeasurementSections(List<MeasurementSection> measurementSections) {
-        this.measurementSections = measurementSections;
+    public void setMeasurementModules(List<ApartmentMeasurementModule> measurementModules) {
+        this.measurementModules = measurementModules;
     }
 
     public String getOwner() {
@@ -98,7 +100,7 @@ public class Apartment {
                 ", owner='" + owner + '\'' +
                 ", rooms=" + rooms +
                 ", floor=" + floor +
-                ", measurementSections=" + measurementSections +
+                ", measurementModules=" + measurementModules +
                 '}';
     }
 }

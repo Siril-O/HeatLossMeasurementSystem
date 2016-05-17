@@ -6,7 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import ua.heatloss.domain.MeasurementSection;
+
+import ua.heatloss.domain.modules.AbstractMeasurementModule;
 import ua.heatloss.domain.sensors.model.FlowSensorModel;
 import ua.heatloss.domain.sensors.model.TemperatureSensorModel;
 import ua.heatloss.services.SensorModelService;
@@ -67,8 +68,8 @@ public class SensorModelController extends AbstractController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = SLASH + LIST)
-    public String getAllHouses(@RequestParam("measurementSectionId") MeasurementSection section, Model model) {
-        model.addAttribute("measurementModule", section.getMeasurementModule());
+    public String getAllHouses(@RequestParam("measurementSectionId") AbstractMeasurementModule section, Model model) {
+        model.addAttribute("measurementModule", section.getMeasurementsGroup());
         return HOUSE + PAGED_LIST;
     }
 

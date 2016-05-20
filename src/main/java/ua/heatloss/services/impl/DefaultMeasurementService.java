@@ -53,7 +53,7 @@ public class DefaultMeasurementService implements MeasurementService {
     }
 
     @Override
-    public List<Measurement> findInTimePeriodForMeasurementSection(AbstractMeasurementModule section, Date startDate, Date endDate) {
+    public List<Measurement> findInTimePeriodForMeasurementModule(AbstractMeasurementModule section, Date startDate, Date endDate) {
         return measurementDao.findInTimePeriodForMeasurementSection(section, startDate, endDate);
     }
 }

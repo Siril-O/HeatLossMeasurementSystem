@@ -11,5 +11,5 @@ public interface MeasurementService extends CrudService<Measurement>{
 
     void createButch(List<Measurement> measurements);
 
-    List<Measurement> findInTimePeriodForMeasurementSection(AbstractMeasurementModule section, Date startDate, Date endDate);
+    List<Measurement> findInTimePeriodForMeasurementModule(AbstractMeasurementModule module, Date startDate, Date endDate);
 }

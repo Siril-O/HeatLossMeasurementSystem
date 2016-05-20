@@ -11,7 +11,7 @@ import java.util.Date;
         {
                 @NamedQuery(name = "Measurement.find", query = "SELECT m FROM Measurement AS m"),
                 @NamedQuery(name = "Measurement.findTotalResultCount", query = "SELECT count(m.id) FROM Measurement AS m"),
-                @NamedQuery(name = "Measurement.findInTimePeriodForMeasurementSection",
+                @NamedQuery(name = "Measurement.findInTimePeriodForMeasurementModule",
                         query = "SELECT m FROM Measurement AS m WHERE m.measurementModule.id =:sectionId AND m.timestamp between :startDate AND :endDate")
 
         }

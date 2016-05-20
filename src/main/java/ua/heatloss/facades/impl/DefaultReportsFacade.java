@@ -1,7 +1,5 @@
 package ua.heatloss.facades.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import ua.heatloss.domain.House;
 import ua.heatloss.domain.modules.AbstractMeasurementModule;
 import ua.heatloss.facades.ReportsFacade;
@@ -10,6 +8,9 @@ import ua.heatloss.services.HeatConsumptionCalculationService;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
 @Controller
 public class DefaultReportsFacade implements ReportsFacade {
@@ -22,14 +23,14 @@ public class DefaultReportsFacade implements ReportsFacade {
     public Map<Date, Double> calculateDataForPowerReport(AbstractMeasurementModule section, Date startDate, Date endDate) {
         DatePeriod period = new DatePeriod(startDate, endDate);
         period.checkDates();
-        return consumptionCalculationService.calculateSummaryHeatConsumptionPowerForMeasurementSection(section, period.startDate, period.endDate);
+        return consumptionCalculationService.calculateModulePowerConsumptionForTimePeriod(section, period.startDate, period.endDate);
     }
 
     @Override
     public Map<AbstractMeasurementModule, Double> calculateEnergyConsumedInPeriodForHouseBySections(House house, Date startDate, Date endDate) {
         DatePeriod period = new DatePeriod(startDate, endDate);
         period.checkDates();
-        Map<AbstractMeasurementModule, Double> result = consumptionCalculationService.calculateEnergyConsumedInPeriodForHouseBySections(house, period.startDate, period.endDate);
+        Map<AbstractMeasurementModule, Double> result = consumptionCalculationService.calculateConsumedEnergyByHouseByModules(house, period.startDate, period.endDate);
 
         for (Map.Entry<AbstractMeasurementModule, Double> entry : result.entrySet()) {
             if (entry.getValue().isNaN()) {

@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import ua.heatloss.domain.Measurement;
@@ -22,6 +23,13 @@ public class MeasurementController extends AbstractController {
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
     public void addMeasurementForModule(Measurement measurement) {
+        measurementService.create(measurement);
+    }
+
+    @RequestMapping(value="/form",  method = RequestMethod.POST)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addMeasurementForModuleUsingFormRequest(@RequestParam Measurement measurement) {
         measurementService.create(measurement);
     }
 

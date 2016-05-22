@@ -9,13 +9,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ua.heatloss.dao.MeasurementModuleDao;
 import ua.heatloss.dao.SensorModelDao;
-import ua.heatloss.domain.Apartment;
 import ua.heatloss.domain.House;
 import ua.heatloss.domain.MeasurementModuleType;
-import ua.heatloss.domain.modules.AbstractMeasurementModule;
 import ua.heatloss.domain.Pipe;
 import ua.heatloss.domain.modules.ApartmentMeasurementModule;
-import ua.heatloss.domain.modules.MeasurementModule;
+import ua.heatloss.domain.modules.MainMeasurementModule;
+import ua.heatloss.domain.modules.PipeMeasurementModule;
 import ua.heatloss.services.HouseService;
 import ua.heatloss.services.PipeService;
 import ua.heatloss.web.controller.dto.MeasurementSectionContext;
@@ -40,13 +39,12 @@ public class PipeController extends AbstractController {
     @Autowired
     private SensorModelDao sensorModelDao;
 
-    //TODO
     @RequestMapping(method = {RequestMethod.POST, RequestMethod.GET}, value = SLASH + MANAGE)
     public String managePipe(@RequestParam("pipeId") Pipe pipe, Model model) {
         MeasurementSectionContext measurementSectionContext = new MeasurementSectionContext();
         pipeService.refresh(pipe);
 
-        MeasurementModule module = new MeasurementModule();
+        PipeMeasurementModule module = new PipeMeasurementModule();
         ApartmentMeasurementModule apmodule = new ApartmentMeasurementModule();
         module.setPipe(pipe);
         apmodule.setPipe(pipe);

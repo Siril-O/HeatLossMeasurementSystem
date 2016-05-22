@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import ua.heatloss.domain.House;
-import ua.heatloss.domain.MeasurementModuleType;
 import ua.heatloss.facades.DataGeneratingFacade;
 import ua.heatloss.web.controller.AbstractController;
 
@@ -23,19 +22,18 @@ public class DataGeneratorController extends AbstractController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public String generateDataModel(@RequestParam("houseId") House house, @RequestParam("type") MeasurementModuleType type) {
-    //TODO
-        dataGeneratingFacade.generateMeasurementModules(house, type);
+    public String generateDataModel(@RequestParam("houseId") House house) {
+        dataGeneratingFacade.generateMeasurementModules(house);
         return "Successfully generated";
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "measurements")
+    @RequestMapping(method = RequestMethod.POST, value = "/measurements")
     @ResponseBody
     public String generateMeauseremtsDataForHouse(@RequestParam("houseId") House house,
-                                                  @RequestParam("startDate")@DateTimeFormat(pattern="MM-dd-yyyy") Date startDate,
-                                                  @RequestParam("finishDate")@DateTimeFormat(pattern="MM-dd-yyyy") Date finishDate) {
-        int density = 60*15;
-        dataGeneratingFacade.generateMeasurementData(startDate, finishDate, density, house);
+                                                  @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date startDate,
+                                                  @RequestParam(value = "finishDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date finishDate) {
+        int density = 60 * 15;
+        dataGeneratingFacade.generateHouseMeasurementData(startDate, finishDate, density, house, true);
         return "Successfully generated";
     }
 }

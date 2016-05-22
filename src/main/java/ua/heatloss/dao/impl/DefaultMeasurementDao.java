@@ -67,9 +67,9 @@ public class DefaultMeasurementDao extends AbstractDao<Measurement> implements M
     }
 
     @Override
-    public List<Measurement> findInTimePeriodForMeasurementSection(AbstractMeasurementModule section, Date startDate, Date endDate) {
+    public List<Measurement> findInTimePeriodForMeasurementSection(AbstractMeasurementModule module, Date startDate, Date endDate) {
         TypedQuery<Measurement> query = em.createNamedQuery("Measurement.findInTimePeriodForMeasurementModule", Measurement.class);
-        query.setParameter("sectionId",section.getId());
+        query.setParameter("moduleId", module.getId());
         query.setParameter("startDate",startDate,TemporalType.TIMESTAMP);
         query.setParameter("endDate",endDate, TemporalType.TIMESTAMP);
         return query.getResultList();

@@ -1,6 +1,8 @@
 package ua.heatloss.services.impl;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ua.heatloss.domain.House;
 import ua.heatloss.domain.Measurement;
 import ua.heatloss.domain.Pipe;
@@ -9,14 +11,7 @@ import ua.heatloss.services.HeatConsumptionCalculationService;
 import ua.heatloss.services.MeasurementService;
 import ua.heatloss.services.helper.PowerToEnergyCalculator;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import java.util.*;
 
 @Component
 public class DefaultHeatConsumptionCalculationService implements HeatConsumptionCalculationService {
@@ -37,6 +32,16 @@ public class DefaultHeatConsumptionCalculationService implements HeatConsumption
         return calculateModulePowerConsumptionByTime(module, startDate, endDate);
     }
 
+//    @Override
+//    public Map<Date, Double> calculateHousePowerMediatorLossForTimePeriod(House house, Date startDate, Date endDate) {
+//        Map<AbstractMeasurementModule, Double> result = new LinkedHashMap<>();
+//        Map<Date, Double> mainPowerByDate = calculateModulePowerConsumptionByTime(house.getMainMeasurementModule(),startDate, endDate);
+//        for (Pipe pipe : house.getPipes()) {
+//                calculateModulePowerConsumptionByTime(pipe.getPipeMeasurementModule(), startDate,endDate);
+//
+//        }
+//        return result;
+//    }
 
     @Override
     public double calculatePowerConsumptionForMeasurement(Measurement measurement) {
@@ -49,10 +54,10 @@ public class DefaultHeatConsumptionCalculationService implements HeatConsumption
     }
 
     @Override
-    public double calculateConsumedEnergyByHouse(House house, Date startDate, Date endDate) {
+    public double calculateConsumedEnergyByHouseApartments(House house, Date startDate, Date endDate) {
         double result = 0;
         for (Pipe pipe : house.getPipes()) {
-            for (AbstractMeasurementModule module : pipe.getMeasurementModules()) {
+            for (AbstractMeasurementModule module : pipe.getApartmentMeasurementModules()) {
                 result += PowerToEnergyCalculator.calculate(calculateModulePowerConsumptionByTime(module, startDate, endDate));
             }
         }
@@ -61,11 +66,11 @@ public class DefaultHeatConsumptionCalculationService implements HeatConsumption
 
 
     @Override
-    public Map<AbstractMeasurementModule, Double> calculateConsumedEnergyByHouseByModules(House house, Date startDate, Date endDate) {
+    public Map<AbstractMeasurementModule, Double> calculateConsumedEnergyByHouseByApartments(House house, Date startDate, Date endDate) {
 
         Map<AbstractMeasurementModule, Double> result = new LinkedHashMap<>();
         for (Pipe pipe : house.getPipes()) {
-            for (AbstractMeasurementModule module : pipe.getMeasurementModules()) {
+            for (AbstractMeasurementModule module : pipe.getApartmentMeasurementModules()) {
                 result.put(module, PowerToEnergyCalculator.calculate(calculateModulePowerConsumptionByTime(module, startDate, endDate)));
             }
         }
@@ -95,4 +100,10 @@ public class DefaultHeatConsumptionCalculationService implements HeatConsumption
         return measurementsByDate;
     }
 
+//    private Map<Date, Measurement> summMeasurementsByDate(Map<Date,Double> map1, Map<Date,Double>map2 , BiFunction<Double, Double, Double> operation){
+//        Map<Date, Measurement> result = new LinkedHashMap<>();
+//        for(Map.Entry<Date,Double> entry: map1.entrySet()){
+//            result.put(map1.get(entry.getKey()))
+//        }
+//    }
 }

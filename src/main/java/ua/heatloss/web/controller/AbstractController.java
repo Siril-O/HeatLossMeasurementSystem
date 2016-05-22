@@ -3,7 +3,7 @@ package ua.heatloss.web.controller;
 import ua.heatloss.domain.Apartment;
 import ua.heatloss.domain.House;
 import ua.heatloss.domain.Pipe;
-import ua.heatloss.domain.modules.MeasurementModule;
+import ua.heatloss.domain.modules.MainMeasurementModule;
 import ua.heatloss.domain.sensors.model.SensorModel;
 import ua.heatloss.services.ApartmentService;
 import ua.heatloss.services.CrudService;
@@ -78,7 +78,7 @@ public class AbstractController {
 
     @InitBinder
     public void bindMeasurementModule(WebDataBinder binder) {
-        binder.registerCustomEditor(MeasurementModule.class, new PropertyEditorSupportById<>(measurementModuleService));
+        binder.registerCustomEditor(MainMeasurementModule.class, new PropertyEditorSupportById<>(measurementModuleService));
     }
 
     public static class PropertyEditorSupportById<T> extends PropertyEditorSupport {

@@ -1,6 +1,7 @@
 package ua.heatloss.domain;
 
-import ua.heatloss.domain.modules.AbstractMeasurementModule;
+import ua.heatloss.domain.modules.ApartmentMeasurementModule;
+import ua.heatloss.domain.modules.PipeMeasurementModule;
 
 import javax.persistence.*;
 import java.util.List;
@@ -26,7 +27,10 @@ public class Pipe {
     private House house;
 
     @OneToMany(mappedBy = "pipe", fetch = FetchType.LAZY)
-    private List<AbstractMeasurementModule> measurementModules;
+    private List<ApartmentMeasurementModule> apartmentMeasurementModules;
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "pipe", cascade = CascadeType.ALL)
+    private PipeMeasurementModule pipeMeasurementModule;
 
     public Long getId() {
         return id;
@@ -52,12 +56,20 @@ public class Pipe {
         this.ordinalNumber = ordinalNumber;
     }
 
-    public List<AbstractMeasurementModule> getMeasurementModules() {
-        return measurementModules;
+    public List<ApartmentMeasurementModule> getApartmentMeasurementModules() {
+        return apartmentMeasurementModules;
     }
 
-    public void setMeasurementModules(List<AbstractMeasurementModule> measurementModules) {
-        this.measurementModules = measurementModules;
+    public void setApartmentMeasurementModules(List<ApartmentMeasurementModule> apartmentMeasurementModules) {
+        this.apartmentMeasurementModules = apartmentMeasurementModules;
+    }
+
+    public PipeMeasurementModule getPipeMeasurementModule() {
+        return pipeMeasurementModule;
+    }
+
+    public void setPipeMeasurementModule(PipeMeasurementModule pipeMeasurementModule) {
+        this.pipeMeasurementModule = pipeMeasurementModule;
     }
 
     @Override
@@ -66,7 +78,7 @@ public class Pipe {
                 "id=" + id +
                 ", ordinalNumber=" + ordinalNumber +
                 ", house=" + (house != null ? house.getId() : "") +
-                ", measurementModules=" + measurementModules +
+                ", apartmentMeasurementModules=" + apartmentMeasurementModules +
                 '}';
     }
 

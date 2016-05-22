@@ -8,19 +8,16 @@ import java.util.List;
 
 public interface DataGeneratingFacade {
 
-    //frequency in seconds
-    void generateMeasurementData(Date startDate, Date finishDate, long density, Object target);
 
-    List<Measurement> generateMeasurementDataForHouse(House house, double startTemperature, Date timestamp);
-
-    List<Measurement> generateMeasurementDataForPipe(Pipe pipe, double startTemperature, Date timestamp);
-
-    List<House> generateHouses(int quantity);
-
-    List<Apartment> generateApartments(int floors, int apartmentsOnFloor, int rooms, int entrances, House house);
-
-    House generateMeasurementModules(House house, MeasurementModuleType moduleType);
+    House generateMeasurementModules(House house);
 
     List<Pipe> generatePipes(int quantity, House house);
 
+    List<Apartment> generateApartments(int floors, int apartmentsOnFloor, int rooms, int entrances, House house);
+
+    List<House> generateHouses(int quantity);
+
+    void generateHouseMeasurementData(Date startDate, Date finishDate, long density, House house, boolean withApartments);
+
+    void generatePipeMeasurementData(Date startDate, Date finishDate, long density, Pipe pipe, boolean withApartments);
 }

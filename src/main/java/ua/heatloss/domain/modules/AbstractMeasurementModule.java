@@ -1,25 +1,9 @@
 package ua.heatloss.domain.modules;
 
 import ua.heatloss.domain.Measurement;
-import ua.heatloss.domain.Pipe;
 
+import javax.persistence.*;
 import java.util.List;
-
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
 
 @NamedQueries(
@@ -39,12 +23,6 @@ public abstract class AbstractMeasurementModule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Integer ordinalNumber;
-
-    @ManyToOne
-    @JoinColumn(name = "PIPE_ID")
-    private Pipe pipe;
-
     @Embedded
     private MeasurementsGroup measurementsGroup;
 
@@ -59,21 +37,6 @@ public abstract class AbstractMeasurementModule {
         this.id = id;
     }
 
-    public Integer getOrdinalNumber() {
-        return ordinalNumber;
-    }
-
-    public void setOrdinalNumber(Integer ordinalNumber) {
-        this.ordinalNumber = ordinalNumber;
-    }
-
-    public Pipe getPipe() {
-        return pipe;
-    }
-
-    public void setPipe(Pipe pipe) {
-        this.pipe = pipe;
-    }
 
     public MeasurementsGroup getMeasurementsGroup() {
         return measurementsGroup;
@@ -96,20 +59,20 @@ public abstract class AbstractMeasurementModule {
         if (this == o) return true;
         if (!(o instanceof AbstractMeasurementModule)) return false;
 
-        AbstractMeasurementModule section = (AbstractMeasurementModule) o;
+        AbstractMeasurementModule that = (AbstractMeasurementModule) o;
 
-        if (id != null ? !id.equals(section.id) : section.id != null) return false;
-        if (ordinalNumber != null ? !ordinalNumber.equals(section.ordinalNumber) : section.ordinalNumber != null)
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (measurementsGroup != null ? !measurementsGroup.equals(that.measurementsGroup) : that.measurementsGroup != null)
             return false;
-        return pipe != null ? pipe.equals(section.pipe) : section.pipe == null;
+        return measurements != null ? measurements.equals(that.measurements) : that.measurements == null;
 
     }
 
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (ordinalNumber != null ? ordinalNumber.hashCode() : 0);
-        result = 31 * result + (pipe != null ? pipe.hashCode() : 0);
+        result = 31 * result + (measurementsGroup != null ? measurementsGroup.hashCode() : 0);
+        result = 31 * result + (measurements != null ? measurements.hashCode() : 0);
         return result;
     }
 }

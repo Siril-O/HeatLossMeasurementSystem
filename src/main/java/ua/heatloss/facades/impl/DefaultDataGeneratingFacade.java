@@ -1,34 +1,21 @@
 package ua.heatloss.facades.impl;
 
-import ua.heatloss.domain.Address;
-import ua.heatloss.domain.Apartment;
-import ua.heatloss.domain.House;
-import ua.heatloss.domain.Measurement;
-import ua.heatloss.domain.MeasurementModuleType;
-import ua.heatloss.domain.Pipe;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import ua.heatloss.domain.*;
 import ua.heatloss.domain.modules.AbstractMeasurementModule;
 import ua.heatloss.domain.modules.ApartmentMeasurementModule;
-import ua.heatloss.domain.modules.MeasurementModule;
+import ua.heatloss.domain.modules.MainMeasurementModule;
+import ua.heatloss.domain.modules.PipeMeasurementModule;
 import ua.heatloss.domain.sensors.SensorType;
 import ua.heatloss.domain.sensors.model.FlowSensorModel;
 import ua.heatloss.domain.sensors.model.TemperatureSensorModel;
 import ua.heatloss.facades.DataGeneratingFacade;
-import ua.heatloss.facades.MeasurementSectionFacade;
-import ua.heatloss.services.ApartmentService;
-import ua.heatloss.services.HouseService;
-import ua.heatloss.services.MeasurementService;
-import ua.heatloss.services.PipeService;
-import ua.heatloss.services.SensorModelService;
+import ua.heatloss.facades.MeasurementModuleFacade;
+import ua.heatloss.services.*;
+import ua.heatloss.services.helper.DateHelper;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import java.util.*;
 
 @Component
 public class DefaultDataGeneratingFacade implements DataGeneratingFacade {
@@ -47,14 +34,17 @@ public class DefaultDataGeneratingFacade implements DataGeneratingFacade {
     public static final double MIN_FLOW_RANGE = 0.1;
     public static final double MAX_FLOW_RANGE = 3;
 
-    public static final double DEFAULT_LOSS_ON_RADIATOR = 2.5;
-    public static final double DELTA_LOSS_ON_RADIATOR = 0.5;
+    public static final double DEFAULT_LOSS_ON_RADIATOR = 3;
+    public static final double DELTA_LOSS_ON_RADIATOR = 0.7;
 
     public static final double DEFAULT_LOSS_ON_OVERLAP = 0.2;
     public static final double DELTA_LOSS_ON_OVERLAP = 0.05;
 
-    public static final double DEFAULT_LOSS_ON_PIPE = 0.8;
-    public static final double DELTA_LOSS_ON_PIPE = 0.2;
+    public static final double DEFAULT_LOSS_ON_MEDIATORS = 3;
+    public static final double DELTA_LOSS_ON_MEDIATORS = 1;
+    public static final double MAX_LOS_ON_MEDIATOR = DEFAULT_LOSS_ON_MEDIATORS + DELTA_LOSS_ON_MEDIATORS;
+    public static final double MIN_LOS_ON_MEDIATOR = DEFAULT_LOSS_ON_MEDIATORS - DELTA_LOSS_ON_MEDIATORS;
+
 
     private static final Random RANDOM = new Random();
 
@@ -65,169 +55,33 @@ public class DefaultDataGeneratingFacade implements DataGeneratingFacade {
     @Autowired
     private PipeService pipeService;
     @Autowired
-    private MeasurementSectionFacade measurementSectionFacade;
+    private MeasurementModuleFacade measurementSectionFacade;
     @Autowired
     private SensorModelService sensorModelService;
     @Autowired
     private MeasurementService measurementService;
 
-    //frequency in seconds
     @Override
-    public void generateMeasurementData(Date startDate, Date finishDate, long density, Object target) {
-        density *= 1000;
-        List<Measurement> measurements = new ArrayList<>();
-        for (long i = startDate.getTime(); i < finishDate.getTime(); i += density) {
-            if (target instanceof Pipe) {
-                measurements.addAll(generateMeasurementDataForPipe((Pipe) target, generateStartTemperature(), new Date(i)));
-            } else if (target instanceof House) {
-                measurements.addAll(generateMeasurementDataForHouse((House) target, generateStartTemperature(), new Date(i)));
-            }
-        }
-        measurementService.createButch(measurements);
-    }
-
-
-    private double generateStartTemperature() {
-        return generateRandomValue(MIN_START_TEMPERATURE_RANGE, MAX_START_TEMPERATURE_RANGE);
-    }
-
-    @Override
-    public List<Measurement> generateMeasurementDataForHouse(House house, double startTemperature, Date timestamp) {
-        List<Measurement> measurements = new ArrayList<>();
-        for (Pipe pipe : house.getPipes()) {
-            measurements.addAll(generateMeasurementDataForPipe(pipe, startTemperature, timestamp));
-        }
-        return measurements;
-    }
-
-    @Override
-    public List<Measurement> generateMeasurementDataForPipe(Pipe pipe, double startTemperature, Date timestamp) {
-        List<Measurement> measurements = new ArrayList<>();
-        for (AbstractMeasurementModule section : pipe.getMeasurementModules()) {
-            Measurement measurement = generateMeasurementDataForSection(section, timestamp, startTemperature);
-            measurements.add(measurement);
-            startTemperature = measurement.getOutputValue();
-        }
-        return measurements;
-    }
-
-
-    private Measurement generateMeasurementDataForSection(AbstractMeasurementModule section, Date timestamp, double startTemperature) {
-        Measurement measurement = new Measurement();
-        double generatedValue = generateRandomValueForSensor(SensorType.INPUT, startTemperature);
-        measurement.setInputValue(generatedValue);
-        measurement.setFlowValue(generateRandomValueForFlowSensor());
-        generatedValue = generateRandomValueForSensor(SensorType.OUTPUT, generatedValue);
-        measurement.setOutputValue(generatedValue);
-
-        measurement.setMeasurementModule(section);
-        measurement.setTimestamp(timestamp);
-        return measurement;
-    }
-
-    private double generateRandomValueForSensor(SensorType type, double startTemperature) {
-        double minRange = 0;
-        double maxRange = 0;
-        switch (type) {
-            case INPUT:
-                minRange = startTemperature - DEFAULT_LOSS_ON_PIPE - DELTA_LOSS_ON_PIPE;
-                maxRange = startTemperature - DEFAULT_LOSS_ON_PIPE + DELTA_LOSS_ON_PIPE;
-                break;
-            case OUTPUT:
-                minRange = startTemperature - DEFAULT_LOSS_ON_RADIATOR - DELTA_LOSS_ON_RADIATOR;
-                maxRange = startTemperature - DEFAULT_LOSS_ON_RADIATOR + DELTA_LOSS_ON_RADIATOR;
-                break;
-        }
-        return generateRandomValue(minRange, maxRange);
-    }
-
-    private double generateRandomValueForFlowSensor() {
-        return generateRandomValue(MIN_FLOW_RANGE, MAX_FLOW_RANGE);
-    }
-
-
-    private double generateRandomValue(double rangeMin, double rangeMax) {
-        double randomValue = rangeMin + (rangeMax - rangeMin) * RANDOM.nextDouble();
-        return randomValue;
-    }
-
-    @Override
-    public House generateMeasurementModules(House house, MeasurementModuleType moduleType) {
+    public House generateMeasurementModules(House house) {
 
         TemperatureSensorModel temperatureSensorModel = sensorModelService.getTemperatureModelsList(0, 1).get(0);
         FlowSensorModel flowSensorModel = sensorModelService.getFlowModelsList(0, 1).get(0);
         if (house == null || temperatureSensorModel == null || flowSensorModel == null) {
             throw new IllegalArgumentException();
         }
-
+        generateMainMeasurementModule(house, temperatureSensorModel, flowSensorModel);
         List<Apartment> apartments = generateApartments(DEFAULT_FLOORS, DEFAULT_APARTMENTS_ON_FLOOR, DEFAULT_ROOMS_QUANTITY, DEFAULT_ENTRANCES, house);
         List<Pipe> pipes = generatePipes(DEFAULT_ROOMS_QUANTITY * DEFAULT_ENTRANCES * DEFAULT_APARTMENTS_ON_FLOOR, house);
         Map<Pipe, List<Apartment>> appMap = mapPipes(apartments, pipes);
         for (Map.Entry<Pipe, List<Apartment>> entry : appMap.entrySet()) {
-            generateMeasurementSections(entry.getKey(), moduleType, temperatureSensorModel, flowSensorModel, entry.getValue());
+            Pipe pipe = entry.getKey();
+            generatePipeMeasurementModule(pipe, temperatureSensorModel, flowSensorModel);
+            generateMeasurementModules(pipe, temperatureSensorModel, flowSensorModel, entry.getValue());
         }
         houseService.refresh(house);
         return house;
     }
 
-    private Map<Pipe, List<Apartment>> mapPipes(List<Apartment> apartments, List<Pipe> pipes) {
-        Map<Pipe, List<Apartment>> appMap = new LinkedHashMap<>();
-
-        Map<Integer, List<Apartment>> apsByFloor = new LinkedHashMap<>();
-        for (Apartment apartment : apartments) {
-            int floor = apartment.getFloor();
-            List<Apartment> appForCurrentFloor = apsByFloor.get(floor);
-            if (appForCurrentFloor == null) {
-                List<Apartment> appsOnTheFloor = new ArrayList<>();
-                appsOnTheFloor.add(apartment);
-                apsByFloor.put(floor, appsOnTheFloor);
-            } else {
-                appForCurrentFloor.add(apartment);
-            }
-        }
-
-        for (Map.Entry<Integer, List<Apartment>> entry : apsByFloor.entrySet()) {
-            int counter = 0;
-            for (Apartment apartment : entry.getValue()) {
-                for (int i = 0; i < apartment.getRooms(); i++) {
-                    Pipe pipe = pipes.get(counter++);
-                    List<Apartment> pipeApartments = appMap.get(pipe);
-                    if (pipeApartments == null) {
-                        pipeApartments = new ArrayList<>();
-                        pipeApartments.add(apartment);
-                        appMap.put(pipe, pipeApartments);
-                    } else {
-                        pipeApartments.add(apartment);
-                    }
-                }
-            }
-        }
-        return appMap;
-    }
-
-    private List<AbstractMeasurementModule> generateMeasurementSections(Pipe pipe, MeasurementModuleType measurementModuleType,
-                                                                        TemperatureSensorModel temperatureSensorModel,
-                                                                        FlowSensorModel flowSensorModel, List<Apartment> apartments) {
-        List<AbstractMeasurementModule> measurementModules = new ArrayList<>();
-        for (Apartment apartment : apartments) {
-            AbstractMeasurementModule section = generateMeasurementSection(pipe, temperatureSensorModel, flowSensorModel, apartment);
-            measurementModules.add(section);
-        }
-        return measurementModules;
-    }
-
-    private AbstractMeasurementModule generateMeasurementSection(Pipe pipe, TemperatureSensorModel temperatureSensorModel,
-                                                                 FlowSensorModel flowSensorModel, Apartment apartment) {
-        //TODO
-        AbstractMeasurementModule module = new MeasurementModule();
-        if (apartment != null) {
-            module = new ApartmentMeasurementModule();
-            ((ApartmentMeasurementModule) module).setApartment(apartment);
-        }
-        module.setPipe(pipe);
-        measurementSectionFacade.createMeasurementModule(module, temperatureSensorModel, flowSensorModel);
-        return module;
-    }
 
     @Override
     public List<Pipe> generatePipes(int quantity, House house) {
@@ -280,4 +134,188 @@ public class DefaultDataGeneratingFacade implements DataGeneratingFacade {
         }
         return houses;
     }
+
+    @Override
+    public void generateHouseMeasurementData(Date startDate, Date finishDate, long density, House house, boolean withApartments) {
+        DateHelper.DatePeriod period = DateHelper.checkDates(startDate, finishDate);
+        startDate = period.getStartDate();
+        finishDate = period.getEndDate();
+        density *= 1000;
+        if (house.getPipes().isEmpty()) {
+            throw new IllegalArgumentException("No pipes in house");
+        }
+        List<Measurement> measurements = new ArrayList<>();
+        for (long i = startDate.getTime(); i < finishDate.getTime(); i += density) {
+            double startTemperature = generateStartTemperature();
+            measurements.addAll(generateMeasurementDataForHouse(house, startTemperature, new Date(i), withApartments));
+        }
+        measurementService.createButch(measurements);
+    }
+
+    @Override
+    public void generatePipeMeasurementData(Date startDate, Date finishDate, long density, Pipe pipe, boolean withApartments) {
+        DateHelper.DatePeriod period = DateHelper.checkDates(startDate, finishDate);
+        startDate = period.getStartDate();
+        finishDate = period.getEndDate();
+        density *= 1000;
+        List<Measurement> measurements = new ArrayList<>();
+        for (long i = startDate.getTime(); i < finishDate.getTime(); i += density) {
+            double startTemperature = generateStartTemperature();
+            measurements.addAll(generateMeasurementDataForPipe(pipe, startTemperature, new Date(i), withApartments));
+        }
+        measurementService.createButch(measurements);
+    }
+
+
+    private double generateStartTemperature() {
+        return generateRandomValue(MIN_START_TEMPERATURE_RANGE, MAX_START_TEMPERATURE_RANGE);
+    }
+
+    private List<Measurement> generateMeasurementDataForHouse(House house, double startTemperature, Date timestamp, boolean withApartments) {
+        List<Measurement> measurements = new ArrayList<>();
+        Measurement mainMeasurement = createMeasurement(house.getMainMeasurementModule(), timestamp);
+        mainMeasurement.setInputValue(startTemperature);
+        List<Pipe> pipes = house.getPipes();
+        mainMeasurement.setFlowValue(MAX_FLOW_RANGE * pipes.size());
+        for (Pipe pipe : pipes) {
+            measurements.addAll(generateMeasurementDataForPipe(pipe, startTemperature, timestamp, withApartments));
+        }
+        mainMeasurement.setOutputValue(measurements.get(measurements.size() - 1).getOutputValue() -
+                generateRandomValue(MIN_LOS_ON_MEDIATOR, MAX_LOS_ON_MEDIATOR));
+        return measurements;
+    }
+
+    private List<Measurement> generateMeasurementDataForPipe(Pipe pipe, double startTemperature, Date timestamp, boolean withApartments) {
+        List<Measurement> measurements = new ArrayList<>();
+        Measurement pipeMeasurement = createMeasurement(pipe.getPipeMeasurementModule(), timestamp);
+        startTemperature = startTemperature - generateRandomValue(MIN_LOS_ON_MEDIATOR, MAX_LOS_ON_MEDIATOR);
+        pipeMeasurement.setInputValue(startTemperature);
+        if (withApartments) {
+            for (ApartmentMeasurementModule module : pipe.getApartmentMeasurementModules()) {
+                Measurement measurement = generateApartmentMeasurement(module, timestamp, startTemperature);
+                measurements.add(measurement);
+                startTemperature = measurement.getOutputValue();
+            }
+        }
+        pipeMeasurement.setFlowValue(MAX_FLOW_RANGE);
+        pipeMeasurement.setOutputValue(measurements.get(measurements.size() - 1).getOutputValue());
+        measurements.add(pipeMeasurement);
+        return measurements;
+    }
+
+
+    private Measurement createMeasurement(AbstractMeasurementModule module, Date timestamp) {
+        Measurement measurement = new Measurement();
+        measurement.setMeasurementModule(module);
+        measurement.setTimestamp(timestamp);
+        return measurement;
+    }
+
+
+    private Measurement generateApartmentMeasurement(ApartmentMeasurementModule module, Date timestamp, double startTemperature) {
+        Measurement measurement = createMeasurement(module, timestamp);
+        double generatedValue = generateRandomValueForSensor(SensorType.INPUT, startTemperature);
+        measurement.setInputValue(generatedValue);
+        measurement.setFlowValue(generateRandomValueForFlowSensor());
+        generatedValue = generateRandomValueForSensor(SensorType.OUTPUT, generatedValue);
+        measurement.setOutputValue(generatedValue);
+        return measurement;
+    }
+
+    private double generateRandomValueForSensor(SensorType type, double startTemperature) {
+        double minRange = 0;
+        double maxRange = 0;
+        if (SensorType.INPUT == type) {
+            minRange = startTemperature - DEFAULT_LOSS_ON_OVERLAP - DELTA_LOSS_ON_OVERLAP;
+            maxRange = startTemperature - DEFAULT_LOSS_ON_OVERLAP + DELTA_LOSS_ON_OVERLAP;
+        } else if (SensorType.OUTPUT == type) {
+            minRange = startTemperature - DEFAULT_LOSS_ON_RADIATOR - DELTA_LOSS_ON_RADIATOR;
+            maxRange = startTemperature - DEFAULT_LOSS_ON_RADIATOR + DELTA_LOSS_ON_RADIATOR;
+        }
+        return generateRandomValue(minRange, maxRange);
+    }
+
+    private double generateRandomValueForFlowSensor() {
+        return generateRandomValue(MIN_FLOW_RANGE, MAX_FLOW_RANGE);
+    }
+
+
+    private double generateRandomValue(double rangeMin, double rangeMax) {
+        double randomValue = rangeMin + (rangeMax - rangeMin) * RANDOM.nextDouble();
+        return randomValue;
+    }
+
+
+    private Map<Pipe, List<Apartment>> mapPipes(List<Apartment> apartments, List<Pipe> pipes) {
+        Map<Pipe, List<Apartment>> appMap = new LinkedHashMap<>();
+
+        Map<Integer, List<Apartment>> apsByFloor = new LinkedHashMap<>();
+        for (Apartment apartment : apartments) {
+            int floor = apartment.getFloor();
+            List<Apartment> appForCurrentFloor = apsByFloor.get(floor);
+            if (appForCurrentFloor == null) {
+                List<Apartment> appsOnTheFloor = new ArrayList<>();
+                appsOnTheFloor.add(apartment);
+                apsByFloor.put(floor, appsOnTheFloor);
+            } else {
+                appForCurrentFloor.add(apartment);
+            }
+        }
+
+        for (Map.Entry<Integer, List<Apartment>> entry : apsByFloor.entrySet()) {
+            int counter = 0;
+            for (Apartment apartment : entry.getValue()) {
+                for (int i = 0; i < apartment.getRooms(); i++) {
+                    Pipe pipe = pipes.get(counter++);
+                    List<Apartment> pipeApartments = appMap.get(pipe);
+                    if (pipeApartments == null) {
+                        pipeApartments = new ArrayList<>();
+                        pipeApartments.add(apartment);
+                        appMap.put(pipe, pipeApartments);
+                    } else {
+                        pipeApartments.add(apartment);
+                    }
+                }
+            }
+        }
+        return appMap;
+    }
+
+
+    private List<ApartmentMeasurementModule> generateMeasurementModules(Pipe pipe, TemperatureSensorModel temperatureSensorModel,
+                                                                        FlowSensorModel flowSensorModel, List<Apartment> apartments) {
+        List<ApartmentMeasurementModule> measurementModules = new ArrayList<>();
+        for (Apartment apartment : apartments) {
+            ApartmentMeasurementModule module = generateApartmentModule(pipe, temperatureSensorModel, flowSensorModel, apartment);
+            measurementModules.add(module);
+        }
+        return measurementModules;
+    }
+
+    private ApartmentMeasurementModule generateApartmentModule(Pipe pipe, TemperatureSensorModel temperatureSensorModel,
+                                                               FlowSensorModel flowSensorModel, Apartment apartment) {
+        ApartmentMeasurementModule module = new ApartmentMeasurementModule();
+        module.setApartment(apartment);
+        module.setPipe(pipe);
+        measurementSectionFacade.createApartmentMeasurementModule(module, temperatureSensorModel, flowSensorModel);
+        return module;
+    }
+
+    private PipeMeasurementModule generatePipeMeasurementModule(Pipe pipe, TemperatureSensorModel temperatureSensorModel,
+                                                                FlowSensorModel flowSensorModel) {
+        PipeMeasurementModule module = new PipeMeasurementModule();
+        module.setPipe(pipe);
+        measurementSectionFacade.createPipeMeasurementModule(module, temperatureSensorModel, flowSensorModel);
+        return module;
+    }
+
+    private MainMeasurementModule generateMainMeasurementModule(House house, TemperatureSensorModel temperatureSensorModel,
+                                                                FlowSensorModel flowSensorModel) {
+        MainMeasurementModule module = new MainMeasurementModule();
+        module.setHouse(house);
+        measurementSectionFacade.createMainMeasurementModule(module, temperatureSensorModel, flowSensorModel);
+        return module;
+    }
+
+
 }

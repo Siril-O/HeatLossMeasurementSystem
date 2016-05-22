@@ -1,7 +1,7 @@
 package ua.heatloss.web.controller;
 
 import ua.heatloss.domain.Measurement;
-import ua.heatloss.domain.modules.MeasurementModule;
+import ua.heatloss.domain.modules.MainMeasurementModule;
 import ua.heatloss.services.MeasurementService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class MeasurementController extends AbstractController {
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
     public void addMeasurementForModuleUsingFormRequest(@RequestParam Measurement measurement,
-                                                        @RequestParam("moduleId") MeasurementModule measurementModule) {
+                                                        @RequestParam("moduleId") MainMeasurementModule measurementModule) {
         measurement.setMeasurementModule(measurementModule);
         measurementService.create(measurement);
     }

@@ -12,6 +12,7 @@ import ua.heatloss.facades.DataGeneratingFacade;
 import ua.heatloss.web.controller.AbstractController;
 
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 @Controller
 @RequestMapping("generate")
@@ -32,7 +33,7 @@ public class DataGeneratorController extends AbstractController {
     public String generateMeauseremtsDataForHouse(@RequestParam("houseId") House house,
                                                   @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date startDate,
                                                   @RequestParam(value = "finishDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date finishDate) {
-        int density = 60 * 15;
+        long density = TimeUnit.MILLISECONDS.convert(5, TimeUnit.MINUTES);
         dataGeneratingFacade.generateHouseMeasurementData(startDate, finishDate, density, house, true);
         return "Successfully generated";
     }

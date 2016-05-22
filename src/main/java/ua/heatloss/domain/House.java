@@ -19,13 +19,13 @@ public class House {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "house", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "house", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY)
     private List<Pipe> pipes;
 
     @Enumerated(EnumType.STRING)
     private PipeSystem pipeSystem;
 
-    @OneToMany(mappedBy = "house", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "house", fetch = FetchType.LAZY)
     private List<Apartment> apartments;
 
     @Embedded

@@ -140,7 +140,6 @@ public class DefaultDataGeneratingFacade implements DataGeneratingFacade {
         DateHelper.DatePeriod period = DateHelper.checkDates(startDate, finishDate);
         startDate = period.getStartDate();
         finishDate = period.getEndDate();
-        density *= 1000;
         if (house.getPipes().isEmpty()) {
             throw new IllegalArgumentException("No pipes in house");
         }
@@ -157,7 +156,6 @@ public class DefaultDataGeneratingFacade implements DataGeneratingFacade {
         DateHelper.DatePeriod period = DateHelper.checkDates(startDate, finishDate);
         startDate = period.getStartDate();
         finishDate = period.getEndDate();
-        density *= 1000;
         List<Measurement> measurements = new ArrayList<>();
         for (long i = startDate.getTime(); i < finishDate.getTime(); i += density) {
             double startTemperature = generateStartTemperature();
@@ -182,6 +180,7 @@ public class DefaultDataGeneratingFacade implements DataGeneratingFacade {
         }
         mainMeasurement.setOutputValue(measurements.get(measurements.size() - 1).getOutputValue() -
                 generateRandomValue(MIN_LOS_ON_MEDIATOR, MAX_LOS_ON_MEDIATOR));
+        measurements.add(mainMeasurement);
         return measurements;
     }
 

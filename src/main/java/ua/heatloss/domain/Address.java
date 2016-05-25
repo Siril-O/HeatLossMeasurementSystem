@@ -9,6 +9,8 @@ public class Address {
     private String city;
     private String street;
     private String houseNumber;
+    private Double lat;
+    private Double lng;
 
     public String getCountry() {
         return country;
@@ -40,6 +42,22 @@ public class Address {
 
     public void setHouseNumber(String houseNumber) {
         this.houseNumber = houseNumber;
+    }
+
+    public Double getLng() {
+        return lng;
+    }
+
+    public void setLng(Double lng) {
+        this.lng = lng;
+    }
+
+    public Double getLat() {
+        return lat;
+    }
+
+    public void setLat(Double lat) {
+        this.lat = lat;
     }
 
     @Override

@@ -1,10 +1,6 @@
-INSERT INTO house (id, country,city,street,houseNumber, pipeSystem) VALUES (1,"Ukraine","Kyiv","Stadium street","3", "VERTICAL_SINGLE");
-INSERT INTO house (id,country,city,street,houseNumber, pipeSystem) VALUES (2, "Ukraine","Kyiv","Haidar street","124B", "VERTICAL_DOUBLE");
-INSERT INTO house (id,country,city,street,houseNumber, pipeSystem) VALUES (3,"Ukraine","Kyiv","Dmitrivska street","56", "VERTICAL_DOUBLE");
-INSERT INTO house (id,country,city,street,houseNumber, pipeSystem) VALUES (4,"Ukraine","Kyiv","Hnata Uri street","78C", "HORIZONTAL_DOUBLE");
-INSERT INTO house (id,country,city,street,houseNumber, pipeSystem) VALUES (5,"Ukraine","Kyiv","Jeliabova street","12", "HORIZONTAL_DOUBLE");
-INSERT INTO house (id,country,city,street,houseNumber, pipeSystem) VALUES (6,"Ukraine","Kyiv","Metalistiv street","134", "HORIZONTAL_SINGLE");
-
+INSERT INTO house (id,lat ,lng, country,city,street,houseNumber, pipeSystem) VALUES (1,50.441659,30.522922,"Ukraine","Kyiv","Stadium street","3", "VERTICAL_SINGLE");
+INSERT INTO house (id,lat ,lng, country,city,street,houseNumber, pipeSystem) VALUES (2,50.45073449,30.50514936, "Ukraine","Kyiv","Olesia Honchara","47", "HORIZONTAL_DOUBLE");
+INSERT INTO house (id,lat ,lng, country,city,street,houseNumber, pipeSystem) VALUES (3,50.43974134,30.49716711,"Ukraine","Kyiv","Lva Tolstoho","55", "VERTICAL_DOUBLE");
 
 INSERT INTO sensor_model (id, MODEL_TYPE,maker,`name`,absoluteAccuracy, maxTemperature, minTemperature, maxFlowRate, minFlowRate)
  VALUES (1,"TEMP","Taxes Instruments","LM95235-Q1 ",0.001,160,-50,NULL,NULL);

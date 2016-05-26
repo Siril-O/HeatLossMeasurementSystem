@@ -24,7 +24,6 @@ public class IndexCotroller extends AbstractController{
 
     @RequestMapping(value = { "/" })
     public String index(Model model){
-      //  return REDIRECT + "/report/energy";
         List<House> houses = houseService.getList(0, 1000);
         model.addAttribute("houses", houses);
         model.addAttribute("APIkey", key);

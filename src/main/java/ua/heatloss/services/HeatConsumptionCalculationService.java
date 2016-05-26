@@ -21,4 +21,6 @@ public interface HeatConsumptionCalculationService {
     double calculateConsumedEnergyByHouseApartments(House house, Date startDate, Date endDate);
 
     Map<AbstractMeasurementModule, Double> calculateConsumedEnergyByHouseByApartments(House house, Date startDate, Date endDate);
+
+    Map<Date, Double> calculatePowerLossByHouse(House house, Date startDate, Date endDate);
 }

@@ -14,7 +14,7 @@ public interface HeatConsumptionCalculationService {
     double calculateConsumedEnergyForMeasurementModule(AbstractMeasurementModule module,
                                                        Date startDate, Date endDate);
 
-    Map<Date, Double> calculateModulePowerConsumptionForTimePeriod(AbstractMeasurementModule module, Date startDate, Date endDate);
+    Map<Date, Double> calculateModulePowerInTimePeriod(AbstractMeasurementModule module, Date startDate, Date endDate);
 
     double calculatePowerConsumptionForMeasurement(Measurement measurement);
 
@@ -25,4 +25,6 @@ public interface HeatConsumptionCalculationService {
     Map<Date, Double> calculatePowerLossByHouse(House house, Date startDate, Date endDate);
 
     double calculateEnergyLossOnHouse(House house, Date startDate, Date endDate);
+
+    Map<Date, Double> calculateHouseConsumedPowerForTimePeriod(House house, Date startDate, Date endDate);
 }

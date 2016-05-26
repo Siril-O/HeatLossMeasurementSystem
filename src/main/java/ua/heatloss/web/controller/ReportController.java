@@ -29,13 +29,11 @@ public class ReportController extends AbstractController {
 
 
     @RequestMapping(method = {RequestMethod.POST, RequestMethod.GET})
-    public String builReportForPowerOfHeatConsumptionForSection(@RequestParam(value = "sectionId", defaultValue = "1") AbstractMeasurementModule section,
-                                                                @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date startDate,
-                                                                @RequestParam(value = "finishDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date endDate,
-                                                                Model model) {
-        Map<Date, Double> dataMap = reportsFacade.calculateDataForPowerReport(section, startDate, endDate);
-        model.addAttribute("dataMap", dataMap);
-        return "report.powerOfHeatConsumption";
+    public String indexHandler(@RequestParam(value = "houseId", defaultValue = "1") House house,
+                               @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date startDate,
+                               @RequestParam(value = "finishDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date endDate,
+                               Model model) {
+        return showHousePowerLossReport(house,startDate,endDate, model);
     }
 
     @RequestMapping(method = {RequestMethod.POST, RequestMethod.GET}, value = "/energy")
@@ -51,5 +49,35 @@ public class ReportController extends AbstractController {
         PagingUtils.preparePaging(paging, total, model);
         model.addAttribute("houses", houses);
         return "report.paging.energyConsumptionOfHouseByPipes";
+    }
+
+    @RequestMapping(value = "power/house/loss")
+    public String showHousePowerLossReport(@RequestParam(value = "houseId", defaultValue = "1") House house,
+                                           @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date startDate,
+                                           @RequestParam(value = "finishDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date endDate,
+                                           Model model) {
+        final Map<Date, Double> chartData = reportsFacade.buildReportOfHousePowerLoss(house, startDate, endDate);
+        model.addAttribute("dataMap", chartData);
+        return "report.houseHeatLoss";
+    }
+
+    @RequestMapping(value = "power/house/input")
+    public String showHouseInputPowerReport(@RequestParam(value = "houseId", defaultValue = "1") House house,
+                                            @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date startDate,
+                                            @RequestParam(value = "finishDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date endDate,
+                                            Model model) {
+        final Map<Date, Double> chartData = reportsFacade.buildReportOfInputHousePower(house, startDate, endDate);
+        model.addAttribute("dataMap", chartData);
+        return "report.houseHeatLoss";
+    }
+
+    @RequestMapping(value = "power/house/consumed")
+    public String showHouseConsumedPowerReport(@RequestParam(value = "houseId", defaultValue = "1") House house,
+                                               @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date startDate,
+                                               @RequestParam(value = "finishDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date endDate,
+                                               Model model) {
+        final Map<Date, Double> chartData = reportsFacade.buildReportOfHouseConsumedPower(house, startDate, endDate);
+        model.addAttribute("dataMap", chartData);
+        return "report.houseHeatLoss";
     }
 }

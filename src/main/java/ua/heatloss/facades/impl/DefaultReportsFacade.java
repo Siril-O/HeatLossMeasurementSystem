@@ -19,9 +19,9 @@ public class DefaultReportsFacade implements ReportsFacade {
     private HeatConsumptionCalculationService consumptionCalculationService;
 
     @Override
-    public Map<Date, Double> calculateDataForPowerReport(AbstractMeasurementModule section, Date startDate, Date endDate) {
+    public Map<Date, Double> buildReportOfModulePower(AbstractMeasurementModule section, Date startDate, Date endDate) {
         DateHelper.DatePeriod period = DateHelper.checkDates(startDate, endDate);
-        return consumptionCalculationService.calculateModulePowerConsumptionForTimePeriod(section, period.getStartDate(),
+        return consumptionCalculationService.calculateModulePowerInTimePeriod(section, period.getStartDate(),
                 period.getEndDate());
     }
 
@@ -40,5 +40,25 @@ public class DefaultReportsFacade implements ReportsFacade {
         return result;
     }
 
+    @Override
+    public Map<Date, Double> buildReportOfHousePowerLoss(House house, Date startDate, Date endDate) {
+        DateHelper.DatePeriod period = DateHelper.checkDates(startDate, endDate);
+        return consumptionCalculationService.calculatePowerLossByHouse(house, period.getStartDate(), period.getEndDate());
+    }
+
+    @Override
+    public Map<Date, Double> buildReportOfInputHousePower(House house, Date startDate, Date endDate) {
+        DateHelper.DatePeriod period = DateHelper.checkDates(startDate, endDate);
+        return consumptionCalculationService.calculateModulePowerInTimePeriod(house.getMainMeasurementModule(),
+                period.getStartDate(), period.getEndDate());
+
+    }
+
+    @Override
+    public Map<Date, Double> buildReportOfHouseConsumedPower(House house, Date startDate, Date endDate) {
+        DateHelper.DatePeriod period = DateHelper.checkDates(startDate, endDate);
+        return consumptionCalculationService.calculateHouseConsumedPowerForTimePeriod(house, period.getStartDate(),
+                period.getEndDate());
+    }
 
 }

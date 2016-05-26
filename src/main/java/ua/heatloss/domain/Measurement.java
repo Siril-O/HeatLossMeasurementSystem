@@ -1,8 +1,7 @@
 package ua.heatloss.domain;
 
-import ua.heatloss.domain.modules.AbstractMeasurementModule;
-
 import org.hibernate.annotations.Type;
+import ua.heatloss.domain.modules.AbstractMeasurementModule;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -12,14 +11,16 @@ import java.util.Date;
                 @NamedQuery(name = "Measurement.find", query = "SELECT m FROM Measurement AS m"),
                 @NamedQuery(name = "Measurement.findTotalResultCount", query = "SELECT count(m.id) FROM Measurement AS m"),
                 @NamedQuery(name = "Measurement.findInTimePeriodForMeasurementModule",
-                        query = "SELECT m FROM Measurement AS m WHERE m.measurementModule.id =:moduleId AND m.timestamp between :startDate AND :endDate")
-
+                        query = "SELECT m FROM Measurement AS m WHERE m.measurementModule.id =:moduleId "+ Measurement.IN_DATES_CONDITION),
+                @NamedQuery(name = "Measurement.findInTimePeriodForHousePipes",
+                        query = "SELECT m FROM Measurement AS m WHERE m.measurementModule.class = :type AND m.measurementModule.pipe.id IN (:pipes) " + Measurement.IN_DATES_CONDITION)
         }
 )
 
 @Entity
 public class Measurement {
 
+    static final String IN_DATES_CONDITION = "AND m.timestamp between :startDate AND :endDate";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "MEASUREMENT_ID")

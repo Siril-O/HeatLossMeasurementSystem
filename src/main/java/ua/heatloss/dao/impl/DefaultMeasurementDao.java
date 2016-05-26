@@ -4,7 +4,9 @@ import org.springframework.stereotype.Repository;
 import ua.heatloss.dao.AbstractDao;
 import ua.heatloss.dao.MeasurementDao;
 import ua.heatloss.domain.Measurement;
+import ua.heatloss.domain.Pipe;
 import ua.heatloss.domain.modules.AbstractMeasurementModule;
+import ua.heatloss.domain.modules.PipeMeasurementModule;
 
 import javax.persistence.TemporalType;
 import javax.persistence.TypedQuery;
@@ -12,6 +14,7 @@ import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class DefaultMeasurementDao extends AbstractDao<Measurement> implements MeasurementDao {
@@ -70,9 +73,23 @@ public class DefaultMeasurementDao extends AbstractDao<Measurement> implements M
     public List<Measurement> findInTimePeriodForMeasurementSection(AbstractMeasurementModule module, Date startDate, Date endDate) {
         TypedQuery<Measurement> query = em.createNamedQuery("Measurement.findInTimePeriodForMeasurementModule", Measurement.class);
         query.setParameter("moduleId", module.getId());
-        query.setParameter("startDate",startDate,TemporalType.TIMESTAMP);
-        query.setParameter("endDate",endDate, TemporalType.TIMESTAMP);
+        query.setParameter("startDate", startDate, TemporalType.TIMESTAMP);
+        query.setParameter("endDate", endDate, TemporalType.TIMESTAMP);
         return query.getResultList();
+    }
+
+    @Override
+    public List<Measurement> findInTimePeriodForHousePipes(List<Pipe> pipes, Date startDate, Date endDate) {
+        TypedQuery<Measurement> query = em.createNamedQuery("Measurement.findInTimePeriodForHousePipes", Measurement.class);
+        query.setParameter("type", PipeMeasurementModule.class);
+        query.setParameter("pipes", extractIdList(pipes));
+        query.setParameter("startDate", startDate, TemporalType.TIMESTAMP);
+        query.setParameter("endDate", endDate, TemporalType.TIMESTAMP);
+        return query.getResultList();
+    }
+
+    private List<Long> extractIdList(List<Pipe> pipes) {
+        return pipes.stream().map(Pipe::getId).collect(Collectors.toList());
     }
 }
 

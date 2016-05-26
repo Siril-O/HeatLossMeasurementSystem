@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 		<div id="linechart_material"></div>
 
@@ -17,7 +18,7 @@
 
             	  var options = {
             		        chart: {
-            		          title: 'Power consumption of heat  in the building',
+            		          title: 'Heat Power Losses by House',
             		          subtitle: 'in wat'
             		        },
             		        width: 900,

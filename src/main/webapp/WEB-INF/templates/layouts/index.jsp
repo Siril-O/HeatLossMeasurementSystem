@@ -18,7 +18,7 @@ function initMap() {
   var marker = new google.maps.Marker({
     position: {lat: ${house.address.lat}, lng: ${house.address.lng}},
     title: 'Select house!',
-    url: '/HeatLossSystem/report/?houseId=${house.id}'
+    url: '/HeatLossSystem/report?houseId=${house.id}'
   });
   marker.setMap(map);
   google.maps.event.addListener(marker, 'click', function() {

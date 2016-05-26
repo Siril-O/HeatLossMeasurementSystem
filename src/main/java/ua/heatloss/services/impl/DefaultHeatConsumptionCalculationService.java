@@ -152,6 +152,13 @@ public class DefaultHeatConsumptionCalculationService implements HeatConsumption
         return calculateLossesPowerConsumptionForTimePeriod(groupLossContextByDate);
     }
 
+    @Override
+    public double calculateEnergyLossOnHouse(House house, Date startDate, Date endDate) {
+        Map<Date, LossContext> groupLossContextByDate = groupLossContextByDate(house, startDate, endDate);
+        Map<Date, Double> lossByDate = calculateLossesPowerConsumptionForTimePeriod(groupLossContextByDate);
+        return PowerToEnergyCalculator.calculate(lossByDate);
+    }
+
     private static class LossContext {
 
         private Measurement mainMeasurement;

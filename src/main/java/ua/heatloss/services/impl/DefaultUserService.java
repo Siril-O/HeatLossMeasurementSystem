@@ -1,19 +1,30 @@
 package ua.heatloss.services.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 import ua.heatloss.dao.UserDao;
 import ua.heatloss.domain.user.User;
 import ua.heatloss.services.UserService;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 @Service
 public class DefaultUserService implements UserService {
 
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Override
+    public void create(User user, String passwordConfirmation) {
+        int users = userDao.countUsersWithEmail(user.getEmail());
+        if (users == 0) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            userDao.create(user);
+        }
+    }
 
     @Override
     public void create(User entity) {

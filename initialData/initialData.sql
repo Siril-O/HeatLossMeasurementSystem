@@ -10,3 +10,7 @@ INSERT INTO sensor_model (id, MODEL_TYPE,maker,`name`,absoluteAccuracy, maxTempe
  VALUES (3,"TEMP","Taxas Instruments","TMP461 - High-Accuracy Remote and Local Temperature Sensor with Pin-Programmable Bus Address",0.005,140,-25,NULL,NULL);
 INSERT INTO sensor_model (id, MODEL_TYPE,maker,`name`,absoluteAccuracy, maxTemperature, minTemperature, maxFlowRate, minFlowRate)
  VALUES (4,"FLOW","Keyence","FD-Q10C",1,NULL,NULL,500,0.01);
+
+
+INSERT INTO user (id,USER_TYPE, email,name,password,ROLE) VALUES (1,'EMPL','kiril@g.com','Kiril Kovalchuk',
+'$2a$04$WT5b20WJsmuqBWrKMw8cv.RrQwB2p4ZSboLxCCDI1DkMV9.fkkNUa','ROLE_EMPLOYEE');

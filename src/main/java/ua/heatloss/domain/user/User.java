@@ -1,25 +1,14 @@
 package ua.heatloss.domain.user;
 
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-
+import javax.persistence.*;
 
 
 @NamedQueries({
-        @NamedQuery(name = "User.find",query = "SELECT u FROM Measurement AS u"),
-        @NamedQuery(name = "User.getTotalCount",query = "SELECT count(u.id) FROM User AS u"),
-        @NamedQuery(name = "User.findByEmail",query = "SELECT u FROM User WHERE u.email=:email")
+        @NamedQuery(name = "User.find", query = "SELECT u FROM Measurement AS u"),
+        @NamedQuery(name = "User.getTotalCount", query = "SELECT count(u.id) FROM User AS u"),
+        @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User AS u WHERE u.email=:email"),
+        @NamedQuery(name = "User.countWithEmail", query = "SELECT count(u.id) FROM User AS u WHERE u.email=:email")
+
 })
 
 @Entity
@@ -80,5 +69,16 @@ public abstract class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", role=" + role +
+                '}';
     }
 }

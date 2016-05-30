@@ -1,5 +1,5 @@
 package ua.heatloss.domain.user;
 
 public enum Role {
-    CUSTOMER, EMPLOYEE
+    ROLE_CUSTOMER, ROLE_EMPLOYEE
 }

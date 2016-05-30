@@ -13,13 +13,14 @@
         <intercept-url pattern="/resources/**" access="permitAll" />
         <intercept-url pattern="/403" access="permitAll" />
         <intercept-url pattern="/*" access="permitAll" />
-        <intercept-url pattern="/user/login**" access="permitAll" />
+        <intercept-url pattern="/login**" access="permitAll" />
+        <intercept-url pattern="/user/register/employee" access="permitAll" />
 
-        <intercept-url pattern="/**" access="hasAnyRole('ROLE_TUTOR','ROLE_ADMIN')" />
+        <intercept-url pattern="/**" access="hasAnyRole('ROLE_CUSTOMER','ROLE_EMPLOYEE')" />
 
-        <form-login login-page="/jsp/user/login"
+        <form-login login-page="/login"
                     login-processing-url="/login" username-parameter="username"
-                    password-parameter="password" authentication-failure-url="/jsp/user/login?error"
+                    password-parameter="password" authentication-failure-url="/login?error"
                     authentication-success-handler-ref="mySuccessHandler" />
         <logout />
         <csrf disabled="true" />

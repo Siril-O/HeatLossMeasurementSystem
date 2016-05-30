@@ -29,6 +29,8 @@ public class AbstractController {
     public static final String MANAGE = "manage";
     public static final String DOT = ".";
     public static final String HOUSE = "house";
+    public static final String ADMIN = "admin";
+
     @Autowired
     private PipeService pipeService;
 

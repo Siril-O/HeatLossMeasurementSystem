@@ -27,12 +27,12 @@ public class SuccessHandler implements AuthenticationSuccessHandler {
         Set<String> roles = AuthorityUtils.authorityListToSet(authentication
                 .getAuthorities());
 
-        if (roles.contains(Role.EMPLOYEE.toString())) {
+        if (roles.contains(Role.ROLE_EMPLOYEE.toString())) {
             httpServletResponse.sendRedirect(httpServletResponse
                     .encodeRedirectURL(EMPLOYEE_URL));
             return;
         }
-        if (roles.contains(Role.CUSTOMER.toString())) {
+        if (roles.contains(Role.ROLE_CUSTOMER.toString())) {
             httpServletResponse.sendRedirect(httpServletResponse
                     .encodeRedirectURL(CUSTOMER_URL));
             return;

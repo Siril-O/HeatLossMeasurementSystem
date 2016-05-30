@@ -26,7 +26,7 @@ public class ApartmentController extends AbstractController {
         Apartment apartment = new Apartment();
         apartment.setHouse(house);
         model.addAttribute("apartment", apartment);
-        return APARTMENT + DOT + CREATE;
+        return ADMIN + DOT + APARTMENT + DOT + CREATE;
     }
 
     @RequestMapping(method = RequestMethod.POST)

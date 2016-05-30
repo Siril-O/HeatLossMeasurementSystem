@@ -14,8 +14,7 @@
 	<nav class="navbar navbar-default navbar-fixed-top">
 	<div class="container">
 		<div class="navbar-header">
-			<a class="navbar-brand" href="/QuizSystem/jsp/user/all">Quiz
-				System</a>
+			<a class="navbar-brand" href="/">Heat Loss Measurement System</a>
 		</div>
 	</div>
 	</nav>

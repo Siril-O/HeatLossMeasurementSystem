@@ -16,7 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 @Controller
-public class IndexCotroller extends AbstractController{
+public class IndexController extends AbstractController{
 
     private static final String key ="";
     @Autowired
@@ -30,4 +30,8 @@ public class IndexCotroller extends AbstractController{
         return "index";
     }
 
+    @RequestMapping(value = "/login")
+    public String loginForm(){
+        return "login";
+    }
 }

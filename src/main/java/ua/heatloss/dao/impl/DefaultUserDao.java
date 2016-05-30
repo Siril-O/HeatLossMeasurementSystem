@@ -1,15 +1,14 @@
 package ua.heatloss.dao.impl;
 
+import org.springframework.stereotype.Repository;
 import ua.heatloss.dao.AbstractDao;
 import ua.heatloss.dao.UserDao;
 import ua.heatloss.domain.user.User;
 
-import java.util.List;
-
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
-
-import org.springframework.stereotype.Repository;
+import java.util.List;
 
 @Repository
 public class DefaultUserDao extends AbstractDao<User> implements UserDao {
@@ -49,9 +48,16 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
     }
 
     @Override
-    public User getUserByEmail(final String email){
+    public User getUserByEmail(final String email) {
         TypedQuery<User> query = em.createNamedQuery("User.findByEmail", User.class);
         query.setParameter("email", email);
         return query.getSingleResult();
+    }
+
+    @Override
+    public int countUsersWithEmail(final String email) {
+        Query query = em.createNamedQuery("User.countWithEmail");
+        query.setParameter("email", email);
+        return (int) query.getSingleResult();
     }
 }

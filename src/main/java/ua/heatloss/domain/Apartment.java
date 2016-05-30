@@ -2,6 +2,7 @@ package ua.heatloss.domain;
 
 
 import ua.heatloss.domain.modules.ApartmentMeasurementModule;
+import ua.heatloss.domain.user.Customer;
 
 import javax.persistence.*;
 import java.util.List;
@@ -35,6 +36,8 @@ public class Apartment {
     private Integer rooms;
     private Integer floor;
 
+    @OneToMany(mappedBy = "apartment", fetch = FetchType.LAZY)
+    private List<Customer> customers;
 
     public Long getId() {
         return id;
@@ -90,6 +93,15 @@ public class Apartment {
 
     public void setHouse(House house) {
         this.house = house;
+    }
+
+
+    public List<Customer> getCustomers() {
+        return customers;
+    }
+
+    public void setCustomers(List<Customer> customers) {
+        this.customers = customers;
     }
 
     @Override

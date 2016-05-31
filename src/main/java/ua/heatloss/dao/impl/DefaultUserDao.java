@@ -55,9 +55,9 @@ public class DefaultUserDao extends AbstractDao<User> implements UserDao {
     }
 
     @Override
-    public int countUsersWithEmail(final String email) {
+    public long countUsersWithEmail(final String email) {
         Query query = em.createNamedQuery("User.countWithEmail");
         query.setParameter("email", email);
-        return (int) query.getSingleResult();
+        return (long) query.getSingleResult();
     }
 }

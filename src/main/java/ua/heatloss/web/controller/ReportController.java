@@ -9,8 +9,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import ua.heatloss.domain.House;
 import ua.heatloss.domain.modules.AbstractMeasurementModule;
+import ua.heatloss.domain.modules.ApartmentMeasurementModule;
+import ua.heatloss.domain.user.Customer;
+import ua.heatloss.domain.user.User;
 import ua.heatloss.facades.ReportsFacade;
 import ua.heatloss.services.HouseService;
+import ua.heatloss.services.UserService;
 import ua.heatloss.web.utils.PagingUtils;
 import ua.heatloss.web.utils.PagingWrapper;
 
@@ -26,6 +30,8 @@ public class ReportController extends AbstractController {
     private ReportsFacade reportsFacade;
     @Autowired
     private HouseService houseService;
+    @Autowired
+    private UserService userService;
 
 
     @RequestMapping(method = {RequestMethod.POST, RequestMethod.GET})
@@ -79,5 +85,41 @@ public class ReportController extends AbstractController {
         final Map<Date, Double> chartData = reportsFacade.buildReportOfHouseConsumedPower(house, startDate, endDate);
         model.addAttribute("dataMap", chartData);
         return "report.houseHeatLoss";
+    }
+
+    @RequestMapping(value = "power/module")
+    public String showModulePowerReport(@RequestParam(value = "moduleId", required = false)ApartmentMeasurementModule module,
+                                        @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern =  "yyyy-MM-dd") Date startDate,
+                                        @RequestParam(value = "endDate", required = false) @DateTimeFormat(pattern =  "yyyy-MM-dd") Date endDate,
+                                        Model model){
+        if(module == null){
+            module = defineModule();
+        }
+        final Map<Date, Double> chartData = reportsFacade.buildPowerReportForMeasurementModule(module, startDate, endDate);
+        model.addAttribute("dataMap", chartData);
+        return "report.modulePowerReport";
+    }
+
+    @RequestMapping(value = "energy/module")
+    public String showModuleEnergyReport(@RequestParam(value = "moduleId", required = false)ApartmentMeasurementModule module,
+                                        @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
+                                        @RequestParam(value = "endDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
+                                        Model model){
+        if(module == null){
+            module = defineModule();
+        }
+        final Map<Date, Double> chartData = reportsFacade.buildEnergyReportForMeasurementModuleByDay(module, startDate, endDate);
+        model.addAttribute("dataMap", chartData);
+        return "report.moduleEnergyReport";
+    }
+
+
+    private ApartmentMeasurementModule defineModule(){
+        Customer customer = userService.getCurrentCustomer();
+            if(customer == null || customer.getApartment() == null || customer.getApartment().getMeasurementModules() == null ||
+                    customer.getApartment().getMeasurementModules().size() <= 0){
+                throw new IllegalArgumentException("no module selected");
+            }
+        return customer.getApartment().getMeasurementModules().iterator().next();
     }
 }

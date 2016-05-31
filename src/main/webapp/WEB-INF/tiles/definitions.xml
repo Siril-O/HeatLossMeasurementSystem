@@ -6,6 +6,7 @@
 
     <definition name="index" extends="base-template">
         <put-attribute name="title" value="main"/>
+        <put-attribute name="top-menu" value="/WEB-INF/templates/employee_top_menu.jsp"/>
         <put-attribute name="content" value="/WEB-INF/templates/layouts/index.jsp"/>
     </definition>
 
@@ -21,11 +22,13 @@
     </definition>
 
     <definition name="admin.*.*" extends="base-template">
+        <put-attribute name="top-menu" value="/WEB-INF/templates/employee_top_menu.jsp"/>
         <put-attribute name="title" value="{2}"/>
         <put-attribute name="content" value="/WEB-INF/templates/layouts/admin/{1}/{2}.jsp"/>
     </definition>
 
     <definition name="*.*" extends="base-template">
+        <put-attribute name="top-menu" value="/WEB-INF/templates/customer_top_menu.jsp"/>
         <put-attribute name="title" value="{2}"/>
         <put-attribute name="content" value="/WEB-INF/templates/layouts/{1}/{2}.jsp"/>
     </definition>

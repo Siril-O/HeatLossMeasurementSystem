@@ -18,7 +18,7 @@ public class SuccessHandler implements AuthenticationSuccessHandler {
 
 
     private final static String EMPLOYEE_URL = "";
-    private final static String CUSTOMER_URL = "";
+    private final static String CUSTOMER_URL = "report/power/module";
 
 
     @Override

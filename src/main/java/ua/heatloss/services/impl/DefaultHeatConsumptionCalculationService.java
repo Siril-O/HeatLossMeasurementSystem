@@ -11,6 +11,8 @@ import ua.heatloss.services.HeatConsumptionCalculationService;
 import ua.heatloss.services.MeasurementService;
 import ua.heatloss.services.helper.PowerToEnergyCalculator;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 
 @Component
@@ -22,12 +24,29 @@ public class DefaultHeatConsumptionCalculationService implements HeatConsumption
     private MeasurementService measurementService;
 
     @Override
-    public double calculateConsumedEnergyForMeasurementModule(AbstractMeasurementModule module,
+    public double calculateEnergyForMeasurementModule(AbstractMeasurementModule module,
                                                               Date startDate, Date endDate) {
         return PowerToEnergyCalculator.calculate(calculateModulePowerInTimePeriod(module, startDate, endDate));
     }
 
     @Override
+    public Map<Date, Double> calculateEnergyForMeasurementModuleByDays(AbstractMeasurementModule module, Date startDate, Date endDate) {
+        final Map<Date, Double> energyByDays = new LinkedHashMap<>();
+
+        Calendar start = Calendar.getInstance();
+        start.setTime(startDate);
+        Calendar end = Calendar.getInstance();
+        end.setTime(endDate);
+
+        Date prevDate = start.getTime();
+        start.add(Calendar.DATE, 1);
+        for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
+            energyByDays.put(date, PowerToEnergyCalculator.calculate(calculateModulePowerInTimePeriod(module, prevDate, date)));
+            prevDate = start.getTime();
+        }
+        return energyByDays;
+    }
+            @Override
     public Map<Date, Double> calculateModulePowerInTimePeriod(AbstractMeasurementModule module, Date startDate, Date endDate) {
         return calculateModulePowerByTime(module, startDate, endDate);
     }

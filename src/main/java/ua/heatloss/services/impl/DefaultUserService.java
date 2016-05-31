@@ -1,9 +1,12 @@
 package ua.heatloss.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ua.heatloss.dao.UserDao;
+import ua.heatloss.domain.user.Customer;
 import ua.heatloss.domain.user.User;
 import ua.heatloss.services.UserService;
 
@@ -19,7 +22,7 @@ public class DefaultUserService implements UserService {
 
     @Override
     public void create(User user, String passwordConfirmation) {
-        int users = userDao.countUsersWithEmail(user.getEmail());
+        long users = userDao.countUsersWithEmail(user.getEmail());
         if (users == 0) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             userDao.create(user);
@@ -59,5 +62,22 @@ public class DefaultUserService implements UserService {
     @Override
     public void refresh(User entity) {
         userDao.refresh(entity);
+    }
+
+    @Override
+    public User getCurrentUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+        return getUserByEmail(email);
+    }
+
+    @Override
+    public Customer getCurrentCustomer() {
+        User user = getCurrentUser();
+        if (user instanceof Customer) {
+            return (Customer) user;
+        } else {
+            return null;
+        }
     }
 }

@@ -11,7 +11,10 @@ import java.util.Map;
 public interface HeatConsumptionCalculationService {
 
 
-    double calculateConsumedEnergyForMeasurementModule(AbstractMeasurementModule module,
+    double calculateEnergyForMeasurementModule(AbstractMeasurementModule module,
+                                                       Date startDate, Date endDate);
+
+    Map<Date,Double> calculateEnergyForMeasurementModuleByDays(AbstractMeasurementModule module,
                                                        Date startDate, Date endDate);
 
     Map<Date, Double> calculateModulePowerInTimePeriod(AbstractMeasurementModule module, Date startDate, Date endDate);

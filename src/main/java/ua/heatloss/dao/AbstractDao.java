@@ -55,7 +55,7 @@ public abstract class AbstractDao<T> {
 
 
 
-    protected Long getTotalResultCount(String queryString) {
+    protected long getTotalResultCount(String queryString) {
         final Query queryTotal = em.createNamedQuery(queryString);
         return (long) queryTotal.getSingleResult();
     }

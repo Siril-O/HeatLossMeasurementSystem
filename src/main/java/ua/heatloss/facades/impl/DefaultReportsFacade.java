@@ -61,4 +61,18 @@ public class DefaultReportsFacade implements ReportsFacade {
                 period.getEndDate());
     }
 
+    @Override
+    public Map<Date, Double> buildPowerReportForMeasurementModule(AbstractMeasurementModule module, Date startDate, Date endDate){
+        DateHelper.DatePeriod period = DateHelper.checkDates(startDate, endDate);
+        return consumptionCalculationService.calculateModulePowerInTimePeriod(module, period.getStartDate(),
+                period.getEndDate());
+    }
+
+    @Override
+    public Map<Date, Double> buildEnergyReportForMeasurementModuleByDay(AbstractMeasurementModule module, Date startDate, Date endDate){
+        DateHelper.DatePeriod period = DateHelper.checkDates(startDate, endDate);
+        return consumptionCalculationService.calculateEnergyForMeasurementModuleByDays(module, period.getStartDate(),
+                period.getEndDate());
+    }
+
 }

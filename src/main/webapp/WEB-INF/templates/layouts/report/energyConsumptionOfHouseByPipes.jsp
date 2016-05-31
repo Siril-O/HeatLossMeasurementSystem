@@ -31,7 +31,7 @@
   </table>
 </div>
 		<script type="text/javascript">
-            google.load("visualization", "1", {packages:["corechart"]});
+            google.load("visualization", "1.1", {packages:["corechart"]});
             google.setOnLoadCallback(drawChart);
 
               function drawChart() {

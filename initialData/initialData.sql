@@ -14,3 +14,5 @@ INSERT INTO sensor_model (id, MODEL_TYPE,maker,`name`,absoluteAccuracy, maxTempe
 
 INSERT INTO user (id,USER_TYPE, email,name,password,ROLE) VALUES (1,'EMPL','kiril@g.com','Kiril Kovalchuk',
 '$2a$04$WT5b20WJsmuqBWrKMw8cv.RrQwB2p4ZSboLxCCDI1DkMV9.fkkNUa','ROLE_EMPLOYEE');
+INSERT INTO user (id,USER_TYPE, email,name,password,ROLE,APARTMENT_ID) VALUES (1,'EMPL','customer@g.com','Customer',
+'$2a$04$gv4WFgM1aLPrfOfce/qn9uj8hvTxgsyAdOemAVKCqc72V4aLAaVzS','ROLE_CUSTOMER',1);

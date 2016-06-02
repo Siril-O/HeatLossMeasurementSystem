@@ -18,6 +18,8 @@
 
         <intercept-url pattern="/report/power/module**" access="hasAnyRole('ROLE_EMPLOYEE','ROLE_CUSTOMER')" />
         <intercept-url pattern="/report/energy/module**" access="hasAnyRole('ROLE_EMPLOYEE','ROLE_CUSTOMER')" />
+        <intercept-url pattern="/report/energy/apartment**" access="hasAnyRole('ROLE_EMPLOYEE','ROLE_CUSTOMER')" />
+        <intercept-url pattern="/report/power/apartment**" access="hasAnyRole('ROLE_EMPLOYEE','ROLE_CUSTOMER')" />
 
         <intercept-url pattern="/**" access="hasAnyRole('ROLE_EMPLOYEE')" />
 

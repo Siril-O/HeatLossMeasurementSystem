@@ -16,7 +16,6 @@
                 <li><c:url var="logOutUrl" value="/logout" />
                 	<form action="${logOutUrl}" method="post" class="navbar-form navbar-right">
                 		<div class="form-group">
-                			<a href="/QuizSystem/jsp/user/info">${user.name}, ${user.surname}</a>
                 			<input class="btn btn-primary" type="submit" value="Log Out" />
                 			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                 		</div>

@@ -26,8 +26,12 @@ public class PowerToEnergyCalculator {
         return result;
     }
 
+    public static double calculateInKJoule(Map<Date, Double> powerByTime){
+        return calculate(powerByTime)/1000;
+    }
+
     private static double calculateEnergy(double powerA, double powerB, double timeA, double timeB) {
-        return (timeA - timeB) * abs((powerA + powerB) / 2);
+        return abs(timeB - timeA) * abs((powerA + powerB) / 2);
     }
 
 

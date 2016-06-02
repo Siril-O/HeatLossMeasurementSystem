@@ -35,7 +35,7 @@ public class ReportController extends AbstractController {
 
 
     @RequestMapping(method = {RequestMethod.POST, RequestMethod.GET})
-    public String indexHandler(@RequestParam(value = "houseId", defaultValue = "1") House house,
+    public String indexHandler(@RequestParam(value = "houseId") House house,
                                @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date startDate,
                                @RequestParam(value = "finishDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date endDate,
                                Model model) {
@@ -58,7 +58,7 @@ public class ReportController extends AbstractController {
     }
 
     @RequestMapping(value = "power/house/loss")
-    public String showHousePowerLossReport(@RequestParam(value = "houseId", defaultValue = "1") House house,
+    public String showHousePowerLossReport(@RequestParam(value = "houseId") House house,
                                            @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date startDate,
                                            @RequestParam(value = "finishDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date endDate,
                                            Model model) {
@@ -68,7 +68,7 @@ public class ReportController extends AbstractController {
     }
 
     @RequestMapping(value = "power/house/input")
-    public String showHouseInputPowerReport(@RequestParam(value = "houseId", defaultValue = "1") House house,
+    public String showHouseInputPowerReport(@RequestParam(value = "houseId") House house,
                                             @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date startDate,
                                             @RequestParam(value = "finishDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date endDate,
                                             Model model) {
@@ -78,7 +78,7 @@ public class ReportController extends AbstractController {
     }
 
     @RequestMapping(value = "power/house/consumed")
-    public String showHouseConsumedPowerReport(@RequestParam(value = "houseId", defaultValue = "1") House house,
+    public String showHouseConsumedPowerReport(@RequestParam(value = "houseId") House house,
                                                @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date startDate,
                                                @RequestParam(value = "finishDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date endDate,
                                                Model model) {

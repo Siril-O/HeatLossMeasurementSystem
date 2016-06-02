@@ -3,10 +3,13 @@ package ua.heatloss.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import ua.heatloss.domain.Apartment;
 import ua.heatloss.domain.House;
 import ua.heatloss.domain.Measurement;
 import ua.heatloss.domain.Pipe;
 import ua.heatloss.domain.modules.AbstractMeasurementModule;
+import ua.heatloss.domain.modules.ApartmentMeasurementModule;
 import ua.heatloss.services.HeatConsumptionCalculationService;
 import ua.heatloss.services.MeasurementService;
 import ua.heatloss.services.helper.PowerToEnergyCalculator;
@@ -202,6 +205,43 @@ public class DefaultHeatConsumptionCalculationService implements HeatConsumption
     public Map<Date, Double> calculateHouseConsumedPowerForTimePeriod(House house, Date startDate, Date endDate) {
         Map<Date, LossContext> groupLossContextByDate = groupLossContextByDate(house, startDate, endDate);
         return calculatePowerConsumptionInTimePeriod(groupLossContextByDate);
+    }
+
+
+    @Override
+    public Map<Date, Double> calculateApartmentPowerForTimePeriod(Apartment app, Date startDate, Date endDate) {
+        List<Map<Date, Double>> listMaps = new ArrayList<>();
+        for (ApartmentMeasurementModule module : app.getMeasurementModules()) {
+            listMaps.add(calculateModulePowerInTimePeriod(module, startDate, endDate));
+        }
+        return sumDateMaps(listMaps);
+    }
+
+    private Map<Date, Double> sumDateMaps(List<Map<Date, Double>> listMaps) {
+        checkMapSize(listMaps);
+        Map<Date, Double> summ = new LinkedHashMap<>();
+        for (Map<Date, Double> map : listMaps) {
+            for (Map.Entry<Date, Double> entry : map.entrySet()) {
+                if (summ.get(entry.getKey()) == null) {
+                    summ.put(entry.getKey(), entry.getValue());
+                } else {
+                    summ.put(entry.getKey(), entry.getValue() + entry.getValue());
+                }
+            }
+        }
+        return summ;
+    }
+
+    private void checkMapSize(List<Map<Date, Double>> listMaps) {
+        int size = 0;
+        if (!listMaps.iterator().hasNext()) {
+            size = listMaps.get(0).size();
+        }
+        for (Map<Date, Double> map : listMaps) {
+            if (size != map.size()) {
+                throw new IllegalStateException("Measurements does not match");
+            }
+        }
     }
 
     private static class LossContext {

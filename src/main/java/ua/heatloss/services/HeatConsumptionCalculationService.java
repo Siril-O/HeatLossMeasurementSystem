@@ -1,5 +1,6 @@
 package ua.heatloss.services;
 
+import ua.heatloss.domain.Apartment;
 import ua.heatloss.domain.House;
 import ua.heatloss.domain.Measurement;
 import ua.heatloss.domain.modules.AbstractMeasurementModule;
@@ -30,4 +31,6 @@ public interface HeatConsumptionCalculationService {
     double calculateEnergyLossOnHouse(House house, Date startDate, Date endDate);
 
     Map<Date, Double> calculateHouseConsumedPowerForTimePeriod(House house, Date startDate, Date endDate);
+
+    Map<Date, Double> calculateApartmentPowerForTimePeriod(Apartment app, Date startDate, Date endDate);
 }

@@ -6,7 +6,7 @@ import ua.heatloss.dao.AbstractDao;
 
 public class PagingUtils {
 
-    public static int preparePaging(PagingWrapper pagingWrapper, Long total, Model model) {
+    public static int preparePaging(Paging pagingWrapper, Long total, Model model) {
         Integer limit = pagingWrapper.getLimit();
         if (limit == null || limit == 0) {
             limit = AbstractDao.DEFAULT_LIMIT;
@@ -18,6 +18,7 @@ public class PagingUtils {
         model.addAttribute("pagesQuantity", pagesQuantity);
         model.addAttribute("offset", pagingWrapper.getOffset());
         model.addAttribute("limit", limit);
+        model.addAttribute("enablePaging", true);
         return pagesQuantity;
     }
 }

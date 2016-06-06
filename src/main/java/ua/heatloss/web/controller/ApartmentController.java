@@ -30,7 +30,7 @@ public class ApartmentController extends AbstractController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public String createHouse(Apartment apartment, Model model, RedirectAttributes redirectAttributes) {
+    public String createApartment(Apartment apartment, Model model, RedirectAttributes redirectAttributes) {
         apartmentService.create(apartment);
         return redirectToManageHouse(apartment.getHouse(), redirectAttributes);
     }

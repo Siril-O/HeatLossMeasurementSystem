@@ -13,13 +13,15 @@ import ua.heatloss.domain.PipeSystem;
 import ua.heatloss.facades.HouseFacade;
 import ua.heatloss.services.HouseService;
 import ua.heatloss.web.utils.PagingUtils;
-import ua.heatloss.web.utils.PagingWrapper;
+import ua.heatloss.web.utils.Paging;
 
 import java.util.List;
 
 @Controller
 @RequestMapping("/house")
 public class HouseController extends AbstractController {
+
+    private static final String key = "";
 
 
     @Autowired
@@ -52,12 +54,22 @@ public class HouseController extends AbstractController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = SLASH + LIST)
-    public String getAllHouses(PagingWrapper paging, Model model) {
+    public String getAllHouses(Paging paging, Model model) {
         final List<House> houses = houseService.getList(paging.getOffset(), paging.getLimit());
         Long total = houseService.getTotalResultCount();
         PagingUtils.preparePaging(paging, total, model);
         model.addAttribute("houses", houses);
-        return HOUSE + PAGED_LIST;
+        model.addAttribute("APIkey", key);
+        return HOUSE + "list";
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    public String getAllHousesOnMap(Paging paging, Model model) {
+        final List<House> houses = houseService.getList(paging.getOffset(), paging.getLimit());
+        Long total = houseService.getTotalResultCount();
+        PagingUtils.preparePaging(paging, total, model);
+        model.addAttribute("houses", houses);
+        return "admin."+ HOUSE + ".map";
     }
 
 

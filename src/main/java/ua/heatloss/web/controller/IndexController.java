@@ -2,28 +2,29 @@ package ua.heatloss.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import ua.heatloss.domain.House;
-import ua.heatloss.services.HouseService;
-
-import java.util.List;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import ua.heatloss.domain.user.Employee;
+import ua.heatloss.domain.user.User;
+import ua.heatloss.services.UserService;
 
 
 @Controller
 public class IndexController extends AbstractController {
 
-    private static final String key = "";
     @Autowired
-    private HouseService houseService;
+    private UserService userService;
 
     @RequestMapping(value = {"/"})
-    public String index(Model model) {
-        List<House> houses = houseService.getList(0, 1000);
-        model.addAttribute("houses", houses);
-        model.addAttribute("APIkey", key);
-        return "index";
+    public String index(RedirectAttributes attributes) {
+
+        User user = userService.getCurrentUser();
+        if (user instanceof Employee) {
+            return REDIRECT + HOUSE;
+        } else {
+            return "energy/apartment";
+        }
     }
 
     @RequestMapping(value = "/403", method = RequestMethod.GET)

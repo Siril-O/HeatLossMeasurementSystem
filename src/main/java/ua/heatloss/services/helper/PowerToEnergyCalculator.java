@@ -1,10 +1,7 @@
 package ua.heatloss.services.helper;
 
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static java.lang.Math.abs;
@@ -16,7 +13,7 @@ public class PowerToEnergyCalculator {
         for (Map.Entry<Date, Double> entry : powerByTime.entrySet()) {
             values.add(new Value(TimeUnit.SECONDS.convert(entry.getKey().getTime(), TimeUnit.MILLISECONDS), entry.getValue()));
         }
-
+        Collections.sort(values, (o1, o2) -> Long.compare(o1.getTime(), o2.getTime()));
         double result = 0;
         for (int i = 1; i < values.size(); i++) {
             Value prevValue = values.get(i - 1);
@@ -26,8 +23,8 @@ public class PowerToEnergyCalculator {
         return result;
     }
 
-    public static double calculateInKJoule(Map<Date, Double> powerByTime){
-        return calculate(powerByTime)/1000;
+    public static double calculateInKJoule(Map<Date, Double> powerByTime) {
+        return calculate(powerByTime) / 1000;
     }
 
     private static double calculateEnergy(double powerA, double powerB, double timeA, double timeB) {
@@ -41,6 +38,22 @@ public class PowerToEnergyCalculator {
 
         public Value(long time, double power) {
             this.time = time;
+            this.power = power;
+        }
+
+        public long getTime() {
+            return time;
+        }
+
+        public void setTime(long time) {
+            this.time = time;
+        }
+
+        public double getPower() {
+            return power;
+        }
+
+        public void setPower(double power) {
             this.power = power;
         }
     }

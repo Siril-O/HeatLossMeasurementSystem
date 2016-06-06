@@ -2,7 +2,7 @@ package ua.heatloss.web.utils;
 
 import ua.heatloss.dao.AbstractDao;
 
-public class PagingWrapper {
+public class Paging {
 
     private Integer offset = 0;
     private Integer limit = AbstractDao.DEFAULT_LIMIT;
@@ -25,7 +25,7 @@ public class PagingWrapper {
 
     @Override
     public String toString() {
-        return "PagingWrapper{" +
+        return "Paging{" +
                 "offset=" + offset +
                 ", limit=" + limit +
                 '}';

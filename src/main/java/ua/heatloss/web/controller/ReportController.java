@@ -11,10 +11,14 @@ import ua.heatloss.domain.House;
 import ua.heatloss.domain.modules.ApartmentMeasurementModule;
 import ua.heatloss.domain.user.Customer;
 import ua.heatloss.facades.ReportsFacade;
+import ua.heatloss.services.HeatConsumptionCalculationService;
 import ua.heatloss.services.HouseService;
 import ua.heatloss.services.UserService;
+import ua.heatloss.services.helper.DateHelper;
+import ua.heatloss.web.controller.dto.HouseReportData;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -27,14 +31,50 @@ public class ReportController extends AbstractController {
     private HouseService houseService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private HeatConsumptionCalculationService calculationService;
+
+    @RequestMapping(value = "power/house")
+    public String showHousePowerReport(@RequestParam(value = "houseId") House house,
+                                       @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
+                                       @RequestParam(value = "endDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
+                                       Model model) {
+        DateHelper.DatePeriod period = DateHelper.checkDates(startDate, endDate);
+        final List<HouseReportData> chartData = calculationService.calculateHousePower(house, period.getStartDate(),
+                period.getEndDate());
+        model.addAttribute("dataMap", chartData);
+        model.addAttribute("startDate", period.getStartDate());
+        model.addAttribute("endDate", period.getEndDate());
+        model.addAttribute("house", house);
+        return "admin.report.housePower";
+    }
+
+    @RequestMapping(value = "energy/house")
+    public String showHouseEnergyReport(@RequestParam(value = "houseId") House house,
+                                       @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
+                                       @RequestParam(value = "endDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
+                                       Model model) {
+        DateHelper.DatePeriod period = DateHelper.checkDates(startDate, endDate);
+        final List<HouseReportData> chartData = calculationService.calculateHouseEnergyInTimePeriod(house, period.getStartDate(),
+                period.getEndDate());
+        model.addAttribute("dataMap", chartData);
+        model.addAttribute("startDate", period.getStartDate());
+        model.addAttribute("endDate", period.getEndDate());
+        model.addAttribute("house", house);
+        return "admin.report.houseEnergy";
+    }
 
     @RequestMapping(value = "power/house/loss")
     public String showHousePowerLossReport(@RequestParam(value = "houseId") House house,
                                            @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date startDate,
-                                           @RequestParam(value = "finishDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date endDate,
+                                           @RequestParam(value = "endDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date endDate,
                                            Model model) {
-        final Map<Date, Double> chartData = reportsFacade.buildReportOfHousePowerLoss(house, startDate, endDate);
+        DateHelper.DatePeriod period = DateHelper.checkDates(startDate, endDate);
+        final Map<Date, Double> chartData = calculationService.calculatePowerLossOnHouse(house, period.getStartDate(),
+                period.getEndDate());
         model.addAttribute("dataMap", chartData);
+        model.addAttribute("startDate", period.getStartDate());
+        model.addAttribute("endDate", period.getEndDate());
         return "report.houseHeatLoss";
     }
 

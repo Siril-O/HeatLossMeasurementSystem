@@ -45,6 +45,7 @@ public class DateHelper {
             calendar.set(Calendar.MILLISECOND, 0);
 
             if (startDate == null || endDate == null) {
+                calendar.setTime(new Date());
                 calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
                 startDate = calendar.getTime();
                 calendar.add(Calendar.DATE, 7);

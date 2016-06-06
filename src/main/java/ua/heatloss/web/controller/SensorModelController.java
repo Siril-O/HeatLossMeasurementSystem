@@ -11,8 +11,8 @@ import ua.heatloss.domain.modules.AbstractMeasurementModule;
 import ua.heatloss.domain.sensors.model.FlowSensorModel;
 import ua.heatloss.domain.sensors.model.TemperatureSensorModel;
 import ua.heatloss.services.SensorModelService;
+import ua.heatloss.web.utils.Paging;
 import ua.heatloss.web.utils.PagingUtils;
-import ua.heatloss.web.utils.PagingWrapper;
 
 import java.util.List;
 
@@ -50,7 +50,7 @@ public class SensorModelController extends AbstractController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = SLASH + LIST + FLOW)
-    public String getFlowSensorModels(PagingWrapper paging, Model model) {
+    public String getFlowSensorModels(Paging paging, Model model) {
         final List<FlowSensorModel> flowSensorModels = sensorModelService.getFlowModelsList(paging.getOffset(), paging.getLimit());
         Long total = sensorModelService.getFlowModelsTotalCount();
         PagingUtils.preparePaging(paging, total, model);
@@ -59,7 +59,7 @@ public class SensorModelController extends AbstractController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = SLASH + LIST + TEMPERATURE)
-    public String getTemperatureSensorModels(PagingWrapper paging, Model model) {
+    public String getTemperatureSensorModels(Paging paging, Model model) {
         final List<TemperatureSensorModel> temperatureSensorModels = sensorModelService.getTemperatureModelsList(paging.getOffset(), paging.getLimit());
         Long total = sensorModelService.getTemperatureModelsTotalCount();
         PagingUtils.preparePaging(paging, total, model);

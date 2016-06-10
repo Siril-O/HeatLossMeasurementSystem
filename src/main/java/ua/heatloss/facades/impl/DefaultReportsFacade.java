@@ -8,7 +8,7 @@ import ua.heatloss.domain.modules.AbstractMeasurementModule;
 import ua.heatloss.facades.ReportsFacade;
 import ua.heatloss.services.HeatConsumptionCalculationService;
 import ua.heatloss.services.helper.DateHelper;
-import ua.heatloss.web.controller.dto.HouseReportData;
+import ua.heatloss.web.controller.dto.HouseReportDataEntry;
 
 import java.util.Date;
 import java.util.List;
@@ -81,7 +81,7 @@ public class DefaultReportsFacade implements ReportsFacade {
     }
 
     @Override
-    public List<HouseReportData> buidHousePowerReport(House house, Date startDate, Date endDate) {
+    public List<HouseReportDataEntry> buidHousePowerReport(House house, Date startDate, Date endDate) {
         DateHelper.DatePeriod period = DateHelper.checkDates(startDate, endDate);
         return calculationService.calculateHousePower(house, period.getStartDate(), period.getEndDate());
     }

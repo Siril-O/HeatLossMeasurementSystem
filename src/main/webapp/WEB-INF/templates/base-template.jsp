@@ -14,6 +14,7 @@
           <script src="<c:url value="/resources/js/jquery-1.10.2.js" />" ></script>
             <script src="<c:url value="/resources/js/jsapi.js" />" ></script>
             <script src="<c:url value="/resources/js/jquery-ui.js" />" ></script>
+            <script src="<c:url value="/resources/js/custom.js" />" ></script>
             <link href="<c:url value="/resources/css/style.css" />" rel="stylesheet">
             <link href="<c:url value="/resources/css/bootstrap.min.css" />" rel="stylesheet">
             <link href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">

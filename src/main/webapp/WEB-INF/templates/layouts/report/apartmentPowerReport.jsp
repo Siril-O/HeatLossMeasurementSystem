@@ -8,14 +8,15 @@
   <h3>Choose time interval</h3>
   <input type="date" name="startDate" value="<fmt:formatDate pattern="yyyy-MM-dd" value="${now}" />">
   <input type="date" name="endDate"   value="<fmt:formatDate pattern="yyyy-MM-dd" value="${now}" />">
-  <input type="submit" value="build Report">
+  <input type="hidden" name="apartmentId" value="${apartment.id}"/>
+  <input type="submit" value="build Report" class="btn btn-primary">
 </form>
 </div>
 
 		<div id="linechart_material"></div>
 
 		<script type="text/javascript">
-            google.load('visualization', '1.1', {packages: ['line']});
+            google.load('visualization', '1.1', {packages: ['corechart']});
             google.setOnLoadCallback(drawChart);
 
               function drawChart() {
@@ -23,7 +24,7 @@
             	  data.addColumn('string', 'Date');
             	  data.addColumn('number', 'Power');
             	  data.addRows([
-            	  <c:forEach items="${dataMap}" var="entry">
+            	  <c:forEach items="${dataMap.result}" var="entry">
             	  [ '<fmt:formatDate pattern="dd.MM.hh:mm:ss" value="${entry.key}" />', ${entry.value} ],
             	  </c:forEach>
             	  ]);
@@ -37,7 +38,7 @@
             		        height: 500
             		      };
 
-            		      var chart = new google.charts.Line(document.getElementById('linechart_material'));
+            		      var chart = new google.visualization.AreaChart(document.getElementById('linechart_material'));
 
             		      chart.draw(data, options);
               }

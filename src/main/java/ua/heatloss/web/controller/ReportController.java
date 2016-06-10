@@ -1,11 +1,5 @@
 package ua.heatloss.web.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import ua.heatloss.domain.Apartment;
 import ua.heatloss.domain.House;
 import ua.heatloss.domain.modules.ApartmentMeasurementModule;
@@ -13,13 +7,25 @@ import ua.heatloss.domain.user.Customer;
 import ua.heatloss.facades.ReportsFacade;
 import ua.heatloss.services.HeatConsumptionCalculationService;
 import ua.heatloss.services.HouseService;
+import ua.heatloss.services.ReportService;
 import ua.heatloss.services.UserService;
 import ua.heatloss.services.helper.DateHelper;
+import ua.heatloss.web.controller.dto.ApartmentReportData;
 import ua.heatloss.web.controller.dto.HouseReportData;
+import ua.heatloss.web.controller.dto.HouseReportDataEntry;
+import ua.heatloss.web.utils.Paging;
+import ua.heatloss.web.utils.PagingUtils;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/report")
@@ -33,29 +39,32 @@ public class ReportController extends AbstractController {
     private UserService userService;
     @Autowired
     private HeatConsumptionCalculationService calculationService;
+    @Autowired
+    private ReportService reportService;
 
     @RequestMapping(value = "power/house")
     public String showHousePowerReport(@RequestParam(value = "houseId") House house,
                                        @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
                                        @RequestParam(value = "endDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
-                                       Model model) {
-        DateHelper.DatePeriod period = DateHelper.checkDates(startDate, endDate);
-        final List<HouseReportData> chartData = calculationService.calculateHousePower(house, period.getStartDate(),
-                period.getEndDate());
+                                       Model model, Paging paging) {
+
+        HouseReportData chartData = reportService.buildHouseEnergyReportDataInTimePeriod(house, startDate, endDate);
+        final List<Apartment> apartments = house.getApartments();
+        PagingUtils.preparePaging(paging, (long) apartments.size(), model);
         model.addAttribute("dataMap", chartData);
-        model.addAttribute("startDate", period.getStartDate());
-        model.addAttribute("endDate", period.getEndDate());
+        populateDates(chartData.getStartDate(), chartData.getEndDate(), model);
         model.addAttribute("house", house);
+        model.addAttribute("apartments", apartments.subList(paging.getOffset(), paging.getLastIndex()));
         return "admin.report.housePower";
     }
 
     @RequestMapping(value = "energy/house")
     public String showHouseEnergyReport(@RequestParam(value = "houseId") House house,
-                                       @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
-                                       @RequestParam(value = "endDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
-                                       Model model) {
+                                        @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
+                                        @RequestParam(value = "endDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
+                                        Model model) {
         DateHelper.DatePeriod period = DateHelper.checkDates(startDate, endDate);
-        final List<HouseReportData> chartData = calculationService.calculateHouseEnergyInTimePeriod(house, period.getStartDate(),
+        final List<HouseReportDataEntry> chartData = calculationService.calculateHouseEnergyInTimePeriod(house, period.getStartDate(),
                 period.getEndDate());
         model.addAttribute("dataMap", chartData);
         model.addAttribute("startDate", period.getStartDate());
@@ -145,8 +154,10 @@ public class ReportController extends AbstractController {
         if (apartment == null) {
             apartment = getApartmentIfCustomer();
         }
-        final Map<Date, Double> chartData = reportsFacade.buildEnergyReportForApartmentByDay(apartment, startDate, endDate);
+        final ApartmentReportData chartData = reportService.buildApartmentEnergyReportReportDataInTimePeriod(apartment, startDate, endDate);
         model.addAttribute("dataMap", chartData);
+        populateDates(chartData.getStartDate(), chartData.getEndDate(), model);
+        model.addAttribute("apartment", apartment);
         return "report.apartmentEnergyReport";
     }
 
@@ -158,5 +169,10 @@ public class ReportController extends AbstractController {
             throw new IllegalArgumentException("no module selected");
         }
         return customer.getApartment();
+    }
+
+    private void populateDates(final Date startDate, final Date endDate, final Model model) {
+        model.addAttribute("startDate", startDate);
+        model.addAttribute("endDate", endDate);
     }
 }

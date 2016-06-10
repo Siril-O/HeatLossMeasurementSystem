@@ -23,6 +23,10 @@ public class Paging {
         this.limit = limit;
     }
 
+    public Integer getLastIndex() {
+        return offset + limit;
+    }
+
     @Override
     public String toString() {
         return "Paging{" +

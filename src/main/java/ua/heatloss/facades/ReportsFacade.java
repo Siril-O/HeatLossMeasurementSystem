@@ -4,7 +4,7 @@ package ua.heatloss.facades;
 import ua.heatloss.domain.Apartment;
 import ua.heatloss.domain.House;
 import ua.heatloss.domain.modules.AbstractMeasurementModule;
-import ua.heatloss.web.controller.dto.HouseReportData;
+import ua.heatloss.web.controller.dto.HouseReportDataEntry;
 
 import java.util.Date;
 import java.util.List;
@@ -27,5 +27,5 @@ public interface ReportsFacade {
 
     Map<Date, Double> buildEnergyReportForApartmentByDay(Apartment apartment, Date startDate, Date endDate);
 
-    List<HouseReportData> buidHousePowerReport(House house, Date startDate, Date endDate);
+    List<HouseReportDataEntry> buidHousePowerReport(House house, Date startDate, Date endDate);
 }

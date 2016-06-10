@@ -1,8 +1,7 @@
 package ua.heatloss.services;
 
 import ua.heatloss.domain.House;
-import ua.heatloss.domain.modules.AbstractMeasurementModule;
-import ua.heatloss.web.controller.dto.HouseReportData;
+import ua.heatloss.web.controller.dto.HouseReportDataEntry;
 
 import java.util.Date;
 import java.util.List;
@@ -22,7 +21,7 @@ public interface HeatConsumptionCalculationService {
 
     Map<Date, Double> calculateHouseConsumedPowerForTimePeriod(House house, Date startDate, Date endDate);
 
-    List<HouseReportData> calculateHousePower(House house, Date startDate, Date endDate);
+    List<HouseReportDataEntry> calculateHousePower(House house, Date startDate, Date endDate);
 
-    List<HouseReportData> calculateHouseEnergyInTimePeriod(House house, Date startDate, Date endDate);
+    List<HouseReportDataEntry> calculateHouseEnergyInTimePeriod(House house, Date startDate, Date endDate);
 }

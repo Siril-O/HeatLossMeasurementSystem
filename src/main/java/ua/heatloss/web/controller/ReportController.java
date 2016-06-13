@@ -48,7 +48,7 @@ public class ReportController extends AbstractController {
                                        @RequestParam(value = "endDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
                                        Model model, Paging paging) {
 
-        HouseReportData chartData = reportService.buildHouseEnergyReportDataInTimePeriod(house, startDate, endDate);
+        HouseReportData chartData = reportService.buildHousePowerReportData(house, startDate, endDate);
         final List<Apartment> apartments = house.getApartments();
         PagingUtils.preparePaging(paging, (long) apartments.size(), model);
         model.addAttribute("dataMap", chartData);

@@ -11,9 +11,15 @@ import java.util.Date;
                 @NamedQuery(name = "Measurement.find", query = "SELECT m FROM Measurement AS m"),
                 @NamedQuery(name = "Measurement.findTotalResultCount", query = "SELECT count(m.id) FROM Measurement AS m"),
                 @NamedQuery(name = "Measurement.findInTimePeriodForMeasurementModule",
-                        query = "SELECT m FROM Measurement AS m WHERE m.measurementModule.id =:moduleId "+ Measurement.IN_DATES_CONDITION),
+                        query = "SELECT m FROM Measurement AS m WHERE m.measurementModule.id =:moduleId " + Measurement.IN_DATES_CONDITION),
                 @NamedQuery(name = "Measurement.findInTimePeriodForHousePipes",
-                        query = "SELECT m FROM Measurement AS m WHERE m.measurementModule.class = :type AND m.measurementModule.pipe.id IN (:pipes) " + Measurement.IN_DATES_CONDITION)
+                        query = "SELECT m FROM Measurement AS m WHERE m.measurementModule.class = :type AND" +
+                                " m.measurementModule.pipe.id IN (:pipes) " + Measurement.IN_DATES_CONDITION),
+                @NamedQuery(name = "Measurement.findInTimePeriodForHouse",
+                        query = "SELECT m FROM Measurement AS m WHERE m.measurementModule.class IN (:types) AND" +
+                                " ((m.measurementModule.pipe.id IN (:pipes)) OR (m.measurementModule.house.id = :houseId)) "
+                                + Measurement.IN_DATES_CONDITION)
+
         }
 )
 
@@ -94,5 +100,43 @@ public class Measurement {
 
     public void setMeasurementModule(AbstractMeasurementModule measurementModule) {
         this.measurementModule = measurementModule;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Measurement)) return false;
+
+        Measurement that = (Measurement) o;
+
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (timestamp != null ? !timestamp.equals(that.timestamp) : that.timestamp != null) return false;
+        if (inputValue != null ? !inputValue.equals(that.inputValue) : that.inputValue != null) return false;
+        if (flowValue != null ? !flowValue.equals(that.flowValue) : that.flowValue != null) return false;
+        return outputValue != null ? outputValue.equals(that.outputValue) : that.outputValue == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (timestamp != null ? timestamp.hashCode() : 0);
+        result = 31 * result + (inputValue != null ? inputValue.hashCode() : 0);
+        result = 31 * result + (flowValue != null ? flowValue.hashCode() : 0);
+        result = 31 * result + (outputValue != null ? outputValue.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Measurement{" +
+                "id=" + id +
+                ", timestamp=" + timestamp +
+                ", inputValue=" + inputValue +
+                ", flowValue=" + flowValue +
+                ", outputValue=" + outputValue +
+                ", measurementModule=" + measurementModule +
+                '}';
     }
 }

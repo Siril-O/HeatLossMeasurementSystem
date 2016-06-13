@@ -24,8 +24,13 @@ public class DatePeriod {
     }
 
     public boolean isDateInPeriod(Date date) {
-        return (date.equals(startDate) || date.after(startDate)) && (date.before(endDate) || date.equals(endDate));
+        return date.after(startDate) && (date.before(endDate) || date.equals(endDate));
     }
+
+    public static boolean isDateInPeriod(Date date, Date startDate, Date endDate) {
+        return date.after(startDate) && (date.before(endDate) || date.equals(endDate));
+    }
+
 
     public static DatePeriod checkDates(Date start, Date finish) {
         DatePeriod period = new DatePeriod(start, finish);
@@ -40,10 +45,9 @@ public class DatePeriod {
         start.set(Calendar.MINUTE, 0);
         start.set(Calendar.SECOND, 0);
         start.set(Calendar.MILLISECOND, 0);
-        Calendar end = Calendar.getInstance();
-        end.setTime(endDate);
+        calendar.setTime(endDate);
 
-        final int daysQuantity = end.get(Calendar.DAY_OF_YEAR) - start.get(Calendar.DAY_OF_YEAR) ;
+        final int daysQuantity = calendar.get(Calendar.DAY_OF_YEAR) - start.get(Calendar.DAY_OF_YEAR);
         for (int i = 0; i < daysQuantity; i++) {
             start.add(Calendar.DAY_OF_YEAR, 1);
             days.add(start.getTime());
@@ -52,9 +56,8 @@ public class DatePeriod {
     }
 
     public static Date getNextDay(Date date) {
-        Calendar start = Calendar.getInstance();
-        start.setTime(date);
-        start.add(Calendar.DAY_OF_YEAR, 1);
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_YEAR, 1);
         return calendar.getTime();
     }
 

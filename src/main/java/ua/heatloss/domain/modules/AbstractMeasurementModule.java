@@ -75,4 +75,6 @@ public abstract class AbstractMeasurementModule {
         result = 31 * result + (measurements != null ? measurements.hashCode() : 0);
         return result;
     }
+
+
 }

@@ -3,15 +3,18 @@ package ua.heatloss.dao.impl;
 import org.springframework.stereotype.Repository;
 import ua.heatloss.dao.AbstractDao;
 import ua.heatloss.dao.MeasurementDao;
+import ua.heatloss.domain.House;
 import ua.heatloss.domain.Measurement;
 import ua.heatloss.domain.Pipe;
 import ua.heatloss.domain.modules.AbstractMeasurementModule;
+import ua.heatloss.domain.modules.MainMeasurementModule;
 import ua.heatloss.domain.modules.PipeMeasurementModule;
 
 import javax.persistence.TemporalType;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -83,6 +86,17 @@ public class DefaultMeasurementDao extends AbstractDao<Measurement> implements M
         TypedQuery<Measurement> query = em.createNamedQuery("Measurement.findInTimePeriodForHousePipes", Measurement.class);
         query.setParameter("type", PipeMeasurementModule.class);
         query.setParameter("pipes", extractIdList(pipes));
+        query.setParameter("startDate", startDate, TemporalType.TIMESTAMP);
+        query.setParameter("endDate", endDate, TemporalType.TIMESTAMP);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Measurement> findInTimePeriodForHouse(House house, Date startDate, Date endDate) {
+        TypedQuery<Measurement> query = em.createNamedQuery("Measurement.findInTimePeriodForHouse", Measurement.class);
+        query.setParameter("types", Arrays.asList("PIPE", "MAIN"));
+        query.setParameter("pipes", extractIdList(house.getPipes()));
+        query.setParameter("houseId", house.getId());
         query.setParameter("startDate", startDate, TemporalType.TIMESTAMP);
         query.setParameter("endDate", endDate, TemporalType.TIMESTAMP);
         return query.getResultList();

@@ -28,7 +28,7 @@ public class DefaultReportService implements ReportService {
 
     @Override
     public HouseReportData buildHouseEnergyReportDataInTimePeriod(House house, Date startDate, Date endDate) {
-        DateHelper.DatePeriod period = DateHelper.checkDates(startDate, endDate);
+        DatePeriod period = DatePeriod.checkDates(startDate, endDate);
         final List<HouseReportDataEntry> chartData = calculationService.calculateHouseEnergyInTimePeriod(house, period.getStartDate(),
                 period.getEndDate());
         return new HouseReportData(period.getStartDate(), period.getEndDate(), chartData);

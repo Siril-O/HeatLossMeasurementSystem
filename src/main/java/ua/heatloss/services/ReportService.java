@@ -12,4 +12,6 @@ public interface ReportService {
     HouseReportData buildHouseEnergyReportDataInTimePeriod(House house, Date startDate, Date endDate);
 
     ApartmentReportData buildApartmentEnergyReportReportDataInTimePeriod(Apartment apartment, Date startDate, Date endDate);
+
+    ApartmentReportData buildPowerReportForApartment(Apartment apartment, Date startDate, Date endDate);
 }

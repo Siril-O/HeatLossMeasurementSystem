@@ -9,7 +9,7 @@ import ua.heatloss.services.HeatConsumptionCalculationService;
 import ua.heatloss.services.HouseService;
 import ua.heatloss.services.ReportService;
 import ua.heatloss.services.UserService;
-import ua.heatloss.services.helper.DateHelper;
+import ua.heatloss.services.helper.DatePeriod;
 import ua.heatloss.web.controller.dto.ApartmentReportData;
 import ua.heatloss.web.controller.dto.HouseReportData;
 import ua.heatloss.web.controller.dto.HouseReportDataEntry;
@@ -63,7 +63,7 @@ public class ReportController extends AbstractController {
                                         @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
                                         @RequestParam(value = "endDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
                                         Model model) {
-        DateHelper.DatePeriod period = DateHelper.checkDates(startDate, endDate);
+        DatePeriod period = DatePeriod.checkDates(startDate, endDate);
         final List<HouseReportDataEntry> chartData = calculationService.calculateHouseEnergyInTimePeriod(house, period.getStartDate(),
                 period.getEndDate());
         model.addAttribute("dataMap", chartData);
@@ -78,7 +78,7 @@ public class ReportController extends AbstractController {
                                            @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date startDate,
                                            @RequestParam(value = "endDate", required = false) @DateTimeFormat(pattern = "MM-dd-yyyy") Date endDate,
                                            Model model) {
-        DateHelper.DatePeriod period = DateHelper.checkDates(startDate, endDate);
+        DatePeriod period = DatePeriod.checkDates(startDate, endDate);
         final Map<Date, Double> chartData = calculationService.calculatePowerLossOnHouse(house, period.getStartDate(),
                 period.getEndDate());
         model.addAttribute("dataMap", chartData);
@@ -141,8 +141,10 @@ public class ReportController extends AbstractController {
         if (apartment == null) {
             apartment = getApartmentIfCustomer();
         }
-        final Map<Date, Double> chartData = reportsFacade.buildPowerReportForApartment(apartment, startDate, endDate);
+        final ApartmentReportData chartData = reportService.buildPowerReportForApartment(apartment, startDate, endDate);
         model.addAttribute("dataMap", chartData);
+        populateDates(chartData.getStartDate(), chartData.getEndDate(), model);
+        model.addAttribute("apartment", apartment);
         return "report.apartmentPowerReport";
     }
 

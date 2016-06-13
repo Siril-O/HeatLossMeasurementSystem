@@ -6,9 +6,10 @@
 <div style="margin-top:15px;">
 <form action="">
   <h3>Choose time interval</h3>
-  <input type="date" name="startDate" value="<fmt:formatDate pattern="yyyy-MM-dd" value="${now}" />">
-  <input type="date" name="endDate"   value="<fmt:formatDate pattern="yyyy-MM-dd" value="${now}" />">
-  <input type="submit" value="build Report">
+  <input type="date" name="startDate" value="<fmt:formatDate pattern="yyyy-MM-dd" value="${dataMap.startDate}" />">
+  <input type="date" name="endDate"   value="<fmt:formatDate pattern="yyyy-MM-dd" value="${dataMap.endDate}" />">
+  <input type="hidden" name="apartmentId" value="${apartment.id}" />
+  <input type="submit" value="build Report" class="btn btn-primary">
 </form>
 </div>
 		<div id="chart_div"></div>
@@ -22,7 +23,7 @@
             	  data.addColumn('string', 'Date');
             	  data.addColumn('number', 'Energy');
             	  data.addRows([
-            	  <c:forEach items="${dataMap}" var="entry">
+            	  <c:forEach items="${dataMap.result}" var="entry">
             	  [ '<fmt:formatDate pattern="dd.MM.yyyy" value="${entry.key}" />', ${entry.value} ],
             	  </c:forEach>
             	  ]);

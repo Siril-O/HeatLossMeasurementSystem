@@ -13,7 +13,7 @@ import ua.heatloss.domain.sensors.model.TemperatureSensorModel;
 import ua.heatloss.facades.DataGeneratingFacade;
 import ua.heatloss.facades.MeasurementModuleFacade;
 import ua.heatloss.services.*;
-import ua.heatloss.services.helper.DateHelper;
+import ua.heatloss.services.helper.DatePeriod;
 
 import java.util.*;
 
@@ -137,7 +137,7 @@ public class DefaultDataGeneratingFacade implements DataGeneratingFacade {
 
     @Override
     public void generateHouseMeasurementData(Date startDate, Date finishDate, long density, House house, boolean withApartments) {
-        DateHelper.DatePeriod period = DateHelper.checkDates(startDate, finishDate);
+        DatePeriod period = DatePeriod.checkDates(startDate, finishDate);
         startDate = period.getStartDate();
         finishDate = period.getEndDate();
         if (house.getPipes().isEmpty()) {
@@ -153,7 +153,7 @@ public class DefaultDataGeneratingFacade implements DataGeneratingFacade {
 
     @Override
     public void generatePipeMeasurementData(Date startDate, Date finishDate, long density, Pipe pipe, boolean withApartments) {
-        DateHelper.DatePeriod period = DateHelper.checkDates(startDate, finishDate);
+        DatePeriod period = DatePeriod.checkDates(startDate, finishDate);
         startDate = period.getStartDate();
         finishDate = period.getEndDate();
         List<Measurement> measurements = new ArrayList<>();

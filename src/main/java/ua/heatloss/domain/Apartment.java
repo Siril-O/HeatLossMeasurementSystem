@@ -4,8 +4,18 @@ package ua.heatloss.domain;
 import ua.heatloss.domain.modules.ApartmentMeasurementModule;
 import ua.heatloss.domain.user.Customer;
 
-import javax.persistence.*;
 import java.util.List;
+
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 
 @NamedQueries(
         {
@@ -102,6 +112,23 @@ public class Apartment {
 
     public void setCustomers(List<Customer> customers) {
         this.customers = customers;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Apartment apartment = (Apartment) o;
+
+        return !(id != null ? !id.equals(apartment.id) : apartment.id != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
     }
 
     @Override

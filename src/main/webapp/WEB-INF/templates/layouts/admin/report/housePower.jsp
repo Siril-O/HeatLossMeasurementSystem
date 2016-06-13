@@ -6,11 +6,15 @@
 <div style="margin-top:15px;">
 <form action="" id="report_form">
   <h3>Choose time interval</h3>
-  <input type="date" name="startDate" value="<fmt:formatDate pattern="yyyy-MM-dd" value="${startDate}" />">
-  <input type="date" name="endDate"   value="<fmt:formatDate pattern="yyyy-MM-dd" value="${endDate}" />">
+  <input type="date" name="startDate" id="startDate_report_input"
+    value="<fmt:formatDate pattern="yyyy-MM-dd" value="${startDate}"/>"
+    onchange="changeDate(startDate_report_input, startDate_apartment_input )"/>
+  <input type="date" name="endDate"  id="endDate_report_input"
+    value="<fmt:formatDate pattern="yyyy-MM-dd" value="${endDate}" />"
+    onchange="changeDate(endDate_report_input, endDate_apartment_input)"/>
   <input type="hidden" name="houseId" value="${house.id}" />
-  <input type="submit" value="Power Report" class="btn btn-primary" onclick="buildPowerReport()">
-  <input type="submit" value="Energy Report" class="btn btn-primary" id="energy_report_btn" onclick="buildEnergyReport()">
+  <input type="submit" value="Power Report" class="btn btn-primary" onclick="buildPowerHouseReport()">
+  <input type="submit" value="Energy Report" class="btn btn-primary" id="energy_report_btn" onclick="buildEnergyHouseReport()"/>
 </form>
 </div>
 		<div id="linechart_material" ></div>
@@ -26,8 +30,10 @@ ${pagingUrl}
                <tr>
               <td>${apartment.number}</td>
               <td>
-              <form method="GET" action="./apartment">
+              <form method="GET" action="./apartment" id="apartment_report_form">
                 <input type="hidden" name="apartmentId" value="${apartment.id}">
+                <input type="hidden" name="startDate" id ="startDate_apartment_input" value="" />
+                <input type="hidden" name="endDate" id="endDate_apartment_input" value="" />
                 <input type="submit" value="Report" class="btn btn-primary">
               </form>
               </td>
@@ -65,16 +71,31 @@ ${pagingUrl}
             		      var chart = new google.visualization.AreaChart(document.getElementById('linechart_material'));
 
             		      chart.draw(data, options);
-              }
+              };
 
              var reportForm = document.getElementById("report_form");
+             var startDateId = document.getElementById("report_form");
 
-             function buildEnergyReport(){
+             function buildEnergyHouseReport(){
             reportForm.action="/HeatLossSystem/report/energy/house"
               };
 
-             function buildPowerReport(){
+             function buildPowerHouseReport(){
             reportForm.action="/HeatLossSystem/report/power/house"
               };
+
+              function changeDate(input, output){
+                 let input = document.getElementById(input);
+                 let output = document.getElementById(output);
+                output.value = input.value;
+              };
+
+              $(function() {
+                  $('#apartment_report_form').submit(function() {
+                  changeDate('startDate_report_input', 'startDate_apartment_input');
+                  changeDate('endDate_report_input', 'endDate_apartment_input');
+                      return true;
+                  });
+              });
 
             </script>

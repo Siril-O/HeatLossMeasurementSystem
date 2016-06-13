@@ -1,8 +1,6 @@
 package ua.heatloss.services.impl;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import ua.heatloss.domain.Apartment;
 import ua.heatloss.domain.House;
 import ua.heatloss.domain.Measurement;
@@ -11,12 +9,21 @@ import ua.heatloss.domain.modules.AbstractMeasurementModule;
 import ua.heatloss.domain.modules.ApartmentMeasurementModule;
 import ua.heatloss.services.HeatConsumptionCalculationService;
 import ua.heatloss.services.MeasurementService;
+import ua.heatloss.services.helper.DatePeriod;
 import ua.heatloss.services.helper.MeasurementCalculator;
 import ua.heatloss.services.helper.PowerToEnergyCalculator;
 import ua.heatloss.web.controller.dto.HouseReportDataEntry;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Component
 public class DefaultHeatConsumptionCalculationService implements HeatConsumptionCalculationService {
@@ -32,18 +39,11 @@ public class DefaultHeatConsumptionCalculationService implements HeatConsumption
 
     @Override
     public Map<Date, Double> calculateEnergyByDays(Object target, Date startDate, Date endDate) {
+        DatePeriod period = new DatePeriod(startDate, endDate);
         final Map<Date, Double> energyByDays = new LinkedHashMap<>();
-
-        Calendar start = Calendar.getInstance();
-        start.setTime(startDate);
-        Calendar end = Calendar.getInstance();
-        end.setTime(endDate);
-
-        Date prevDate = start.getTime();
-        start.add(Calendar.DATE, 1);
-        for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
-            energyByDays.put(date, PowerToEnergyCalculator.calculateInKJoule(calculatePowerInTimePeriod(target, prevDate, date)));
-            prevDate = start.getTime();
+        for (Date day : period.getDays()) {
+            energyByDays.put(day,
+                    PowerToEnergyCalculator.calculateInKJoule(calculatePowerInTimePeriod(target, day, DatePeriod.getNextDay(day))));
         }
         return energyByDays;
     }
@@ -187,24 +187,16 @@ public class DefaultHeatConsumptionCalculationService implements HeatConsumption
 
     @Override
     public List<HouseReportDataEntry> calculateHouseEnergyInTimePeriod(House house, Date startDate, Date endDate) {
+        DatePeriod period = new DatePeriod(startDate, endDate);
         final List<HouseReportDataEntry> energyByDays = new ArrayList<>();
-
-        Calendar start = Calendar.getInstance();
-        start.setTime(startDate);
-        Calendar end = Calendar.getInstance();
-        end.setTime(endDate);
-
-        Date prevDate = start.getTime();
-        start.add(Calendar.DATE, 1);
-        for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
-            final List<HouseReportDataEntry> powerInPeriod = calculateHousePower(house, prevDate, date);
+        for (Date day : period.getDays()) {
+            final List<HouseReportDataEntry> powerInPeriod = calculateHousePower(house, day, DatePeriod.getNextDay(day));
             HouseReportDataEntry energy = new HouseReportDataEntry();
-            energy.setDate(prevDate);
+            energy.setDate(day);
             energy.setLoss(PowerToEnergyCalculator.calculateInKJoule(powerInPeriod.stream().collect(Collectors.toMap(HouseReportDataEntry::getDate, HouseReportDataEntry::getLoss))));
             energy.setConsumed(PowerToEnergyCalculator.calculateInKJoule(powerInPeriod.stream().collect(Collectors.toMap(HouseReportDataEntry::getDate, HouseReportDataEntry::getConsumed))));
             energy.setInput(PowerToEnergyCalculator.calculateInKJoule(powerInPeriod.stream().collect(Collectors.toMap(HouseReportDataEntry::getDate, HouseReportDataEntry::getInput))));
             energyByDays.add(energy);
-            prevDate = start.getTime();
         }
         return energyByDays;
     }

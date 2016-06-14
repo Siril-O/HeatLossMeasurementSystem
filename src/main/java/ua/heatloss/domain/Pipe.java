@@ -1,10 +1,22 @@
 package ua.heatloss.domain;
 
+import ua.heatloss.domain.modules.AbstractPipeMeasurementModule;
 import ua.heatloss.domain.modules.ApartmentMeasurementModule;
 import ua.heatloss.domain.modules.PipeMeasurementModule;
 
-import javax.persistence.*;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 
 @NamedQueries(
         {
@@ -27,10 +39,10 @@ public class Pipe {
     private House house;
 
     @OneToMany(mappedBy = "pipe", fetch = FetchType.LAZY)
-    private List<ApartmentMeasurementModule> apartmentMeasurementModules;
+    private List<AbstractPipeMeasurementModule> measurementModules;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "pipe", cascade = CascadeType.ALL)
-    private PipeMeasurementModule pipeMeasurementModule;
+//    @OneToOne(fetch = FetchType.LAZY, mappedBy = "pipe", cascade = CascadeType.ALL)
+//    private PipeMeasurementModule pipeMeasurementModule;
 
     public Long getId() {
         return id;
@@ -57,19 +69,31 @@ public class Pipe {
     }
 
     public List<ApartmentMeasurementModule> getApartmentMeasurementModules() {
-        return apartmentMeasurementModules;
+        return measurementModules.stream().filter(ApartmentMeasurementModule.class::isInstance)
+                .map(ApartmentMeasurementModule.class::cast).collect(Collectors.toList());
     }
 
-    public void setApartmentMeasurementModules(List<ApartmentMeasurementModule> apartmentMeasurementModules) {
-        this.apartmentMeasurementModules = apartmentMeasurementModules;
-    }
+//    public void setApartmentMeasurementModules(List<ApartmentMeasurementModule> apartmentMeasurementModules) {
+//        this.apartmentMeasurementModules = apartmentMeasurementModules;
+//    }
 
     public PipeMeasurementModule getPipeMeasurementModule() {
-        return pipeMeasurementModule;
+        return measurementModules.stream().filter(PipeMeasurementModule.class::isInstance)
+                .map(PipeMeasurementModule.class::cast).findAny().get();
     }
 
-    public void setPipeMeasurementModule(PipeMeasurementModule pipeMeasurementModule) {
-        this.pipeMeasurementModule = pipeMeasurementModule;
+//    public void setPipeMeasurementModule(PipeMeasurementModule pipeMeasurementModule) {
+//        measurementModules.stream().filter(PipeMeasurementModule.class::isInstance)
+//                .map(PipeMeasurementModule.class::cast).findAny().get();
+//
+//    }
+
+    public List<AbstractPipeMeasurementModule> getMeasurementModules() {
+        return measurementModules;
+    }
+
+    public void setMeasurementModules(List<AbstractPipeMeasurementModule> measurementModules) {
+        this.measurementModules = measurementModules;
     }
 
     @Override
@@ -78,7 +102,7 @@ public class Pipe {
                 "id=" + id +
                 ", ordinalNumber=" + ordinalNumber +
                 ", house=" + (house != null ? house.getId() : "") +
-                ", apartmentMeasurementModules=" + apartmentMeasurementModules +
+                ", measurementModules=" +  measurementModules +
                 '}';
     }
 

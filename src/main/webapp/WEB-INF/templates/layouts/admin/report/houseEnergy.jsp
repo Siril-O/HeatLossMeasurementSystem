@@ -4,11 +4,15 @@
 <div style="margin-top:15px;">
 <form action="" id="report_form">
   <h3>Choose time interval</h3>
-  <input type="date" name="startDate" value="<fmt:formatDate pattern="yyyy-MM-dd" value="${startDate}" />">
-  <input type="date" name="endDate"   value="<fmt:formatDate pattern="yyyy-MM-dd" value="${endDate}" />">
+  <input type="date" name="startDate" id="startDate_report_input"
+    value="<fmt:formatDate pattern="yyyy-MM-dd" value="${startDate}"/>"
+    onchange="changeDate(startDate_report_input, startDate_apartment_input )"/>
+  <input type="date" name="endDate"  id="endDate_report_input"
+    value="<fmt:formatDate pattern="yyyy-MM-dd" value="${endDate}" />"
+    onchange="changeDate(endDate_report_input, endDate_apartment_input)"/>
   <input type="hidden" name="houseId" value="${house.id}" />
-  <input type="submit" value="Power Report" class="btn btn-primary">
-  <input type="submit" value="Energy Report" class="btn btn-primary" id="energy_report_btn" onclick="buildEnergyReport()">
+  <input type="submit" value="Power Report" class="btn btn-primary" id="power_report_btn">
+  <input type="submit" value="Energy Report" class="btn btn-primary" id="energy_report_btn"/>
 </form>
 </div>
 		<div id="linechart_material" ></div>
@@ -42,10 +46,5 @@
             		      var chart = new google.visualization.ColumnChart(document.getElementById('linechart_material'));
 
             		      chart.draw(data, options);
-              }
-
-             function buildEnergyReport(){
-             var reportForm = document.getElementById("report_form");
-            reportForm.action="/HeatLossSystem/report/energy/house"
               }
             </script>

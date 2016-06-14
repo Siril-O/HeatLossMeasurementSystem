@@ -1,12 +1,9 @@
 package ua.heatloss.services.impl;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import ua.heatloss.domain.Apartment;
 import ua.heatloss.domain.House;
 import ua.heatloss.domain.Measurement;
-import ua.heatloss.domain.Pipe;
 import ua.heatloss.domain.modules.AbstractMeasurementModule;
 import ua.heatloss.domain.modules.ApartmentMeasurementModule;
 import ua.heatloss.domain.modules.MainMeasurementModule;
@@ -18,8 +15,17 @@ import ua.heatloss.services.helper.MeasurementCalculator;
 import ua.heatloss.services.helper.PowerToEnergyCalculator;
 import ua.heatloss.web.controller.dto.HouseReportDataEntry;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Component
 public class DefaultHeatConsumptionCalculationService implements HeatConsumptionCalculationService {
@@ -58,20 +64,20 @@ public class DefaultHeatConsumptionCalculationService implements HeatConsumption
 
     @Override
     public Map<Date, Double> calculatePowerLossOnHouse(House house, Date startDate, Date endDate) {
-        Map<Date, LossContext> groupLossContextByDate = groupLossContextByDate(house, startDate, endDate);
+        List<LossContext> groupLossContextByDate = groupLossContextByDate(house, startDate, endDate);
         return calculatePowerLossesInTimePeriod(groupLossContextByDate);
     }
 
     @Override
     public double calculateEnergyLossOnHouse(House house, Date startDate, Date endDate) {
-        Map<Date, LossContext> groupLossContextByDate = groupLossContextByDate(house, startDate, endDate);
+        List<LossContext> groupLossContextByDate = groupLossContextByDate(house, startDate, endDate);
         Map<Date, Double> lossByDate = calculatePowerLossesInTimePeriod(groupLossContextByDate);
         return PowerToEnergyCalculator.calculateInKJoule(lossByDate);
     }
 
     @Override
     public Map<Date, Double> calculateHouseConsumedPowerForTimePeriod(House house, Date startDate, Date endDate) {
-        Map<Date, LossContext> groupLossContextByDate = groupLossContextByDate(house, startDate, endDate);
+        List<LossContext> groupLossContextByDate = groupLossContextByDate(house, startDate, endDate);
         return calculatePowerConsumedByCustomersInTimePeriod(groupLossContextByDate);
     }
 
@@ -114,20 +120,6 @@ public class DefaultHeatConsumptionCalculationService implements HeatConsumption
         return powerConsumptionByTime;
     }
 
-
-    private List<HouseReportDataEntry> calculatePowerInTimePeriod(final Map<Date, LossContext> lossContextsByDate) {
-        List<HouseReportDataEntry> reportDataEntries = new ArrayList<>();
-        for (Map.Entry<Date, LossContext> entry : lossContextsByDate.entrySet()) {
-            HouseReportDataEntry data = new HouseReportDataEntry();
-            data.setDate(entry.getKey());
-            data.setLoss(MeasurementCalculator.calculatePowerLosses(entry.getValue()));
-            data.setConsumed(MeasurementCalculator.calculatePowerConsumedByCustomers(entry.getValue()));
-            data.setInput(MeasurementCalculator.calculatePower(entry.getValue().getMainMeasurement()));
-            reportDataEntries.add(data);
-        }
-        return reportDataEntries;
-    }
-
     private List<HouseReportDataEntry> calculatePowerInTimePeriod(final List<LossContext> lossContexts) {
         List<HouseReportDataEntry> reportDataEntries = new ArrayList<>();
         for (LossContext context : lossContexts) {
@@ -154,35 +146,27 @@ public class DefaultHeatConsumptionCalculationService implements HeatConsumption
         return reportDataEntries;
     }
 
-    private Map<Date, Double> calculatePowerLossesInTimePeriod(final Map<Date, LossContext> lossContextsByDate) {
+    private Map<Date, Double> calculatePowerLossesInTimePeriod(final List<LossContext> lossContexts) {
         Map<Date, Double> powerConsumptionByTime = new LinkedHashMap<>();
-        for (Map.Entry<Date, LossContext> entry : lossContextsByDate.entrySet()) {
-            powerConsumptionByTime.put(entry.getKey(), MeasurementCalculator.calculatePowerLosses(entry.getValue()));
+        for (LossContext context : lossContexts) {
+            powerConsumptionByTime.put(context.getDate(), MeasurementCalculator.calculatePowerLosses(context));
         }
         return powerConsumptionByTime;
     }
 
-    private Map<Date, Double> calculatePowerConsumedByCustomersInTimePeriod(final Map<Date, LossContext> lossContextsByDate) {
+    private Map<Date, Double> calculatePowerConsumedByCustomersInTimePeriod(final List<LossContext> lossContexts) {
         Map<Date, Double> powerConsumptionByTime = new LinkedHashMap<>();
-        for (Map.Entry<Date, LossContext> entry : lossContextsByDate.entrySet()) {
-            powerConsumptionByTime.put(entry.getKey(), MeasurementCalculator.calculatePowerConsumedByCustomers(entry.getValue()));
+        for (LossContext context : lossContexts) {
+            powerConsumptionByTime.put(context.getDate(), MeasurementCalculator.calculatePowerConsumedByCustomers(context));
         }
         return powerConsumptionByTime;
     }
 
-    private Map<Date, LossContext> groupLossContextByDate(final House house, final Date startDate, final Date endDate) {
-        Map<Date, LossContext> lossContextByDates = new LinkedHashMap<>();
+    private List<LossContext> groupLossContextByDate(final House house, final Date startDate, final Date endDate) {
+        List<LossContext> lossContexts = new ArrayList<>();
         List<Measurement> mainMeasurements = measurementService.findInTimePeriodForMeasurementModule
                 (house.getMainMeasurementModule(), startDate, endDate);
-        List<Measurement> pipesMeasurements = new ArrayList<>();
-        for (Pipe pipe : house.getPipes()) {
-            final List<Measurement> pipeMeasurements = measurementService.findInTimePeriodForMeasurementModule
-                    (pipe.getPipeMeasurementModule(), startDate, endDate);
-            if (pipeMeasurements.size() != mainMeasurements.size()) {
-                throw new IllegalArgumentException("Measurement data does not match");
-            }
-            pipesMeasurements.addAll(pipeMeasurements);
-        }
+        List<Measurement> pipesMeasurements = measurementService.findInTimePeriodForHousePipes(house.getPipes(), startDate, endDate);
         Map<Date, List<Measurement>> pipeMeasurementsByDate = new LinkedHashMap<>();
 
         for (Measurement measurement : pipesMeasurements) {
@@ -194,43 +178,28 @@ public class DefaultHeatConsumptionCalculationService implements HeatConsumption
             measurementsForDate.add(measurement);
         }
 
-        for (Measurement mainMeasurement : mainMeasurements) {
-            lossContextByDates.put(mainMeasurement.getTimestamp(),
-                    new LossContext(mainMeasurement, pipeMeasurementsByDate.get(mainMeasurement.getTimestamp())));
-        }
-        return lossContextByDates;
+        lossContexts.addAll(mainMeasurements.stream().map(mainMeasurement ->
+                new LossContext(mainMeasurement, pipeMeasurementsByDate.get(mainMeasurement.getTimestamp())))
+                .collect(Collectors.toList()));
+        return lossContexts;
     }
 
     @Override
     public List<HouseReportDataEntry> calculateHousePower(House house, Date startDate, Date endDate) {
-        Map<Date, LossContext> groupLossContextByDate = groupLossContextByDate(house, startDate, endDate);
-        return calculatePowerInTimePeriod(groupLossContextByDate);
+        return calculatePowerInTimePeriod(groupLossContextByDate(house, startDate, endDate));
     }
 
-//    @Override
-//    public List<HouseReportDataEntry> calculateHouseEnergyInTimePeriod(House house, Date startDate, Date endDate) {
-//        DatePeriod period = new DatePeriod(startDate, endDate);
-//        final List<HouseReportDataEntry> energyByDays = new ArrayList<>();
-//        for (Date day : period.getDays()) {
-//            final List<HouseReportDataEntry> powerInPeriod = calculateHousePower(house, day, DatePeriod.getNextDay(day));
-//            HouseReportDataEntry energy = new HouseReportDataEntry();
-//            energy.setDate(day);
-//            energy.setLoss(PowerToEnergyCalculator.calculateInKJoule(powerInPeriod.stream().collect(Collectors.toMap(HouseReportDataEntry::getDate, HouseReportDataEntry::getLoss))));
-//            energy.setConsumed(PowerToEnergyCalculator.calculateInKJoule(powerInPeriod.stream().collect(Collectors.toMap(HouseReportDataEntry::getDate, HouseReportDataEntry::getConsumed))));
-//            energy.setInput(PowerToEnergyCalculator.calculateInKJoule(powerInPeriod.stream().collect(Collectors.toMap(HouseReportDataEntry::getDate, HouseReportDataEntry::getInput))));
-//            energyByDays.add(energy);
-//        }
-//        return energyByDays;
-//    }
 
     @Override
     public List<HouseReportDataEntry> calculateHouseEnergyInTimePeriod(House house, Date startDate, Date endDate) {
         DatePeriod period = new DatePeriod(startDate, endDate);
         final List<HouseReportDataEntry> energyByDays = new ArrayList<>();
         final List<Measurement> measurements = measurementService.findInTimePeriodForHouse(house, startDate, endDate);
+        final List<Measurement> inTimePeriodForHousePipes = measurementService.findInTimePeriodForHousePipes(house.getPipes(), startDate, endDate);
+        measurements.addAll(inTimePeriodForHousePipes);
         for (Date day : period.getDays()) {
             final Map<Date, List<Measurement>> measurementsByDate = measurements.stream().
-                    filter(m -> DatePeriod.isDateInPeriod(m.getTimestamp(), day, DatePeriod.getNextDay(day))).sorted((m1, m2) -> m1.getTimestamp().compareTo(m2.getTimestamp())).peek(System.out::println)
+                    filter(m -> DatePeriod.isDateInPeriod(m.getTimestamp(), day, DatePeriod.getNextDay(day)))
                     .collect(Collectors.groupingBy(Measurement::getTimestamp));
 
             final List<LossContext> lossContexts = new ArrayList<>();
@@ -265,6 +234,7 @@ public class DefaultHeatConsumptionCalculationService implements HeatConsumption
         public LossContext(Measurement mainMeasurement, List<Measurement> pipeMeasurements) {
             this.mainMeasurement = mainMeasurement;
             this.pipeMeasurements = pipeMeasurements;
+            date = mainMeasurement.getTimestamp();
         }
 
         public LossContext(Date date, Measurement mainMeasurement, List<Measurement> pipeMeasurements) {

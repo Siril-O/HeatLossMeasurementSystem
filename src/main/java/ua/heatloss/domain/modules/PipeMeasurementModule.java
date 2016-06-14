@@ -1,23 +1,10 @@
 package ua.heatloss.domain.modules;
 
-import ua.heatloss.domain.Pipe;
-
-import javax.persistence.*;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 
 @Entity
 @DiscriminatorValue(value = "PIPE")
-public class PipeMeasurementModule extends AbstractMeasurementModule {
+public class PipeMeasurementModule extends AbstractPipeMeasurementModule {
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "RISER_PIPE_ID")
-    private Pipe pipe;
-
-
-    public Pipe getPipe() {
-        return pipe;
-    }
-
-    public void setPipe(Pipe pipe) {
-        this.pipe = pipe;
-    }
 }

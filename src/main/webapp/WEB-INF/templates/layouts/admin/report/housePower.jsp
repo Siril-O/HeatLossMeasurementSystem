@@ -13,8 +13,8 @@
     value="<fmt:formatDate pattern="yyyy-MM-dd" value="${endDate}" />"
     onchange="changeDate(endDate_report_input, endDate_apartment_input)"/>
   <input type="hidden" name="houseId" value="${house.id}" />
-  <input type="submit" value="Power Report" class="btn btn-primary" onclick="buildPowerHouseReport()">
-  <input type="submit" value="Energy Report" class="btn btn-primary" id="energy_report_btn" onclick="buildEnergyHouseReport()"/>
+  <input type="submit" value="Power Report" class="btn btn-primary" id="power_report_btn">
+  <input type="submit" value="Energy Report" class="btn btn-primary" id="energy_report_btn"/>
 </form>
 </div>
 		<div id="linechart_material" ></div>
@@ -73,16 +73,7 @@ ${pagingUrl}
             		      chart.draw(data, options);
               };
 
-             var reportForm = document.getElementById("report_form");
-             var startDateId = document.getElementById("report_form");
 
-             function buildEnergyHouseReport(){
-            reportForm.action="/HeatLossSystem/report/energy/house"
-              };
-
-             function buildPowerHouseReport(){
-            reportForm.action="/HeatLossSystem/report/power/house"
-              };
 
               function changeDate(input, output){
                  let input = document.getElementById(input);
@@ -97,5 +88,4 @@ ${pagingUrl}
                       return true;
                   });
               });
-
             </script>

@@ -16,8 +16,8 @@ import java.util.Date;
                         query = "SELECT m FROM Measurement AS m WHERE m.measurementModule.class = :type AND" +
                                 " m.measurementModule.pipe.id IN (:pipes) " + Measurement.IN_DATES_CONDITION),
                 @NamedQuery(name = "Measurement.findInTimePeriodForHouse",
-                        query = "SELECT m FROM Measurement AS m WHERE m.measurementModule.class IN (:types) AND" +
-                                " ((m.measurementModule.pipe.id IN (:pipes)) OR (m.measurementModule.house.id = :houseId)) "
+                        query = "SELECT m FROM Measurement AS m WHERE m.measurementModule.class = :type AND" +
+                                " m.measurementModule.house.id = :houseId "
                                 + Measurement.IN_DATES_CONDITION)
 
         }

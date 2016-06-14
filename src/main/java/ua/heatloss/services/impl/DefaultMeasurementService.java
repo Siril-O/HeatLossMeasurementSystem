@@ -1,15 +1,17 @@
 package ua.heatloss.services.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import ua.heatloss.dao.MeasurementDao;
 import ua.heatloss.domain.House;
 import ua.heatloss.domain.Measurement;
+import ua.heatloss.domain.Pipe;
 import ua.heatloss.domain.modules.AbstractMeasurementModule;
 import ua.heatloss.services.MeasurementService;
 
 import java.util.Date;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class DefaultMeasurementService implements MeasurementService {
@@ -61,6 +63,11 @@ public class DefaultMeasurementService implements MeasurementService {
     @Override
     public List<Measurement> findInTimePeriodForHouse(House house, Date startDate, Date endDate) {
         return measurementDao.findInTimePeriodForHouse(house, startDate, endDate);
+    }
+
+    @Override
+    public List<Measurement> findInTimePeriodForHousePipes(List<Pipe> pipes, Date startDate, Date endDate) {
+        return measurementDao.findInTimePeriodForHousePipes(pipes, startDate, endDate);
     }
 
 }

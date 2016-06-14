@@ -10,7 +10,6 @@
 		</div>
 		<div id="navbar" class="navbar-collapse collapse">
 			<ul class="nav navbar-nav">
-				<li><a href="/HeatLossSystem/report">Reports</a></li>
 				<li><a href="/HeatLossSystem/house/list">Houses</a></li>
 				<li><a href="/HeatLossSystem/sensorModel/listTemperature">Sensor Model</a></li>
                 <li><c:url var="logOutUrl" value="/logout" />

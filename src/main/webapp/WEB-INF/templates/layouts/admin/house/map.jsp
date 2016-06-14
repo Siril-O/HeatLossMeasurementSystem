@@ -3,7 +3,6 @@
 <div id="content">
     <div id="map" style="height:400px"></div>
     <h1>All Houses</h1>
-    <a href="house/create" class="btn btn-primary">Register new House</a>
       <table class="table table-striped">
       <tr>
           <th>Country</th>
@@ -21,10 +20,6 @@
               <td>${house.address.houseNumber}</td>
               <td>${house.pipeSystem}</td>
               <td>
-              <form method="POST" action="house/manage">
-                <input type="hidden" name="houseId" value="${house.id}">
-                <input type="submit" value="Manage house" class="btn btn-primary">
-              </form>
               <form method="GET" action="report/power/house">
                 <input type="hidden" name="houseId" value="${house.id}">
                 <input type="submit" value="Report" class="btn btn-primary">

@@ -7,3 +7,8 @@
 padding-top:30px;}
 #footer-wraper{
 margin-top:100px;}
+
+.paging-container{
+    margin: 0 auto;
+    text-align: center;
+}

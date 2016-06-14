@@ -50,7 +50,7 @@ public class HouseController extends AbstractController {
         house.setAddress(address);
         model.addAttribute("house", house);
         model.addAttribute("pipeTypes", PipeSystem.values());
-        return HOUSE + "." + CREATE;
+        return "admin." + HOUSE + "." + CREATE;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = SLASH + LIST)
@@ -60,7 +60,7 @@ public class HouseController extends AbstractController {
         PagingUtils.preparePaging(paging, total, model);
         model.addAttribute("houses", houses);
         model.addAttribute("APIkey", key);
-        return HOUSE + "list";
+        return "admin." + HOUSE + ".list";
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -77,7 +77,7 @@ public class HouseController extends AbstractController {
     public String manageHouse(@RequestParam("houseId") House house, Model model) {
         houseService.refresh(house);
         model.addAttribute("house", house);
-        return HOUSE + "." + MANAGE;
+        return "admin." + HOUSE + "." + MANAGE;
     }
 
 }

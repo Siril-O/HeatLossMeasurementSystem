@@ -73,6 +73,9 @@ public class DefaultMeasurementDao extends AbstractDao<Measurement> implements M
 
     @Override
     public List<Measurement> findInTimePeriodForMeasurementSection(AbstractMeasurementModule module, Date startDate, Date endDate) {
+        if(module == null){
+            throw new IllegalArgumentException("module can not be null");
+        }
         TypedQuery<Measurement> query = em.createNamedQuery("Measurement.findInTimePeriodForMeasurementModule", Measurement.class);
         query.setParameter("moduleId", module.getId());
         query.setParameter("startDate", startDate, TemporalType.TIMESTAMP);

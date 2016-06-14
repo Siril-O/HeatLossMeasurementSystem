@@ -47,14 +47,13 @@ public class ReportController extends AbstractController {
                                        @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
                                        @RequestParam(value = "endDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
                                        Model model, Paging paging) {
-
         HouseReportData chartData = reportService.buildHousePowerReportData(house, startDate, endDate);
         final List<Apartment> apartments = house.getApartments();
-        PagingUtils.preparePaging(paging, (long) apartments.size(), model);
         model.addAttribute("dataMap", chartData);
         populateDates(chartData.getStartDate(), chartData.getEndDate(), model);
         model.addAttribute("house", house);
-        model.addAttribute("apartments", apartments.subList(paging.getOffset(), paging.getLastIndex()));
+        PagingUtils.preparePaging(paging, (long) apartments.size(), model);
+        model.addAttribute("apartments", apartments.subList(paging.getOffset(), Math.min(paging.getLastIndex(),apartments.size())));
         return "admin.report.housePower";
     }
 
@@ -62,15 +61,51 @@ public class ReportController extends AbstractController {
     public String showHouseEnergyReport(@RequestParam(value = "houseId") House house,
                                         @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
                                         @RequestParam(value = "endDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
-                                        Model model) {
-        DatePeriod period = DatePeriod.checkDates(startDate, endDate);
-        final List<HouseReportDataEntry> chartData = calculationService.calculateHouseEnergyInTimePeriod(house, period.getStartDate(),
-                period.getEndDate());
+                                        Model model, Paging paging) {
+        final HouseReportData chartData = reportService.buildHouseEnergyReportDataInTimePeriod(house, startDate, endDate);
+        final List<Apartment> apartments = house.getApartments();
         model.addAttribute("dataMap", chartData);
-        model.addAttribute("startDate", period.getStartDate());
-        model.addAttribute("endDate", period.getEndDate());
+        populateDates(chartData.getStartDate(), chartData.getEndDate(), model);
         model.addAttribute("house", house);
+        PagingUtils.preparePaging(paging, (long) apartments.size(), model);
+        model.addAttribute("apartments", apartments.subList(paging.getOffset(), Math.min(paging.getLastIndex(),apartments.size())));
         return "admin.report.houseEnergy";
+    }
+
+    @RequestMapping(value = "power/apartment")
+    public String showApartmentPowerReport(@RequestParam(value = "apartmentId", required = false) Apartment apartment,
+                                           @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
+                                           @RequestParam(value = "endDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
+                                           Model model,  Paging paging) {
+        if (apartment == null) {
+            apartment = getApartmentIfCustomer();
+        }
+        final ApartmentReportData chartData = reportService.buildPowerReportForApartment(apartment, startDate, endDate);
+        model.addAttribute("dataMap", chartData);
+        populateDates(chartData.getStartDate(), chartData.getEndDate(), model);
+        model.addAttribute("apartment", apartment);
+        final List<ApartmentMeasurementModule> modules = apartment.getMeasurementModules();
+        PagingUtils.preparePaging(paging, (long) modules.size(), model);
+        model.addAttribute("modules", modules.subList(paging.getOffset(), Math.min(paging.getLastIndex(),modules.size())));
+        return "admin.report.apartmentPower";
+    }
+
+    @RequestMapping(value = "energy/apartment")
+    public String showApartmentEnergyReport(@RequestParam(value = "apartmentId", required = false) Apartment apartment,
+                                            @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
+                                            @RequestParam(value = "endDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
+                                            Model model, Paging paging) {
+        if (apartment == null) {
+            apartment = getApartmentIfCustomer();
+        }
+        final ApartmentReportData chartData = reportService.buildApartmentEnergyReportReportDataInTimePeriod(apartment, startDate, endDate);
+        model.addAttribute("dataMap", chartData);
+        populateDates(chartData.getStartDate(), chartData.getEndDate(), model);
+        model.addAttribute("apartment", apartment);
+        final List<ApartmentMeasurementModule> modules = apartment.getMeasurementModules();
+        PagingUtils.preparePaging(paging, (long) modules.size(), model);
+        model.addAttribute("modules", modules.subList(paging.getOffset(), Math.min(paging.getLastIndex(),modules.size())));
+        return "admin.report.apartmentEnergy";
     }
 
     @RequestMapping(value = "power/house/loss")
@@ -86,6 +121,8 @@ public class ReportController extends AbstractController {
         model.addAttribute("endDate", period.getEndDate());
         return "report.houseHeatLoss";
     }
+
+
 
     @RequestMapping(value = "power/house/input")
     public String showHouseInputPowerReport(@RequestParam(value = "houseId") House house,
@@ -132,37 +169,6 @@ public class ReportController extends AbstractController {
         model.addAttribute("dataMap", chartData);
         return "report.moduleEnergyReport";
     }
-
-    @RequestMapping(value = "power/apartment")
-    public String showApartmentPowerReport(@RequestParam(value = "apartmentId", required = false) Apartment apartment,
-                                           @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
-                                           @RequestParam(value = "endDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
-                                           Model model) {
-        if (apartment == null) {
-            apartment = getApartmentIfCustomer();
-        }
-        final ApartmentReportData chartData = reportService.buildPowerReportForApartment(apartment, startDate, endDate);
-        model.addAttribute("dataMap", chartData);
-        populateDates(chartData.getStartDate(), chartData.getEndDate(), model);
-        model.addAttribute("apartment", apartment);
-        return "report.apartmentPowerReport";
-    }
-
-    @RequestMapping(value = "energy/apartment")
-    public String showApartmentEnergyReport(@RequestParam(value = "apartmentId", required = false) Apartment apartment,
-                                            @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
-                                            @RequestParam(value = "endDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
-                                            Model model) {
-        if (apartment == null) {
-            apartment = getApartmentIfCustomer();
-        }
-        final ApartmentReportData chartData = reportService.buildApartmentEnergyReportReportDataInTimePeriod(apartment, startDate, endDate);
-        model.addAttribute("dataMap", chartData);
-        populateDates(chartData.getStartDate(), chartData.getEndDate(), model);
-        model.addAttribute("apartment", apartment);
-        return "report.apartmentEnergyReport";
-    }
-
 
     private Apartment getApartmentIfCustomer() {
         Customer customer = userService.getCurrentCustomer();

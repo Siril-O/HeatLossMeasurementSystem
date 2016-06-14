@@ -41,9 +41,6 @@ public class Pipe {
     @OneToMany(mappedBy = "pipe", fetch = FetchType.LAZY)
     private List<AbstractPipeMeasurementModule> measurementModules;
 
-//    @OneToOne(fetch = FetchType.LAZY, mappedBy = "pipe", cascade = CascadeType.ALL)
-//    private PipeMeasurementModule pipeMeasurementModule;
-
     public Long getId() {
         return id;
     }

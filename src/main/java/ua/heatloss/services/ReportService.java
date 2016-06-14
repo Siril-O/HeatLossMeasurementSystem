@@ -3,6 +3,7 @@ package ua.heatloss.services;
 
 import ua.heatloss.domain.Apartment;
 import ua.heatloss.domain.House;
+import ua.heatloss.services.helper.DatePeriod;
 import ua.heatloss.web.controller.dto.ApartmentReportData;
 import ua.heatloss.web.controller.dto.HouseReportData;
 

@@ -47,7 +47,7 @@
             	  var options = {
             		        chart: {
             		          title: 'Energy consumed  heat in the building in time Period',
-            		          subtitle: 'in KJoules'
+            		          subtitle: 'in KKalories'
             		        },
             		        width: 900,
             		        height: 500

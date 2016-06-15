@@ -10,9 +10,6 @@
 		</div>
 		<div id="navbar" class="navbar-collapse collapse">
 			<ul class="nav navbar-nav">
-				<li><a href="/HeatLossSystem/report/power/module">Power Report</a></li>
-				<li><a href="/HeatLossSystem/report/energy/module">Energy Report</a></li>
-				<li><a href="/HeatLossSystem/house/list">Info</a></li>
                 <li><c:url var="logOutUrl" value="/logout" />
                 	<form action="${logOutUrl}" method="post" class="navbar-form navbar-right">
                 		<div class="form-group">

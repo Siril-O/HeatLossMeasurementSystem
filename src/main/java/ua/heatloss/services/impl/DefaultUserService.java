@@ -1,16 +1,18 @@
 package ua.heatloss.services.impl;
 
+import ua.heatloss.dao.UserDao;
+import ua.heatloss.domain.user.Customer;
+import ua.heatloss.domain.user.Role;
+import ua.heatloss.domain.user.User;
+import ua.heatloss.services.UserService;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ua.heatloss.dao.UserDao;
-import ua.heatloss.domain.user.Customer;
-import ua.heatloss.domain.user.User;
-import ua.heatloss.services.UserService;
-
-import java.util.List;
 
 @Service
 public class DefaultUserService implements UserService {
@@ -66,6 +68,10 @@ public class DefaultUserService implements UserService {
 
     @Override
     public User getCurrentUser() {
+        return getCurrentUserInternal();
+    }
+
+    private User getCurrentUserInternal() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
         return getUserByEmail(email);
@@ -73,11 +79,17 @@ public class DefaultUserService implements UserService {
 
     @Override
     public Customer getCurrentCustomer() {
-        User user = getCurrentUser();
-        if (user instanceof Customer) {
+        User user = getCurrentUserInternal();
+        if (Role.ROLE_CUSTOMER ==user.getRole()) {
             return (Customer) user;
         } else {
             return null;
         }
+    }
+
+    @Override
+    public boolean hasRole(Role role) {
+        return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().
+                filter(a -> a.getAuthority().equals(role.name())).findAny().isPresent();
     }
 }

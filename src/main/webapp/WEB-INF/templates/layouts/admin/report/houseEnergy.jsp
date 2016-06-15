@@ -11,7 +11,14 @@
   <input type="submit" value="Energy Report" class="btn btn-primary" id="energy_report_btn"/>
 </form>
 </div>
-		<div id="linechart_material" ></div>
+		<div id="linechart_material" style="display:inline"></div>
+		<div style="display:inline">
+		<table class="table table-striped">
+		<tr><td>Total Input</td><td><fmt:formatNumber type="number" maxFractionDigits="2" value="${energySum.input}" /> KKalories</td></tr>
+		<tr><td>Total Loss</td><td><fmt:formatNumber type="number" maxFractionDigits="2" value="${energySum.loss}" /> KKalories</td></tr>
+		<tr><td>Total Consumed</td><td><fmt:formatNumber type="number" maxFractionDigits="2" value="${energySum.consumed}" /> KKalories</td></tr>
+		</table>
+		</div>
 		<h2 align="center" >House Apartments</h2>
         <table class="table table-striped" style="width:500px;margin: 0 auto;">
                       <tr>
@@ -53,7 +60,7 @@
 
             	  var options = {
             		        chart: {
-            		          title: 'Energy in KJoules',
+            		          title: 'Energy in KKalories',
             		          subtitle: 'in wat'
             		        },
             		        width: 900,

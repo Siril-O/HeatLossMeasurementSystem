@@ -1,6 +1,7 @@
 package ua.heatloss.services;
 
 import ua.heatloss.domain.user.Customer;
+import ua.heatloss.domain.user.Role;
 import ua.heatloss.domain.user.User;
 
 
@@ -13,4 +14,6 @@ public interface UserService extends CrudService<User> {
     User getCurrentUser();
 
     Customer getCurrentCustomer();
+
+    boolean hasRole(Role role);
 }

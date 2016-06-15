@@ -36,7 +36,7 @@ public class DefaultHeatConsumptionCalculationService implements HeatConsumption
 
     @Override
     public double calculateEnergy(Object target, Date startDate, Date endDate) {
-        return PowerToEnergyCalculator.calculateInKJoule(calculatePowerInTimePeriod(target, startDate, endDate));
+        return PowerToEnergyCalculator.calculateInKKalories(calculatePowerInTimePeriod(target, startDate, endDate));
     }
 
     @Override
@@ -45,7 +45,7 @@ public class DefaultHeatConsumptionCalculationService implements HeatConsumption
         final Map<Date, Double> energyByDays = new LinkedHashMap<>();
         for (Date day : period.getDays()) {
             energyByDays.put(day,
-                    PowerToEnergyCalculator.calculateInKJoule(calculatePowerInTimePeriod(target, day, DatePeriod.getNextDay(day))));
+                    PowerToEnergyCalculator.calculateInKKalories(calculatePowerInTimePeriod(target, day, DatePeriod.getNextDay(day))));
         }
         return energyByDays;
     }
@@ -72,7 +72,7 @@ public class DefaultHeatConsumptionCalculationService implements HeatConsumption
     public double calculateEnergyLossOnHouse(House house, Date startDate, Date endDate) {
         List<LossContext> groupLossContextByDate = groupLossContextByDate(house, startDate, endDate);
         Map<Date, Double> lossByDate = calculatePowerLossesInTimePeriod(groupLossContextByDate);
-        return PowerToEnergyCalculator.calculateInKJoule(lossByDate);
+        return PowerToEnergyCalculator.calculateInKKalories(lossByDate);
     }
 
     @Override
@@ -121,19 +121,6 @@ public class DefaultHeatConsumptionCalculationService implements HeatConsumption
     }
 
     private List<HouseReportDataEntry> calculatePowerInTimePeriod(final List<LossContext> lossContexts) {
-        List<HouseReportDataEntry> reportDataEntries = new ArrayList<>();
-        for (LossContext context : lossContexts) {
-            HouseReportDataEntry data = new HouseReportDataEntry();
-            data.setDate(context.getDate());
-            data.setLoss(MeasurementCalculator.calculatePowerLosses(context));
-            data.setConsumed(MeasurementCalculator.calculatePowerConsumedByCustomers(context));
-            data.setInput(MeasurementCalculator.calculatePower(context.getMainMeasurement()));
-            reportDataEntries.add(data);
-        }
-        return reportDataEntries;
-    }
-
-    private List<HouseReportDataEntry> calculateEnergyInTimePeriod(final List<LossContext> lossContexts) {
         List<HouseReportDataEntry> reportDataEntries = new ArrayList<>();
         for (LossContext context : lossContexts) {
             HouseReportDataEntry data = new HouseReportDataEntry();
@@ -216,9 +203,9 @@ public class DefaultHeatConsumptionCalculationService implements HeatConsumption
             final List<HouseReportDataEntry> powerInPeriod = calculatePowerInTimePeriod(lossContexts);
             HouseReportDataEntry energy = new HouseReportDataEntry();
             energy.setDate(day);
-            energy.setLoss(PowerToEnergyCalculator.calculateInKJoule(powerInPeriod.stream().collect(Collectors.toMap(HouseReportDataEntry::getDate, HouseReportDataEntry::getLoss))));
-            energy.setConsumed(PowerToEnergyCalculator.calculateInKJoule(powerInPeriod.stream().collect(Collectors.toMap(HouseReportDataEntry::getDate, HouseReportDataEntry::getConsumed))));
-            energy.setInput(PowerToEnergyCalculator.calculateInKJoule(powerInPeriod.stream().collect(Collectors.toMap(HouseReportDataEntry::getDate, HouseReportDataEntry::getInput))));
+            energy.setLoss(PowerToEnergyCalculator.calculateInKKalories(powerInPeriod.stream().collect(Collectors.toMap(HouseReportDataEntry::getDate, HouseReportDataEntry::getLoss))));
+            energy.setConsumed(PowerToEnergyCalculator.calculateInKKalories(powerInPeriod.stream().collect(Collectors.toMap(HouseReportDataEntry::getDate, HouseReportDataEntry::getConsumed))));
+            energy.setInput(PowerToEnergyCalculator.calculateInKKalories(powerInPeriod.stream().collect(Collectors.toMap(HouseReportDataEntry::getDate, HouseReportDataEntry::getInput))));
             energyByDays.add(energy);
         }
         return energyByDays;

@@ -4,6 +4,7 @@ import ua.heatloss.domain.Apartment;
 import ua.heatloss.domain.House;
 import ua.heatloss.domain.modules.ApartmentMeasurementModule;
 import ua.heatloss.domain.user.Customer;
+import ua.heatloss.domain.user.Role;
 import ua.heatloss.facades.ReportsFacade;
 import ua.heatloss.services.HeatConsumptionCalculationService;
 import ua.heatloss.services.HouseService;
@@ -12,12 +13,13 @@ import ua.heatloss.services.UserService;
 import ua.heatloss.services.helper.DatePeriod;
 import ua.heatloss.web.controller.dto.ApartmentReportData;
 import ua.heatloss.web.controller.dto.HouseReportData;
+import ua.heatloss.web.controller.dto.HouseReportDataEntry;
 import ua.heatloss.web.utils.Paging;
 import ua.heatloss.web.utils.PagingUtils;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -47,11 +49,10 @@ public class ReportController extends AbstractController {
                                        @RequestParam(value = "endDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
                                        Model model, Paging paging) {
         HouseReportData chartData = reportService.buildHousePowerReportData(house, startDate, endDate);
-        final List<Apartment> apartments = house.getApartments();
         model.addAttribute("dataMap", chartData);
         populateDates(chartData.getStartDate(), chartData.getEndDate(), model);
         model.addAttribute("house", house);
-        PagingUtils.prepareJSPaging(paging, (long) apartments.size(), model);
+        PagingUtils.prepareJSPaging(paging, (long) house.getApartments().size(), model);
         return "admin.report.housePower";
     }
 
@@ -61,11 +62,11 @@ public class ReportController extends AbstractController {
                                         @RequestParam(value = "endDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
                                         Model model, Paging paging) {
         final HouseReportData chartData = reportService.buildHouseEnergyReportDataInTimePeriod(house, startDate, endDate);
-        final List<Apartment> apartments = house.getApartments();
         model.addAttribute("dataMap", chartData);
         populateDates(chartData.getStartDate(), chartData.getEndDate(), model);
         model.addAttribute("house", house);
-        PagingUtils.prepareJSPaging(paging, (long) apartments.size(), model);
+        model.addAttribute("energySum", calculateTotalEnergy(chartData));
+        PagingUtils.prepareJSPaging(paging, (long) house.getApartments().size(), model);
         return "admin.report.houseEnergy";
     }
 
@@ -82,7 +83,7 @@ public class ReportController extends AbstractController {
         populateDates(chartData.getStartDate(), chartData.getEndDate(), model);
         model.addAttribute("apartment", apartment);
         PagingUtils.prepareJSPaging(paging, (long) apartment.getMeasurementModules().size(), model);
-        return "admin.report.apartmentPower";
+        return (userService.hasRole(Role.ROLE_EMPLOYEE) ? "admin." : "") + "report.apartmentPower";
     }
 
     @RequestMapping(value = "energy/apartment")
@@ -97,8 +98,9 @@ public class ReportController extends AbstractController {
         model.addAttribute("dataMap", chartData);
         populateDates(chartData.getStartDate(), chartData.getEndDate(), model);
         model.addAttribute("apartment", apartment);
+        model.addAttribute("energySum", calculateTotalEnergy(chartData.getResult()));
         PagingUtils.prepareJSPaging(paging, (long) apartment.getMeasurementModules().size(), model);
-        return "admin.report.apartmentEnergy";
+        return (userService.hasRole(Role.ROLE_EMPLOYEE) ? "admin." : "") + "report.apartmentEnergy";
     }
 
     @RequestMapping(value = "power/house/loss")
@@ -149,7 +151,7 @@ public class ReportController extends AbstractController {
         model.addAttribute("dataMap", chartData);
         model.addAttribute("module", module);
         populateDates(period.getStartDate(), period.getEndDate(), model);
-        return "admin.report.modulePowerReport";
+        return (userService.hasRole(Role.ROLE_EMPLOYEE) ? "admin." : "") + "report.modulePower";
     }
 
     @RequestMapping(value = "energy/module")
@@ -164,8 +166,9 @@ public class ReportController extends AbstractController {
         final Map<Date, Double> chartData = reportsFacade.buildEnergyReportForMeasurementModuleByDay(module, startDate, endDate);
         model.addAttribute("dataMap", chartData);
         model.addAttribute("module", module);
+        model.addAttribute("energySum", calculateTotalEnergy(chartData));
         populateDates(period.getStartDate(), period.getEndDate(), model);
-        return "admin.report.moduleEnergyReport";
+        return (userService.hasRole(Role.ROLE_EMPLOYEE) ? "admin." : "") + "report.moduleEnergy";
     }
 
     private Apartment getApartmentIfCustomer() {
@@ -181,4 +184,17 @@ public class ReportController extends AbstractController {
         model.addAttribute("startDate", startDate);
         model.addAttribute("endDate", endDate);
     }
+
+    private HouseReportDataEntry calculateTotalEnergy(HouseReportData reportData) {
+        HouseReportDataEntry summ = new HouseReportDataEntry();
+        summ.setLoss(reportData.getReportEntries().stream().mapToDouble(HouseReportDataEntry::getLoss).sum());
+        summ.setInput(reportData.getReportEntries().stream().mapToDouble(HouseReportDataEntry::getInput).sum());
+        summ.setConsumed(reportData.getReportEntries().stream().mapToDouble(HouseReportDataEntry::getConsumed).sum());
+        return summ;
+    }
+
+    private Double calculateTotalEnergy(final Map<Date, Double> energyMap) {
+        return energyMap.values().stream().collect(Collectors.summingDouble(e -> e));
+    }
+
 }

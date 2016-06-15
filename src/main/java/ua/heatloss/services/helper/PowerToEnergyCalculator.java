@@ -8,6 +8,8 @@ import static java.lang.Math.abs;
 
 public class PowerToEnergyCalculator {
 
+    private static final double KKALORIES_IN_JOULE = 0.000239006;
+
     public static double calculate(Map<Date, Double> powerByTime) {
         List<Value> values = new ArrayList<>(powerByTime.size());
         for (Map.Entry<Date, Double> entry : powerByTime.entrySet()) {
@@ -23,8 +25,8 @@ public class PowerToEnergyCalculator {
         return result;
     }
 
-    public static double calculateInKJoule(Map<Date, Double> powerByTime) {
-        return calculate(powerByTime) / 1000;
+    public static double calculateInKKalories(Map<Date, Double> powerByTime) {
+        return calculate(powerByTime) * KKALORIES_IN_JOULE;
     }
 
     private static double calculateEnergy(double powerA, double powerB, double timeA, double timeB) {

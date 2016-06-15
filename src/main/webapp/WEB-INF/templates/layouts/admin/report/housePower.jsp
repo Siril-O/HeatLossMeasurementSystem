@@ -1,9 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<c:set var="urlParams" value="houseId=${house.id}&" scope="request"/>
-
 <div style="margin-top:15px;">
+<h2>House Power Chart</h2>
 <form action="" id="report_form">
   <h3>Choose time interval</h3>
   <input type="date" name="startDate" id="startDate_report_input" value="<fmt:formatDate pattern="yyyy-MM-dd" value="${startDate}"/>"/>
@@ -14,14 +13,14 @@
 </form>
 </div>
 		<div id="linechart_material" ></div>
-		<table class="table table-striped" style="width:500px">
+		<h2 align="center" >House Apartments</h2>
+        <table class="table table-striped" style="width:500px;margin: 0 auto;">
               <tr>
               <th>Number</th>
               <th>action</th>
-
               </tr>
-               <c:forEach items="${apartments}" var="apartment">
-               <tr>
+               <c:forEach items="${house.apartments}" var="apartment">
+               <tr class="paging_content">
               <td>${apartment.number}</td>
               <td>
               <form method="GET" action="./apartment" class="apartment_report_form">
@@ -34,7 +33,7 @@
               </tr>
               </c:forEach>
         </table>
-
+                <jsp:include page="/WEB-INF/templates/layouts/general/pagingjs.jsp"/>
 		<script type="text/javascript">
             google.load('visualization', '1.1', {packages: ['corechart']});
             google.setOnLoadCallback(drawChart);

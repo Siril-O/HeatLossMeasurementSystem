@@ -12,7 +12,6 @@ import ua.heatloss.services.UserService;
 import ua.heatloss.services.helper.DatePeriod;
 import ua.heatloss.web.controller.dto.ApartmentReportData;
 import ua.heatloss.web.controller.dto.HouseReportData;
-import ua.heatloss.web.controller.dto.HouseReportDataEntry;
 import ua.heatloss.web.utils.Paging;
 import ua.heatloss.web.utils.PagingUtils;
 
@@ -52,8 +51,7 @@ public class ReportController extends AbstractController {
         model.addAttribute("dataMap", chartData);
         populateDates(chartData.getStartDate(), chartData.getEndDate(), model);
         model.addAttribute("house", house);
-        PagingUtils.preparePaging(paging, (long) apartments.size(), model);
-        model.addAttribute("apartments", apartments.subList(paging.getOffset(), Math.min(paging.getLastIndex(),apartments.size())));
+        PagingUtils.prepareJSPaging(paging, (long) apartments.size(), model);
         return "admin.report.housePower";
     }
 
@@ -67,8 +65,7 @@ public class ReportController extends AbstractController {
         model.addAttribute("dataMap", chartData);
         populateDates(chartData.getStartDate(), chartData.getEndDate(), model);
         model.addAttribute("house", house);
-        PagingUtils.preparePaging(paging, (long) apartments.size(), model);
-        model.addAttribute("apartments", apartments.subList(paging.getOffset(), Math.min(paging.getLastIndex(),apartments.size())));
+        PagingUtils.prepareJSPaging(paging, (long) apartments.size(), model);
         return "admin.report.houseEnergy";
     }
 
@@ -76,7 +73,7 @@ public class ReportController extends AbstractController {
     public String showApartmentPowerReport(@RequestParam(value = "apartmentId", required = false) Apartment apartment,
                                            @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
                                            @RequestParam(value = "endDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
-                                           Model model,  Paging paging) {
+                                           Model model, Paging paging) {
         if (apartment == null) {
             apartment = getApartmentIfCustomer();
         }
@@ -84,9 +81,7 @@ public class ReportController extends AbstractController {
         model.addAttribute("dataMap", chartData);
         populateDates(chartData.getStartDate(), chartData.getEndDate(), model);
         model.addAttribute("apartment", apartment);
-        final List<ApartmentMeasurementModule> modules = apartment.getMeasurementModules();
-        PagingUtils.preparePaging(paging, (long) modules.size(), model);
-        model.addAttribute("modules", modules.subList(paging.getOffset(), Math.min(paging.getLastIndex(),modules.size())));
+        PagingUtils.prepareJSPaging(paging, (long) apartment.getMeasurementModules().size(), model);
         return "admin.report.apartmentPower";
     }
 
@@ -102,9 +97,7 @@ public class ReportController extends AbstractController {
         model.addAttribute("dataMap", chartData);
         populateDates(chartData.getStartDate(), chartData.getEndDate(), model);
         model.addAttribute("apartment", apartment);
-        final List<ApartmentMeasurementModule> modules = apartment.getMeasurementModules();
-        PagingUtils.preparePaging(paging, (long) modules.size(), model);
-        model.addAttribute("modules", modules.subList(paging.getOffset(), Math.min(paging.getLastIndex(),modules.size())));
+        PagingUtils.prepareJSPaging(paging, (long) apartment.getMeasurementModules().size(), model);
         return "admin.report.apartmentEnergy";
     }
 
@@ -121,7 +114,6 @@ public class ReportController extends AbstractController {
         model.addAttribute("endDate", period.getEndDate());
         return "report.houseHeatLoss";
     }
-
 
 
     @RequestMapping(value = "power/house/input")
@@ -152,9 +144,12 @@ public class ReportController extends AbstractController {
         if (module == null) {
             module = getApartmentIfCustomer().getMeasurementModules().get(0);
         }
+        DatePeriod period = DatePeriod.checkDates(startDate, endDate);
         final Map<Date, Double> chartData = reportsFacade.buildPowerReportForMeasurementModule(module, startDate, endDate);
         model.addAttribute("dataMap", chartData);
-        return "report.modulePowerReport";
+        model.addAttribute("module", module);
+        populateDates(period.getStartDate(), period.getEndDate(), model);
+        return "admin.report.modulePowerReport";
     }
 
     @RequestMapping(value = "energy/module")
@@ -165,9 +160,12 @@ public class ReportController extends AbstractController {
         if (module == null) {
             module = getApartmentIfCustomer().getMeasurementModules().get(0);
         }
+        DatePeriod period = DatePeriod.checkDates(startDate, endDate);
         final Map<Date, Double> chartData = reportsFacade.buildEnergyReportForMeasurementModuleByDay(module, startDate, endDate);
         model.addAttribute("dataMap", chartData);
-        return "report.moduleEnergyReport";
+        model.addAttribute("module", module);
+        populateDates(period.getStartDate(), period.getEndDate(), model);
+        return "admin.report.moduleEnergyReport";
     }
 
     private Apartment getApartmentIfCustomer() {

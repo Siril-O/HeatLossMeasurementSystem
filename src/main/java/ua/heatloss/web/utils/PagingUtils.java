@@ -23,4 +23,17 @@ public class PagingUtils {
         model.addAttribute("enablePaging", true);
         return pagesQuantity;
     }
+
+    public static int prepareJSPaging(Paging pagingWrapper, Long total, Model model) {
+        Integer limit = pagingWrapper.getLimit();
+        if (limit == null || limit == 0) {
+            limit = AbstractDao.DEFAULT_LIMIT;
+        }
+        long pages = total / limit;
+        int extraPage = (total % limit) != 0 ? 1 : 0;
+        int pagesQuantity = (int) (pages + extraPage);
+
+        model.addAttribute("pagesQuantity", pagesQuantity);
+        return pagesQuantity;
+    }
 }

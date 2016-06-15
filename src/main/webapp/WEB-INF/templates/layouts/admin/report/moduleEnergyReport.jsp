@@ -1,14 +1,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<jsp:useBean id="now" class="java.util.Date"/>
-
 <div style="margin-top:15px;">
-<form action="" id="apartment_build_report_form">
+<h2>Measurement Module Energy Chart</h2>
+<form action="" id="module_build_report_form">
   <h3>Choose time interval</h3>
   <input type="date" name="startDate" id="startDate_report_input" value="<fmt:formatDate pattern="yyyy-MM-dd" value="${startDate}"/>"/>
   <input type="date" name="endDate"  id="endDate_report_input" value="<fmt:formatDate pattern="yyyy-MM-dd" value="${endDate}" />" />
-  <input type="hidden" name="moduleId" value="${apartment.id}" />
+  <input type="hidden" name="moduleId" value="${module.id}" />
   <input type="submit" value="Power Report" class="btn btn-primary" id="power_report_btn">
   <input type="submit" value="Energy Report" class="btn btn-primary" id="energy_report_btn"/>
 </form>

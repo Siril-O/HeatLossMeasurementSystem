@@ -1,8 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<c:set var="urlParams" value="houseId=${house.id}&" scope="request"/>
-
 
       <div style="margin-top:15px;">
       <h2>Power Report</h2>
@@ -18,15 +16,15 @@
       </div>
 
 		<div id="linechart_material"></div>
-
-        <table class="table table-striped" style="width:500px">
+		<h2 align="center">Apartment measurement modules</h2>
+        <table class="table table-striped" style="width:500px;margin: 0 auto;">
                       <tr>
                       <th>Pipe</th>
                       <th>Action</th>
 
                       </tr>
-                       <c:forEach items="${modules}" var="module">
-                       <tr>
+                       <c:forEach items="${apartment.measurementModules}" var="module">
+                    <tr class="paging_content">
                       <td>${module.pipe.ordinalNumber}</td>
                       <td>
                       <form method="GET" action="./module" class="module_report_form">
@@ -39,6 +37,7 @@
                       </tr>
                       </c:forEach>
         </table>
+                <jsp:include page="/WEB-INF/templates/layouts/general/pagingjs.jsp"/>
 
 		<script type="text/javascript">
             google.load('visualization', '1.1', {packages: ['corechart']});

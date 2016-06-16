@@ -74,9 +74,10 @@ public class HouseController extends AbstractController {
 
 
     @RequestMapping(method = {RequestMethod.POST, RequestMethod.GET}, value = SLASH + MANAGE)
-    public String manageHouse(@RequestParam("houseId") House house, Model model) {
+    public String manageHouse(@RequestParam("houseId") House house, Model model, Paging paging) {
         houseService.refresh(house);
         model.addAttribute("house", house);
+        PagingUtils.prepareJSPaging(paging, (long) house.getApartments().size(), model);
         return "admin." + HOUSE + "." + MANAGE;
     }
 

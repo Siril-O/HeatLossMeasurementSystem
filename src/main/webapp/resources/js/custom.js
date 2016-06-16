@@ -1,30 +1,19 @@
 
+
+                function changeFormAction(formId, energyButtonId, powerButtonId, powerURL, energyURL){
+                       $(`#${formId} #${powerButtonId}`).click(function(){
+                                  $(`#${formId}`).attr("action",powerURL);
+                              });
+                       $(`#${formId} #${energyButtonId}`).click(function(){
+                                  $(`#${formId}`).attr("action",energyURL);
+                              });
+                }
+
               $(document).ready(function(){
-                       $("#power_report_btn").click(function(){
-                                  $("#report_form").attr("action","/HeatLossSystem/report/power/house");
-                              });
 
-                       $("#energy_report_btn").click(function(){
-                                  $("#report_form").attr("action","/HeatLossSystem/report/energy/house");
-                              });
-
-                       $("#apartment_build_report_form #power_report_btn").click(function(){
-                                  $("#apartment_build_report_form").attr("action","/HeatLossSystem/report/power/apartment");
-                              });
-
-                       $("#apartment_build_report_form #energy_report_btn").click(function(){
-                                  $("#apartment_build_report_form").attr("action","/HeatLossSystem/report/energy/apartment");
-                              });
-
-                       $("#module_build_report_form #power_report_btn").click(function(){
-                                  $("#module_build_report_form").attr("action","/HeatLossSystem/report/power/module");
-                              });
-
-                       $("#module_build_report_form #energy_report_btn").click(function(){
-                                  $("#module_build_report_form").attr("action","/HeatLossSystem/report/energy/module");
-                              });
-
-
+                       changeFormAction("report_form", "energy_report_btn", "power_report_btn", "/HeatLossSystem/report/power/house", "/HeatLossSystem/report/energy/house");
+                       changeFormAction("apartment_build_report_form", "energy_report_btn", "power_report_btn", "/HeatLossSystem/report/power/apartment", "/HeatLossSystem/report/energy/apartment");
+                       changeFormAction("module_build_report_form", "energy_report_btn", "power_report_btn", "/HeatLossSystem/report/power/module", "/HeatLossSystem/report/energy/module");
 
                $('.apartment_report_form').submit(function() {
                let startDate = $("#startDate_report_input").val();
@@ -53,4 +42,4 @@
               });
 
                };
-                      });
+ });

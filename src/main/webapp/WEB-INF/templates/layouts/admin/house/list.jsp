@@ -21,7 +21,7 @@
           <td>${house.address.houseNumber}</td>
           <td>${house.pipeSystem}</td>
           <td>
-          <form method="POST" action="./manage">
+          <form method="GET" action="./manage">
             <input type="hidden" name="houseId" value="${house.id}">
             <input type="submit" value="Manage house" class="btn btn-primary">
           </form>

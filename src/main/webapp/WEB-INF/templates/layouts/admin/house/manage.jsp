@@ -69,7 +69,11 @@
                          </c:when>
                          <c:otherwise>
                          <h4>Apartments</h4>
-                           <table class="table table-striped">
+         <form method="GET" action="../apartment/create">
+              <input type="hidden" name="houseId" value="${house.id}">
+              <input type="submit" value="Add Apartment" class="btn btn-primary">
+         </form>
+                           <table class="table table-striped" >
                                 <tr>
                                     <th>Number</th>
                                     <th>Owner</th>
@@ -77,7 +81,7 @@
                                     <th>floor</th>
                                 </tr>
                                      <c:forEach items="${house.apartments}" var="apartment">
-                                <tr>
+                                <tr class="paging_content">
                                           <td>${apartment.number}</td>
                                           <td>${apartment.owner}</td>
                                           <td>${apartment.rooms}</td>
@@ -87,10 +91,8 @@
                               </table>
                          </c:otherwise>
               </c:choose>
-         <form method="POST" action="../apartment/create">
-              <input type="hidden" name="houseId" value="${house.id}">
-              <input type="submit" value="Add Apartment" class="btn btn-primary">
-         </form>
+
+<jsp:include page="/WEB-INF/templates/layouts/general/pagingjs.jsp"/>
 
 
   <script>

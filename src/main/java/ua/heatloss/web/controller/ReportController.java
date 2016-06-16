@@ -94,7 +94,7 @@ public class ReportController extends AbstractController {
         if (apartment == null) {
             apartment = getApartmentIfCustomer();
         }
-        final ApartmentReportData chartData = reportService.buildApartmentEnergyReportReportDataInTimePeriod(apartment, startDate, endDate);
+        final ApartmentReportData chartData = reportService.buildApartmentEnergyReportDataInTimePeriod(apartment, startDate, endDate);
         model.addAttribute("dataMap", chartData);
         populateDates(chartData.getStartDate(), chartData.getEndDate(), model);
         model.addAttribute("apartment", apartment);
@@ -147,7 +147,7 @@ public class ReportController extends AbstractController {
             module = getApartmentIfCustomer().getMeasurementModules().get(0);
         }
         DatePeriod period = DatePeriod.checkDates(startDate, endDate);
-        final Map<Date, Double> chartData = reportsFacade.buildPowerReportForMeasurementModule(module, startDate, endDate);
+        final Map<Date, Double> chartData = reportService.buildModulePowerReportDataInTimePeriod(module, startDate, endDate);
         model.addAttribute("dataMap", chartData);
         model.addAttribute("module", module);
         populateDates(period.getStartDate(), period.getEndDate(), model);
@@ -163,7 +163,7 @@ public class ReportController extends AbstractController {
             module = getApartmentIfCustomer().getMeasurementModules().get(0);
         }
         DatePeriod period = DatePeriod.checkDates(startDate, endDate);
-        final Map<Date, Double> chartData = reportsFacade.buildEnergyReportForMeasurementModuleByDay(module, startDate, endDate);
+        final Map<Date, Double> chartData = reportService.buildModuleEnergyReportDataInTimePeriod(module, startDate, endDate);
         model.addAttribute("dataMap", chartData);
         model.addAttribute("module", module);
         model.addAttribute("energySum", calculateTotalEnergy(chartData));

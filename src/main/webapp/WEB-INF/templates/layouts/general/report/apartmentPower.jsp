@@ -53,6 +53,7 @@
             	  ]);
 
             	  var options = {
+            	            curveType: 'function',
             		        chart: {
             		          title: 'Power of Apartment',
             		          subtitle: 'in Kwat'
@@ -61,7 +62,7 @@
             		        height: 500
             		      };
 
-            		      var chart = new google.visualization.AreaChart(document.getElementById('linechart_material'));
+            		      var chart = new google.visualization.LineChart(document.getElementById('linechart_material'));
 
             		      chart.draw(data, options);
               }

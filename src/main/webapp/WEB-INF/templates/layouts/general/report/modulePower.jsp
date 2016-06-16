@@ -16,7 +16,7 @@
 		<div id="linechart_material"></div>
 
 		<script type="text/javascript">
-            google.load('visualization', '1.1', {packages: ['line']});
+            google.load('visualization', '1.1', {packages: ['corechart']});
             google.setOnLoadCallback(drawChart);
 
               function drawChart() {
@@ -30,6 +30,7 @@
             	  ]);
 
             	  var options = {
+            	            curveType: 'function',
             		        chart: {
             		          title: 'Power of Measurement Module',
             		          subtitle: 'in Kwat'
@@ -38,7 +39,7 @@
             		        height: 500
             		      };
 
-            		      var chart = new google.charts.Line(document.getElementById('linechart_material'));
+            		      var chart = new google.visualization.LineChart(document.getElementById('linechart_material'));
 
             		      chart.draw(data, options);
               }

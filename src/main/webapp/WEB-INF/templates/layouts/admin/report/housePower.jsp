@@ -52,6 +52,7 @@
             	  ]);
 
             	  var options = {
+            	            curveType: 'function',
             		        chart: {
             		          title: 'Heat Power Losses by House',
             		          subtitle: 'in wat'
@@ -59,7 +60,7 @@
             		        width: 900,
             		        height: 600
             		      };
-            		      var chart = new google.visualization.AreaChart(document.getElementById('linechart_material'));
+            		      var chart = new google.visualization.LineChart(document.getElementById('linechart_material'));
             		      chart.draw(data, options);
               };
             </script>

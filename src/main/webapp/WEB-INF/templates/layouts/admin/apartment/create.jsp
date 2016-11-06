@@ -1,7 +1,10 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<c:url var="createApartmentUrl" value="/apartment"/>
+
 <h1>Register new House</h1>
-<form:form commandName="apartment" method="POST" action="./">
+<form:form commandName="apartment" method="POST" action="${createApartmentUrl}">
 <fieldset>
 <legend>Create Apartment</legend>
             <fieldset class="form-group">

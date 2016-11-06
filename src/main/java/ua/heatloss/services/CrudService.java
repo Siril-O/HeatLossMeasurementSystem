@@ -13,7 +13,7 @@ public interface CrudService<T> {
 
     List<T> getList(final Integer startPosition, final Integer maxResults);
 
-    Long getTotalResultCount();
+    long getTotalResultCount();
 
     void refresh(T entity);
 }

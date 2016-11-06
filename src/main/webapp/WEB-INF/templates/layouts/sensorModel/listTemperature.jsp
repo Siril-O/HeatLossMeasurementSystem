@@ -16,7 +16,6 @@
       <th>Min Temperature</th>
       <th>maxTemperature</th>
       <th>Absolute Accuracy</th>
-      <th>Actions</th>
   </tr>
     <c:forEach items="${sensorModels}" var="sensorModel">
     <tr>
@@ -25,12 +24,6 @@
           <td>${sensorModel.minTemperature}</td>
           <td>${sensorModel.maxTemperature}</td>
           <td>${sensorModel.absoluteAccuracy}</td>
-          <td>
-          <form method="POST" action="./manage">
-            <input type="hidden" name="sensorModelId" value="${sensorModel.id}">
-            <input type="submit" value="Manage Model" class="btn btn-primary">
-          </form>
-          </td>
     </tr>
     </c:forEach>
   </table>

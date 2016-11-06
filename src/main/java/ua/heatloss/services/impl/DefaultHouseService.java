@@ -37,7 +37,7 @@ public class DefaultHouseService implements HouseService {
     }
 
     @Override
-    public Long getTotalResultCount() {
+    public long getTotalResultCount() {
         return houseDao.getTotalResultCount();
     }
 

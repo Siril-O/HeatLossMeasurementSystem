@@ -38,7 +38,7 @@ public class DefaultSensorModelService implements SensorModelService {
     }
 
     @Override
-    public Long getTotalResultCount() {
+    public long getTotalResultCount() {
         return sensorModelDao.getTotalResultCount();
     }
 

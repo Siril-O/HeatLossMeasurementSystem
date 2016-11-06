@@ -40,7 +40,7 @@ public class Measurement {
     private Double flowValue;
     private Double outputValue;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEASUREMENT_MODULE_ID")
     private AbstractMeasurementModule measurementModule;
 

@@ -22,8 +22,6 @@ import javax.persistence.OneToMany;
                 @NamedQuery(name = "Apartment.find", query = "SELECT m FROM Apartment AS m"),
                 @NamedQuery(name = "Apartment.findTotalResultCount", query = "SELECT count(m.id) FROM Apartment AS m"),
                 @NamedQuery(name = "Apartment.findByNumberLike", query = "SELECT a FROM Apartment AS a WHERE a.number LIKE CONCAT('%', :value, '%')"),
-
-
         }
 )
 
@@ -37,7 +35,7 @@ public class Apartment {
     @OneToMany(mappedBy = "apartment", fetch = FetchType.LAZY)
     private List<ApartmentMeasurementModule> measurementModules;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "HOUSE_ID")
     private House house;
 

@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ua.heatloss.web.controller.mmodule.dto.CreateModuleRequest;
 
 @Component
 public class DefaultMeasurementModuleFacade implements MeasurementModuleFacade {

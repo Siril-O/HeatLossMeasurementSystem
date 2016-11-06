@@ -3,22 +3,22 @@ package ua.heatloss.domain.modules;
 import ua.heatloss.domain.sensors.model.SensorModel;
 
 import javax.persistence.Embeddable;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Embeddable
 public class MeasurementsGroup {
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "INPUT_SENSOR_MODEL_ID")
     private SensorModel input;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "FLOW_SENSOR_MODEL_ID")
     private SensorModel flow;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "OUTPUT_SENSOR_MODEL_ID")
     private SensorModel output;
-
 
     public SensorModel getInput() {
         return input;

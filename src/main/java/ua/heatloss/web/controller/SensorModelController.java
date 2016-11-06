@@ -55,7 +55,7 @@ public class SensorModelController extends AbstractController {
         Long total = sensorModelService.getFlowModelsTotalCount();
         PagingUtils.preparePaging(paging, total, model);
         model.addAttribute("sensorModels", flowSensorModels);
-        return SENSOR_MODEL + PAGED_LIST + FLOW;
+        return SENSOR_MODEL + "." + LIST + FLOW;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = SLASH + LIST + TEMPERATURE)
@@ -64,13 +64,13 @@ public class SensorModelController extends AbstractController {
         Long total = sensorModelService.getTemperatureModelsTotalCount();
         PagingUtils.preparePaging(paging, total, model);
         model.addAttribute("sensorModels", temperatureSensorModels);
-        return SENSOR_MODEL + PAGED_LIST + TEMPERATURE;
+        return SENSOR_MODEL + "." +  LIST + TEMPERATURE;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = SLASH + LIST)
     public String getAllHouses(@RequestParam("measurementSectionId") AbstractMeasurementModule section, Model model) {
         model.addAttribute("measurementModule", section.getMeasurementsGroup());
-        return HOUSE + PAGED_LIST;
+        return HOUSE + LIST;
     }
 
 }

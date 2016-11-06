@@ -7,13 +7,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import ua.heatloss.domain.Address;
 import ua.heatloss.domain.House;
+import ua.heatloss.domain.Location;
 import ua.heatloss.domain.PipeSystem;
 import ua.heatloss.facades.HouseFacade;
 import ua.heatloss.services.HouseService;
-import ua.heatloss.web.utils.PagingUtils;
 import ua.heatloss.web.utils.Paging;
+import ua.heatloss.web.utils.PagingUtils;
 
 import java.util.List;
 
@@ -23,7 +23,6 @@ public class HouseController extends AbstractController {
 
     private static final String key = "";
 
-
     @Autowired
     private HouseService houseService;
 
@@ -31,7 +30,7 @@ public class HouseController extends AbstractController {
     private HouseFacade houseFacade;
 
     @RequestMapping(method = RequestMethod.GET, value = "/{houseId}")
-    public String getHouse(@PathVariable final Long houseId, final Model model) {
+    public String getHouseInfo(@PathVariable final Long houseId, final Model model) {
         final House house = houseService.findById(houseId);
         model.addAttribute(HOUSE, house);
         return "model";
@@ -46,8 +45,8 @@ public class HouseController extends AbstractController {
     @RequestMapping(value = SLASH + CREATE)
     public String showAddHouseForm(Model model) {
         House house = new House();
-        Address address = new Address();
-        house.setAddress(address);
+        Location location = new Location();
+        house.setLocation(location);
         model.addAttribute("house", house);
         model.addAttribute("pipeTypes", PipeSystem.values());
         return "admin." + HOUSE + "." + CREATE;
@@ -69,7 +68,7 @@ public class HouseController extends AbstractController {
         Long total = houseService.getTotalResultCount();
         PagingUtils.preparePaging(paging, total, model);
         model.addAttribute("houses", houses);
-        return "admin."+ HOUSE + ".map";
+        return "admin." + HOUSE + ".map";
     }
 
 

@@ -41,7 +41,7 @@ public class DefaultMeasurementService implements MeasurementService {
     }
 
     @Override
-    public Long getTotalResultCount() {
+    public long getTotalResultCount() {
         return measurementDao.getTotalResultCount();
     }
 

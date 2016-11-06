@@ -8,7 +8,6 @@ import javax.persistence.*;
         @NamedQuery(name = "User.getTotalCount", query = "SELECT count(u.id) FROM User AS u"),
         @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User AS u WHERE u.email=:email"),
         @NamedQuery(name = "User.countWithEmail", query = "SELECT count(u.id) FROM User AS u WHERE u.email=:email")
-
 })
 
 @Entity
@@ -69,6 +68,28 @@ public abstract class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+
+        User user = (User) o;
+
+        if (!id.equals(user.id)) return false;
+        if (!name.equals(user.name)) return false;
+        return email.equals(user.email) && role == user.role;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + name.hashCode();
+        result = 31 * result + email.hashCode();
+        result = 31 * result + role.hashCode();
+        return result;
     }
 
     @Override

@@ -2,20 +2,16 @@ package ua.heatloss.domain.modules;
 
 import ua.heatloss.domain.Apartment;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 
 @Entity
 @DiscriminatorValue(value = "APARTMENT")
 public class ApartmentMeasurementModule extends AbstractPipeMeasurementModule {
 
-
     private Integer ordinalNumber;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "APARTMENT_ID")
     private Apartment apartment;
 

@@ -35,7 +35,7 @@ public class DefaultPipeService implements PipeService {
     }
 
     @Override
-    public Long getTotalResultCount() {
+    public long getTotalResultCount() {
         return pipeDao.getTotalResultCount();
     }
 

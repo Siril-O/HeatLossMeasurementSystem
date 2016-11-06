@@ -16,10 +16,8 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 
 public class SuccessHandler implements AuthenticationSuccessHandler {
 
-
     private final static String EMPLOYEE_URL = "";
     private final static String CUSTOMER_URL = "report/energy/apartment";
-
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
@@ -35,7 +33,6 @@ public class SuccessHandler implements AuthenticationSuccessHandler {
         if (roles.contains(Role.ROLE_CUSTOMER.toString())) {
             httpServletResponse.sendRedirect(httpServletResponse
                     .encodeRedirectURL(CUSTOMER_URL));
-            return;
         }
     }
 }

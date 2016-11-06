@@ -1,4 +1,4 @@
-package ua.heatloss.web.controller;
+package ua.heatloss.web.controller.mmodule;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,13 +15,15 @@ import ua.heatloss.domain.sensors.model.FlowSensorModel;
 import ua.heatloss.domain.sensors.model.TemperatureSensorModel;
 import ua.heatloss.facades.MeasurementModuleFacade;
 import ua.heatloss.services.MeasurementModuleService;
+import ua.heatloss.web.controller.AbstractController;
+import ua.heatloss.web.controller.mmodule.dto.CreateModuleRequest;
 
 @Controller
 @RequestMapping(value = "/measurementModule")
 public class MeasurementModuleController extends AbstractController {
 
     @Autowired
-    private MeasurementModuleFacade measurementSectionFacade;
+    private MeasurementModuleFacade measurementModuleFacade;
 
     @Autowired
     private MeasurementModuleService measurementModuleService;
@@ -30,7 +32,7 @@ public class MeasurementModuleController extends AbstractController {
     public String createMainMeasurementModule(MainMeasurementModule measurementModule, RedirectAttributes redirectAttributes,
                                               @RequestParam("temperatureSensorModelId") TemperatureSensorModel temperatureSensorModel,
                                               @RequestParam("flowSensorModelId") FlowSensorModel flowSensorModel) {
-        measurementSectionFacade.createMainMeasurementModule(measurementModule, temperatureSensorModel, flowSensorModel);
+        measurementModuleFacade.createMainMeasurementModule(measurementModule, temperatureSensorModel, flowSensorModel);
         return redirectToManageHouse(measurementModule.getHouse(), redirectAttributes);
     }
 
@@ -39,7 +41,7 @@ public class MeasurementModuleController extends AbstractController {
                                                    @RequestParam("flowSensorModelId") FlowSensorModel flowSensorModel,
                                                    @RequestParam(value = "apartmentId") Apartment apartment) {
         measurementModule.setApartment(apartment);
-        measurementSectionFacade.createApartmentMeasurementModule(measurementModule, temperatureSensorModel, flowSensorModel);
+        measurementModuleFacade.createApartmentMeasurementModule(measurementModule, temperatureSensorModel, flowSensorModel);
         return redirectToManagePipe(measurementModule.getPipe(), redirectAttributes);
     }
 

@@ -29,7 +29,7 @@ public class House {
     private List<Apartment> apartments;
 
     @Embedded
-    private Address address;
+    private Location location;
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "house", cascade = CascadeType.ALL)
     private MainMeasurementModule mainMeasurementModule;
@@ -50,12 +50,12 @@ public class House {
         this.pipes = pipes;
     }
 
-    public Address getAddress() {
-        return address;
+    public Location getLocation() {
+        return location;
     }
 
-    public void setAddress(Address address) {
-        this.address = address;
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
     public PipeSystem getPipeSystem() {
@@ -83,15 +83,6 @@ public class House {
     }
 
     @Override
-    public String toString() {
-        return "House{" +
-                "id=" + id +
-                ", pipes=" + (pipes == null ? "" : pipes) +
-                ", address=" + address +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof House)) return false;
@@ -99,14 +90,22 @@ public class House {
         House house = (House) o;
 
         if (id != null ? !id.equals(house.id) : house.id != null) return false;
-        return address != null ? address.equals(house.address) : house.address == null;
+        if (pipes != null ? !pipes.equals(house.pipes) : house.pipes != null) return false;
+        if (pipeSystem != house.pipeSystem) return false;
+        if (apartments != null ? !apartments.equals(house.apartments) : house.apartments != null) return false;
+        if (location != null ? !location.equals(house.location) : house.location != null) return false;
+        return mainMeasurementModule != null ? mainMeasurementModule.equals(house.mainMeasurementModule) : house.mainMeasurementModule == null;
 
     }
 
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (address != null ? address.hashCode() : 0);
+        result = 31 * result + (pipes != null ? pipes.hashCode() : 0);
+        result = 31 * result + (pipeSystem != null ? pipeSystem.hashCode() : 0);
+        result = 31 * result + (apartments != null ? apartments.hashCode() : 0);
+        result = 31 * result + (location != null ? location.hashCode() : 0);
+        result = 31 * result + (mainMeasurementModule != null ? mainMeasurementModule.hashCode() : 0);
         return result;
     }
 

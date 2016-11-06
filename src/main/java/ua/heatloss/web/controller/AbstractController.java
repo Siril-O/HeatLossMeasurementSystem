@@ -22,15 +22,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 public class AbstractController {
 
-    public static final String SLASH = "/";
-    public static final String CREATE = "create";
-    public static final String LIST = "list";
-    public static final String REDIRECT = "redirect:";
-    public static final String PAGED_LIST = ".paging.list";
-    public static final String MANAGE = "manage";
-    public static final String DOT = ".";
-    public static final String HOUSE = "house";
-    public static final String ADMIN = "admin";
+    protected static final String SLASH = "/";
+    protected static final String CREATE = "create";
+    protected static final String LIST = "list";
+    protected static final String REDIRECT = "redirect:";
+    protected static final String MANAGE = "manage";
+    protected static final String DOT = ".";
+    protected static final String HOUSE = "house";
+    protected static final String ADMIN = "admin";
 
     @Autowired
     private PipeService pipeService;

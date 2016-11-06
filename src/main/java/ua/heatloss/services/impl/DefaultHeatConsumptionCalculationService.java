@@ -9,6 +9,7 @@ import ua.heatloss.domain.modules.ApartmentMeasurementModule;
 import ua.heatloss.domain.modules.MainMeasurementModule;
 import ua.heatloss.domain.modules.PipeMeasurementModule;
 import ua.heatloss.services.HeatConsumptionCalculationService;
+import ua.heatloss.services.LossContext;
 import ua.heatloss.services.MeasurementService;
 import ua.heatloss.services.helper.DatePeriod;
 import ua.heatloss.services.helper.MeasurementCalculator;
@@ -209,49 +210,5 @@ public class DefaultHeatConsumptionCalculationService implements HeatConsumption
             energyByDays.add(energy);
         }
         return energyByDays;
-    }
-
-
-    public static class LossContext {
-
-        private Date date;
-        private Measurement mainMeasurement;
-        private List<Measurement> pipeMeasurements;
-
-        public LossContext(Measurement mainMeasurement, List<Measurement> pipeMeasurements) {
-            this.mainMeasurement = mainMeasurement;
-            this.pipeMeasurements = pipeMeasurements;
-            date = mainMeasurement.getTimestamp();
-        }
-
-        public LossContext(Date date, Measurement mainMeasurement, List<Measurement> pipeMeasurements) {
-            this.date = date;
-            this.mainMeasurement = mainMeasurement;
-            this.pipeMeasurements = pipeMeasurements;
-        }
-
-        public Measurement getMainMeasurement() {
-            return mainMeasurement;
-        }
-
-        public void setMainMeasurement(Measurement mainMeasurement) {
-            this.mainMeasurement = mainMeasurement;
-        }
-
-        public List<Measurement> getPipeMeasurements() {
-            return pipeMeasurements;
-        }
-
-        public void setPipeMeasurements(List<Measurement> pipeMeasurements) {
-            this.pipeMeasurements = pipeMeasurements;
-        }
-
-        public Date getDate() {
-            return date;
-        }
-
-        public void setDate(Date date) {
-            this.date = date;
-        }
     }
 }

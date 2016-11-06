@@ -1,7 +1,7 @@
 package ua.heatloss.services.helper;
 
 import ua.heatloss.domain.Measurement;
-import ua.heatloss.services.impl.DefaultHeatConsumptionCalculationService;
+import ua.heatloss.services.LossContext;
 
 
 public class MeasurementCalculator {
@@ -29,7 +29,7 @@ public class MeasurementCalculator {
         }
     }
 
-    public static double calculatePowerLosses(DefaultHeatConsumptionCalculationService.LossContext context) {
+    public static double calculatePowerLosses(LossContext context) {
         double mainPowerConsumption = calculatePower(context.getMainMeasurement());
         double consumedPowerByCustomers = 0;
         for (Measurement measurement : context.getPipeMeasurements()) {
@@ -40,7 +40,7 @@ public class MeasurementCalculator {
 
 
 
-    public static double calculatePowerConsumedByCustomers(DefaultHeatConsumptionCalculationService.LossContext context) {
+    public static double calculatePowerConsumedByCustomers(LossContext context) {
         double consumedPowerByCustomers = 0;
         for (Measurement measurement : context.getPipeMeasurements()) {
             consumedPowerByCustomers += calculatePower(measurement);

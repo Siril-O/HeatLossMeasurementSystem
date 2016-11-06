@@ -35,7 +35,7 @@ public class DefaultApartmentService implements ApartmentService {
     }
 
     @Override
-    public Long getTotalResultCount() {
+    public long getTotalResultCount() {
         return apartmentDao.getTotalResultCount();
     }
 

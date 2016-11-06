@@ -2,21 +2,8 @@ package ua.heatloss.domain.modules;
 
 import ua.heatloss.domain.Measurement;
 
+import javax.persistence.*;
 import java.util.List;
-
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
 
 @NamedQueries(

@@ -14,10 +14,10 @@
       </tr>
         <c:forEach items="${houses}" var="house">
         <tr>
-              <td>${house.address.country}</td>
-              <td>${house.address.city}</td>
-              <td>${house.address.street}</td>
-              <td>${house.address.houseNumber}</td>
+              <td>${house.location.country}</td>
+              <td>${house.location.city}</td>
+              <td>${house.location.street}</td>
+              <td>${house.location.houseNumber}</td>
               <td>${house.pipeSystem}</td>
               <td>
               <form method="GET" action="report/power/house">
@@ -42,7 +42,7 @@ function initMap() {
 <c:forEach items="${houses}" var="house">
 
   var marker = new google.maps.Marker({
-    position: {lat: ${house.address.lat}, lng: ${house.address.lng}},
+    position: {lat: ${house.location.latitude}, lng: ${house.location.longitude}},
     title: 'Select house!',
     url: '/HeatLossSystem/report/power/house?houseId=${house.id}'
   });

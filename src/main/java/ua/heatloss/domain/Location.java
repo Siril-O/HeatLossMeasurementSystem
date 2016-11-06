@@ -3,14 +3,14 @@ package ua.heatloss.domain;
 import javax.persistence.Embeddable;
 
 @Embeddable
-public class Address {
+public class Location {
 
     private String country;
     private String city;
     private String street;
     private String houseNumber;
-    private Double lat;
-    private Double lng;
+    private Double latitude;
+    private Double longitude;
 
     public String getCountry() {
         return country;
@@ -44,33 +44,36 @@ public class Address {
         this.houseNumber = houseNumber;
     }
 
-    public Double getLng() {
-        return lng;
+    public Double getLongitude() {
+        return longitude;
     }
 
-    public void setLng(Double lng) {
-        this.lng = lng;
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
-    public Double getLat() {
-        return lat;
+    public Double getLatitude() {
+        return latitude;
     }
 
-    public void setLat(Double lat) {
-        this.lat = lat;
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Address)) return false;
+        if (!(o instanceof Location)) return false;
 
-        Address address = (Address) o;
+        Location location = (Location) o;
 
-        if (country != null ? !country.equals(address.country) : address.country != null) return false;
-        if (city != null ? !city.equals(address.city) : address.city != null) return false;
-        if (street != null ? !street.equals(address.street) : address.street != null) return false;
-        return houseNumber != null ? houseNumber.equals(address.houseNumber) : address.houseNumber == null;
+        if (country != null ? !country.equals(location.country) : location.country != null) return false;
+        if (city != null ? !city.equals(location.city) : location.city != null) return false;
+        if (street != null ? !street.equals(location.street) : location.street != null) return false;
+        if (houseNumber != null ? !houseNumber.equals(location.houseNumber) : location.houseNumber != null)
+            return false;
+        if (latitude != null ? !latitude.equals(location.latitude) : location.latitude != null) return false;
+        return longitude != null ? longitude.equals(location.longitude) : location.longitude == null;
 
     }
 
@@ -80,16 +83,8 @@ public class Address {
         result = 31 * result + (city != null ? city.hashCode() : 0);
         result = 31 * result + (street != null ? street.hashCode() : 0);
         result = 31 * result + (houseNumber != null ? houseNumber.hashCode() : 0);
+        result = 31 * result + (latitude != null ? latitude.hashCode() : 0);
+        result = 31 * result + (longitude != null ? longitude.hashCode() : 0);
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return "Address{" +
-                "country='" + country + '\'' +
-                ", city='" + city + '\'' +
-                ", street='" + street + '\'' +
-                ", houseNumber='" + houseNumber + '\'' +
-                '}';
     }
 }

@@ -57,7 +57,7 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public Long getTotalResultCount() {
+    public long getTotalResultCount() {
         return userDao.getTotalResultCount();
     }
 

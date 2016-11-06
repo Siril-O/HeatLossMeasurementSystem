@@ -1,6 +1,11 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<h1>Manage Pipe ${sectionContext.pipe.ordinalNumber} ${sectionContext.pipe.house.address.city} ${sectionContext.pipe.house.address.street} ${sectionContext.pipe.house.address.houseNumber} house</h1>
+
+<c:url var="manageMeasurementModuleUrl" value="/measurementModule/manage"/>
+<c:url var="createMeasurementModuleUrl" value="/measurementModule"/>
+<c:url var="createAppartmentMeasurementModuleUrl" value="/measurementModule/apartment"/>
+
+<h1>Manage Pipe ${sectionContext.pipe.ordinalNumber} ${sectionContext.pipe.house.location.city} ${sectionContext.pipe.house.location.street} ${sectionContext.pipe.house.location.houseNumber} house</h1>
        <c:choose>
            <c:when test="${empty sectionContext.pipe.measurementModules}">
               <h3>There are no measurement sections</h3>
@@ -18,7 +23,7 @@
                         <td>Measurement Section # ${measurementSection.ordinalNumber}</td>
                          <td>${measurementSection.sectionType}</td>
                          <td>
-                           <form method="POST" action="../measurementModule/manage">
+                           <form method="POST" action="${manageMeasurementModuleUrl}>
                                    <input type="hidden" name="measurementModuleId" value="${measurementModule.id}">
                                    <input type="submit" value="Manage Module" class="btn btn-primary">
                            </form>
@@ -37,7 +42,7 @@
        </div>
 
   <div id="measurementModuleForm" style="display:none">
-  <form:form commandName="measurementModule" method="POST" action="../measurementModule">
+  <form:form commandName="measurementModule" method="POST" action="&{createMeasurementModuleUrl}">
             <form:radiobuttons path="moduleType" items="${moduleTypes}"/>
              <fieldset class="form-group">
                      <label for="temperatureSensorModel">Choose temperature Sensors Model</label>

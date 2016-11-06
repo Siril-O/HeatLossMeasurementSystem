@@ -17,6 +17,8 @@ import ua.heatloss.services.helper.DatePeriod;
 
 import java.util.*;
 
+
+
 @Component
 public class DefaultDataGeneratingFacade implements DataGeneratingFacade {
 
@@ -123,12 +125,12 @@ public class DefaultDataGeneratingFacade implements DataGeneratingFacade {
         List<House> houses = new ArrayList<>();
         for (int i = 0; i < quantity; i++) {
             House house = new House();
-            Address address = new Address();
-            address.setHouseNumber("number " + i);
-            address.setStreet("Street " + i);
-            address.setCountry("Ukraine");
-            address.setCity("Kyiv");
-            house.setAddress(address);
+            Location location = new Location();
+            location.setHouseNumber("number " + i);
+            location.setStreet("Street " + i);
+            location.setCountry("Ukraine");
+            location.setCity("Kyiv");
+            house.setLocation(location);
             houseService.create(house);
             houses.add(house);
         }

@@ -17,7 +17,7 @@ public class IndexController extends AbstractController {
     private UserService userService;
 
     @RequestMapping(value = {"/"})
-    public String index(RedirectAttributes attributes) {
+    public String showIndexPage(RedirectAttributes attributes) {
 
         User user = userService.getCurrentUser();
         if (user instanceof Employee) {
